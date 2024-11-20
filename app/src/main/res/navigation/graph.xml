@@ -58,9 +58,19 @@
         android:name="com.example.mohassu.fragment.Signup3Fragment"
         android:label="Signup3Fragment"
         tools:layout="@layout/fragment_sign_up3">
-        <!--        <action-->
-        <!--            android:id="@+id/btn_singup1_next"-->
-        <!--            app:destination="@+id/Signup2Fragment"/>-->
+                <action
+                    android:id="@+id/btn_singup3_next"
+                    app:destination="@+id/Signup4Fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/Signup4Fragment"
+        android:name="com.example.mohassu.fragment.Signup3Fragment"
+        android:label="Signup3Fragment"
+        tools:layout="@layout/fragment_sign_up4">
+        <action
+            android:id="@+id/btn_singup4_next"
+            app:destination="@+id/Signup5Fragment"/>
     </fragment>
 
 </navigation>
