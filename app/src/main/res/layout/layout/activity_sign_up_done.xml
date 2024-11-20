@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    android:gravity="center">
+
+    <!-- 로고 이미지 -->
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:src="@drawable/logo"
+        android:contentDescription="회원가입 성공 로고"
+        android:layout_marginBottom="24dp" />
+
+    <!-- 축하 메시지 -->
+    <TextView
+        android:id="@+id/tvSuccessMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="축하합니다!\n회원가입이 완료되었어요"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:layout_marginBottom="120dp" />
+
+    <!-- 로그인하러 가기 버튼 -->
+    <Button
+        android:id="@+id/btnGoToLogin"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:text="로그인하러 가기"
+        android:textSize="25sp"
+        style="@style/BlueMaterialButtonStyle"
+        android:textColor="@android:color/white"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="16dp" />
+
+</LinearLayout>
+

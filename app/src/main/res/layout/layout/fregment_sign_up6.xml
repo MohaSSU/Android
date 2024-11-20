@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_back"
+            android:contentDescription="뒤로가기 버튼"
+            android:background="?selectableItemBackground"
+            android:foregroundTint="@color/black" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="모하SSU 회원가입"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#BDBDBD"
+        android:layout_marginBottom="60dp" />
+
+    <!-- 화면 부제목 -->
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="수업 추가"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:layout_marginBottom="90dp"
+        android:textColor="@android:color/black" />
+
+    <!-- 수업명 입력 -->
+    <TextView
+        android:id="@+id/label_class_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="수업명"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/input_class_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ex) 사용자 인터페이스"
+        android:background="@android:color/transparent"
+        android:inputType="text"
+        android:layout_marginBottom="16dp"
+        android:textColor="@android:color/black"
+        android:padding="8dp"
+        android:backgroundTint="@color/black" />
+
+    <!-- 수업 시간 입력 -->
+    <TextView
+        android:id="@+id/label_class_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="수업 시간"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Spinner
+            android:id="@+id/spinner_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/days_of_week"
+            android:spinnerMode="dropdown" />
+
+        <EditText
+            android:id="@+id/input_start_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="09:00"
+            android:inputType="time"
+            android:gravity="center"
+            android:backgroundTint="@color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="~"
+            android:gravity="center"
+            android:layout_marginHorizontal="8dp" />
+
+        <EditText
+            android:id="@+id/input_end_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="10:00"
+            android:inputType="time"
+            android:gravity="center"
+            android:backgroundTint="@color/black" />
+    </LinearLayout>
+
+    <!-- 강의 장소 입력 -->
+    <TextView
+        android:id="@+id/label_class_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="강의 장소"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="4dp" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- 베어드홀 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="베어드홀"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 숭덕경상관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="숭덕경상관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 문화관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="문화관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 안익태 기념관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="안익태 기념관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 형남공학관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="형남공학관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 교육관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="교육관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 백마관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="백마관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 한경직기념관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="한경직기념관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 신양관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="신양관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 벤처중소기업센터 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="벤처중소기업센터"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 진리관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="진리관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 조만식기념관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="조만식기념관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 한국기독교박물관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="한국기독교박물관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 중앙도서관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="중앙도서관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 연구관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="연구관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 창신관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="창신관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 생활관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="생활관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 학생생활관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="학생생활관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 전산관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="전산관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 미래관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="미래관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 정보과학관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="정보과학관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 웨스트민스터홀 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="웨스트민스터홀"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 학생회관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="학생회관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 창의관 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="창의관"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 대운동장 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="대운동장"
+                android:padding="16dp"
+                android:background="@drawable/border_background"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- 추가 버튼 -->
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="추가하기"
+        style="@style/BlueMaterialButtonStyle"
+        android:layout_marginTop="120dp"
+        android:layout_marginBottom="16dp" />
+
+</LinearLayout>

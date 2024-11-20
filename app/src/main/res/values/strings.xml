@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MohaSSU</string>
+    <string-array name="days_of_week">
+        <item>월요일</item>
+        <item>화요일</item>
+        <item>수요일</item>
+        <item>목요일</item>
+        <item>금요일</item>
+        <item>토요일</item>
+        <item>일요일</item>
+    </string-array>
+</resources>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<!-- 지도 뷰 -->
+<FrameLayout
+    android:id="@+id/map_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 지도 뷰 -->
+    <com.naver.maps.map.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>
+
+<!-- 바텀시트 -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:padding="16dp">
+
+        <!-- 약속 제목 -->
+        <TextView
+            android:id="@+id/tv_promise_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="원석핑님과의 약속"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 약속 위치 및 설명 -->
+        <TextView
+            android:id="@+id/tv_promise_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="진리관에서 정보섬으로 출발~"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 약속 종류 및 시간 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <!-- 약속 종류 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="약속 종류"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/tv_promise_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="반약속"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <!-- 약속 시간 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="약속 시간"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/tv_promise_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="24시간 / 09:00 ~ 10:00"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 참여한 사람들 -->
+        <TextView
+            android:id="@+id/tv_attendee_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="참여한 사람들"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 프로필 이미지 리스트 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- 프로필 이미지 1 -->
+            <ImageView
+                android:id="@+id/img_attendee1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/basic_profile"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="8dp" />
+
+            <!-- 프로필 이미지 2 -->
+            <ImageView
+                android:id="@+id/img_attendee2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/basic_profile"
+                android:scaleType="centerCrop" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
