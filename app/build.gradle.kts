@@ -5,6 +5,9 @@ plugins {
 android {
     namespace = "com.example.mohassu"
     compileSdk = 34
+    buildFeatures {
+        dataBinding = true
+    }
 
     defaultConfig {
         applicationId = "com.example.mohassu"
@@ -37,6 +40,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

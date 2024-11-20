@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/graph">
+
+<!--    &lt;!&ndash;초기 화면&ndash;&gt;-->
+<!--    <fragment-->
+<!--        android:id="@+id/StartFragment"-->
+<!--        android:name="com.example.mohassu.fragment.StartFragment"-->
+<!--        android:label="StartFragment"-->
+<!--        tools:layout="@layout/fragment_start">-->
+<!--        <action-->
+<!--            android:id="@+id/btn_start_login"-->
+<!--            app:destination="@+id/LoginFragment"/>-->
+<!--        <action-->
+<!--            android:id="@+id/btn_start_signup"-->
+<!--            app:destination="@+id/Signup1Fragment"/>-->
+<!--    </fragment>-->
+
+<!--    &lt;!&ndash;로그인 화면&ndash;&gt;-->
+<!--    <fragment-->
+<!--        android:id="@+id/LoginFragment"-->
+<!--        android:name="com.example.mohassu.fragment.LoginFragment"-->
+<!--        android:label="LoginFragment"-->
+<!--        tools:layout="@layout/fragment_login">-->
+<!--        &lt;!&ndash;        <action&ndash;&gt;-->
+<!--        &lt;!&ndash;            android:id="@+id/btn_start_signup"&ndash;&gt;-->
+<!--        &lt;!&ndash;            app:destination="@+id/Signup1Fragment"/>&ndash;&gt;-->
+<!--    </fragment>-->
+
+
+<!--    &lt;!&ndash;회원가입&ndash;&gt;-->
+<!--    <fragment-->
+<!--        android:id="@+id/Signup1Fragment"-->
+<!--        android:name="com.example.mohassu.fragment.Signup1Fragment"-->
+<!--        android:label="Signup1Fragment"-->
+<!--        tools:layout="@layout/fragment_sign_up1">-->
+<!--        <action-->
+<!--            android:id="@+id/btn_singup1_next"-->
+<!--            app:destination="@+id/Signup2Fragment"/>-->
+<!--    </fragment>-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/Signup2Fragment"-->
+<!--        android:name="com.example.mohassu.fragment.Signup2Fragment"-->
+<!--        android:label="Signup2Fragment"-->
+<!--        tools:layout="@layout/fragment_sign_up2">-->
+<!--        <action-->
+<!--            android:id="@+id/btn_singup2_next"-->
+<!--            app:destination="@+id/Signup3Fragment"/>-->
+
+<!--    </fragment>-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/Signup3Fragment"-->
+<!--        android:name="com.example.mohassu.fragment.Signup3Fragment"-->
+<!--        android:label="Signup3Fragment"-->
+<!--        tools:layout="@layout/fragment_sign_up3">-->
+<!--        &lt;!&ndash;        <action&ndash;&gt;-->
+<!--        &lt;!&ndash;            android:id="@+id/btn_singup1_next"&ndash;&gt;-->
+<!--        &lt;!&ndash;            app:destination="@+id/Signup2Fragment"/>&ndash;&gt;-->
+<!--    </fragment>-->
+
+</navigation>
