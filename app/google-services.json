@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "495253667769",
+    "project_id": "mohassu-98a30",
+    "storage_bucket": "mohassu-98a30.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495253667769:android:2171285dc398ec1800c068",
+        "android_client_info": {
+          "package_name": "com.example.mohassu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPivKcI8eggc1ftlSKvsg8ki7EqHxDsi4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
