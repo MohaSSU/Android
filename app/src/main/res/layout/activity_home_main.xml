@@ -5,64 +5,78 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 지도 영역 -->
     <ImageView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:elevation="1dp"
         android:src="@drawable/map"
-        android:elevation="8dp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <!-- 알림 버튼 -->
     <ImageButton
         android:id="@+id/btnNotification"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:background="@drawable/rounded_button_background"
         android:src="@drawable/ic_notification"
-        android:elevation="8dp"
+        android:padding="5dp"
+        android:elevation="10dp"
         android:scaleType="centerInside"
         android:layout_marginTop="70dp"
         android:layout_marginStart="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- 약속 버튼 -->
     <ImageButton
         android:id="@+id/btnSchedule"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:padding="3dp"
         android:background="@drawable/rounded_button_background"
-        android:src="@drawable/ic_schedule"
-        android:elevation="8dp"
+        android:src="@drawable/ic_noti"
+        android:elevation="10dp"
         android:scaleType="centerInside"
         android:layout_marginEnd="10dp"
         app:layout_constraintTop_toTopOf="@id/btnNotification"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 친구목록 버튼 -->
     <ImageButton
         android:id="@+id/btnFriendList"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:padding="3dp"
         android:background="@drawable/rounded_button_background"
         android:src="@drawable/ic_friends"
-        android:elevation="8dp"
+        android:elevation="10dp"
         android:scaleType="centerInside"
         android:layout_marginTop="10dp"
-
         app:layout_constraintTop_toBottomOf="@id/btnSchedule"
         app:layout_constraintStart_toStartOf="@id/btnSchedule" />
 
-    <!-- 핀 추가 버튼 -->
+    <ImageButton
+        android:id="@+id/btnNowLocation"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="5dp"
+        android:background="@drawable/rounded_button_background"
+        android:src="@drawable/ic_current_location"
+        android:elevation="8dp"
+        android:scaleType="centerInside"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@id/btnAddPin"
+        app:layout_constraintStart_toStartOf="@id/btnAddPin"
+        app:layout_constraintEnd_toEndOf="@id/btnAddPin"/>
+
     <ImageButton
         android:id="@+id/btnAddPin"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:padding="3dp"
         android:background="@drawable/rounded_button_background"
         android:src="@drawable/ic_add_location"
         android:elevation="8dp"
@@ -71,13 +85,13 @@
         app:layout_constraintBottom_toTopOf="@id/btnMyPage"
         app:layout_constraintStart_toStartOf="@id/btnMyPage" />
 
-    <!-- 마이페이지 버튼 -->
     <ImageButton
         android:id="@+id/btnMyPage"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:padding="3dp"
         android:background="@drawable/rounded_button_background"
-        android:src="@drawable/ic_my_page"
+        android:src="@drawable/ic_mypage"
         android:elevation="8dp"
         android:scaleType="centerInside"
         android:layout_marginBottom="10dp"
@@ -85,20 +99,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 사용자의 현재 위치 아이콘 -->
     <ImageView
         android:id="@+id/currentLocation"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@drawable/my_icon"
         android:elevation="8dp"
-
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 친구 위치 아이콘 -->
     <ImageView
         android:id="@+id/friendLocation"
         android:layout_width="80dp"
