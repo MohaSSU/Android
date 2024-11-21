@@ -37,7 +37,6 @@ public class LoginFragment extends Fragment {
         editTextEmail = view.findViewById(R.id.editTextEmail);
         editTextPassword = view.findViewById(R.id.editTextPassword);
         buttonLogin = view.findViewById(R.id.buttonLogin);
-        textViewSignUp = view.findViewById(R.id.textViewSignUp);
 
         // 로그인 버튼 클릭 리스너
         buttonLogin.setOnClickListener(v -> {
@@ -49,15 +48,6 @@ public class LoginFragment extends Fragment {
             } else {
                 loginUser(email, password);
             }
-        });
-
-        // 회원가입 텍스트 클릭 리스너
-        textViewSignUp.setOnClickListener(v -> {
-            // 회원가입 Fragment로 이동
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, new SignUpFragment())
-                    .addToBackStack(null)
-                    .commit();
         });
 
         return view;
