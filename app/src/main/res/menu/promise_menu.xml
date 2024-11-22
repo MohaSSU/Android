@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_food_promise"
+        android:icon="@drawable/ic_promise_rice"
+        android:title="밥약속" />
+    <item
+        android:id="@+id/menu_drink_promise"
+        android:icon="@drawable/ic_promise_drink"
+        android:title="술약속" />
+    <item
+        android:id="@+id/menu_study_promise"
+        android:icon="@drawable/ic_promise_study"
+        android:title="공부약속" />
+    <item
+        android:id="@+id/menu_other_promise"
+        android:icon="@drawable/ic_promise_etc"
+        android:title="기타" />
+</menu>

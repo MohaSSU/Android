@@ -5,6 +5,7 @@
     <color name="red">#FF2B00</color>
     <color name="gray">#797A7E</color>
     <color name="lightGray">#E5E5EA</color>
+    <color name="veryLightGray">#F7F8FF</color>
     <color name="colorPrimary">#4B7CFA</color>
     <color name="colorSecondary">#FF6500</color>
 </resources>
