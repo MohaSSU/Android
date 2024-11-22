@@ -10,4 +10,9 @@
         <item name="android:textColor">@color/white</item>
         <item name="cornerRadius">8dp</item>
     </style>
+    <style name="RedMaterialButtonStyle">
+        <item name="android:backgroundTint">@color/red</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
 </resources>

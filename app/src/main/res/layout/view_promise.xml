@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="@drawable/promise_card_background"
+    android:background="@drawable/background_promise_card"
     android:layout_margin="8dp"
     android:elevation="4dp">
 

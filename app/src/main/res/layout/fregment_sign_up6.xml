@@ -153,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:text="베어드홀"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -164,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:text="숭덕경상관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -175,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:text="문화관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -186,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:text="안익태 기념관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -197,7 +197,7 @@
                 android:layout_height="wrap_content"
                 android:text="형남공학관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -208,7 +208,7 @@
                 android:layout_height="wrap_content"
                 android:text="교육관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -219,7 +219,7 @@
                 android:layout_height="wrap_content"
                 android:text="백마관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -230,7 +230,7 @@
                 android:layout_height="wrap_content"
                 android:text="한경직기념관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -241,7 +241,7 @@
                 android:layout_height="wrap_content"
                 android:text="신양관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -252,7 +252,7 @@
                 android:layout_height="wrap_content"
                 android:text="벤처중소기업센터"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -263,7 +263,7 @@
                 android:layout_height="wrap_content"
                 android:text="진리관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -274,7 +274,7 @@
                 android:layout_height="wrap_content"
                 android:text="조만식기념관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -285,7 +285,7 @@
                 android:layout_height="wrap_content"
                 android:text="한국기독교박물관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -296,7 +296,7 @@
                 android:layout_height="wrap_content"
                 android:text="중앙도서관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -307,7 +307,7 @@
                 android:layout_height="wrap_content"
                 android:text="연구관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -318,7 +318,7 @@
                 android:layout_height="wrap_content"
                 android:text="창신관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -329,7 +329,7 @@
                 android:layout_height="wrap_content"
                 android:text="생활관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -340,7 +340,7 @@
                 android:layout_height="wrap_content"
                 android:text="학생생활관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -351,7 +351,7 @@
                 android:layout_height="wrap_content"
                 android:text="전산관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -362,7 +362,7 @@
                 android:layout_height="wrap_content"
                 android:text="미래관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -373,7 +373,7 @@
                 android:layout_height="wrap_content"
                 android:text="정보과학관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -384,7 +384,7 @@
                 android:layout_height="wrap_content"
                 android:text="웨스트민스터홀"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -395,7 +395,7 @@
                 android:layout_height="wrap_content"
                 android:text="학생회관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -406,7 +406,7 @@
                 android:layout_height="wrap_content"
                 android:text="창의관"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
@@ -417,7 +417,7 @@
                 android:layout_height="wrap_content"
                 android:text="대운동장"
                 android:padding="16dp"
-                android:background="@drawable/border_background"
+                android:background="@drawable/background_boarder"
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
