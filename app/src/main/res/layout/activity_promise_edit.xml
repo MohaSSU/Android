@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     >
-    <!-- 임시 지도 스크린 샷 -->
+    <! 임시 지도 스크린 샷 -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,7 +37,7 @@
                 android:layout_width="270dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="약속 만들기"
+                android:text="약속 수정하기"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -102,6 +102,7 @@
                     android:id="@+id/tv_promise_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="0dp"
                     android:text="밥약속"
                     android:background="@drawable/background_edit_text"
                     android:textColor="@android:color/black"
@@ -181,10 +182,17 @@
                 android:id="@+id/btn_modify_promise"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="약속 저장하기"
+                android:text="약속 수정하기"
                 android:textStyle="bold"
                 style="@style/BlueMaterialButtonStyle" />
 
+            <Button
+                android:id="@+id/btn_delete_promise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="약속 삭제하기"
+                android:textStyle="bold"
+                style="@style/RedMaterialButtonStyle"/>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
