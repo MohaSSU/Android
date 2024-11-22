@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/sample_map" />
+        android:src="@drawable/pic_sample_map" />
 
     <!-- 프로필 이미지 -->
     <ImageView
@@ -24,7 +24,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="-20dp"
-        android:src="@drawable/basic_profile"
+        android:src="@drawable/pic_basic_profile"
         android:padding="4dp" />
 
     <!-- 약속 제목 -->
