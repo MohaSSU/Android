@@ -70,7 +70,7 @@
             android:layout_height="300dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/profile_marker" />
+            android:src="@drawable/pic_profile_marker" />
 
         <!-- 기본 프로필 이미지 -->
         <ImageView
@@ -80,7 +80,7 @@
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:layout_marginBottom="47dp"
-            android:src="@drawable/basic_profile" />
+            android:src="@drawable/pic_basic_profile" />
 
         <!-- 프로필 추가 + 버튼 -->
         <ImageButton
@@ -89,7 +89,7 @@
             android:layout_height="70dp"
             android:layout_marginLeft="180dp"
             android:layout_marginTop="140dp"
-            android:background="@drawable/plus_profile_button"
+            android:background="@drawable/button_plus_profile"
             android:contentDescription="프로필 추가 버튼"
             />
     </FrameLayout>

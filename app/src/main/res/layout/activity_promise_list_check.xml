@@ -15,9 +15,10 @@ android:layout_height="match_parent">
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </FrameLayout>
 
-<!-- 바텀시트 -->
+<!-- 바텀시트(모양만) -->
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -27,37 +28,71 @@ android:layout_height="match_parent">
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginBottom="30dp"
         android:background="@android:color/white"
-        android:padding="16dp">
+        android:orientation="vertical"
+        android:padding="30dp">
 
-        <!-- 약속 제목 -->
-        <TextView
-            android:id="@+id/tv_promise_title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/bottom_sheet"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="원석핑님과의 약속"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="8dp" />
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            >
+        <!-- 약속 제목 -->
+
+            <TextView
+                android:id="@+id/tv_promise_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:layout_marginRight="190dp"
+                android:text="원석핑님과의 약속"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="?selectableItemBackground"
+                android:contentDescription="뒤로가기 버튼"
+                android:foregroundTint="@color/black"
+                android:src="@drawable/ic_clear" />
+        </LinearLayout>
 
         <!-- 약속 위치 및 설명 -->
         <TextView
             android:id="@+id/tv_promise_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="진리관에서 정보섬으로 출발~"
-            android:textSize="14sp"
+            android:layout_marginBottom="8dp"
+            android:text="약속 장소 및 설명"
             android:textColor="@android:color/darker_gray"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_promise_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="진리관으로 오세용~"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#BDBDBD"
             android:layout_marginBottom="16dp" />
 
         <!-- 약속 종류 및 시간 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
 
             <!-- 약속 종류 -->
             <LinearLayout
@@ -69,18 +104,18 @@ android:layout_height="match_parent">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="약속 종류"
-                    android:textSize="12sp"
                     android:textColor="@android:color/darker_gray"
-                    android:layout_marginBottom="4dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_promise_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="반약속"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/black" />
+                    android:text="밥약속"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <!-- 약속 시간 -->
@@ -93,56 +128,88 @@ android:layout_height="match_parent">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="약속 시간"
-                    android:textSize="12sp"
                     android:textColor="@android:color/darker_gray"
-                    android:layout_marginBottom="4dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_promise_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="24시간 / 09:00 ~ 10:00"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/black" />
+                    android:text="24.11.17 09:00 ~ 10:00"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#BDBDBD"
+            android:layout_marginBottom="16dp" />
 
         <!-- 참여한 사람들 -->
         <TextView
             android:id="@+id/tv_attendee_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="참여한 사람들"
-            android:textSize="12sp"
             android:textColor="@android:color/darker_gray"
-            android:layout_marginBottom="8dp" />
+            android:textSize="12sp" />
 
         <!-- 프로필 이미지 리스트 -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="62dp"
             android:orientation="horizontal">
 
             <!-- 프로필 이미지 1 -->
-            <ImageView
-                android:id="@+id/img_attendee1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/basic_profile"
-                android:scaleType="centerCrop"
-                android:layout_marginEnd="8dp" />
-
             <!-- 프로필 이미지 2 -->
-            <ImageView
-                android:id="@+id/img_attendee2"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/basic_profile"
-                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_attendee1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="8dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/pic_basic_profile" />
+
+                <TextView
+                    android:id="@+id/name_attendee1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="우진핑" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_attendee2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/pic_basic_profile" />
+
+                <TextView
+                    android:id="@+id/name_attendee2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="원석핑" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
+
 </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
