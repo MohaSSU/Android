@@ -114,7 +114,7 @@
 
     <!-- 다음 버튼 -->
     <Button
-        android:id="@+id/btnNext"
+        android:id="@+id/btn_signup3_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

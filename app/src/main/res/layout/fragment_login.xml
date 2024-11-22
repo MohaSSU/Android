@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="모하SSU 회원가입"
+            android:text="모하SSU 로그인"
             android:textSize="20sp"
             android:layout_marginStart="8dp"
             android:textColor="@color/black" />
@@ -53,6 +53,7 @@
         android:layout_marginBottom="8dp" />
 
     <EditText
+        android:id="@+id/editTextEmail"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -73,6 +74,7 @@
         android:layout_marginBottom="8dp" />
 
     <EditText
+        android:id="@+id/editTextPassword"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -83,6 +85,7 @@
 
     <!-- 로그인 버튼 -->
     <Button
+        android:id="@+id/buttonLogin"
         android:layout_marginTop="200dp"
         style="@style/BlueMaterialButtonStyle"
         android:layout_width="300dp"
