@@ -1,6 +1,111 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?selectableItemBackground"
+        android:foregroundTint="@color/black"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="10dp"
+        />
+
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="친구 목록"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        />
+
+    <ImageButton
+        android:id="@+id/add_friend_button"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/addfriendbutton"
+        android:scaleType="centerInside"
+        android:background="?selectableItemBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        android:layout_marginEnd="15dp" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#BDBDBD"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginHorizontal="20dp"/>
+
+    <ImageButton
+        android:id="@+id/search_friend_ic"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:src="@drawable/searchfriend"
+        android:scaleType="centerInside"
+        android:background="?selectableItemBackground"
+        app:layout_constraintStart_toStartOf="@id/search_line"
+        app:layout_constraintBottom_toTopOf="@id/search_line"
+        android:layout_marginBottom="5dp"/>
+
+    <View
+        android:id="@+id/search_line"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#BDBDBD"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        android:layout_marginTop="50dp"
+        android:layout_marginHorizontal="40dp"/>
+
+    <Button
+        android:id="@+id/search_friend_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="검색"
+        app:layout_constraintEnd_toEndOf="@id/search_line"
+        app:layout_constraintBottom_toTopOf="@id/search_line"
+        style="@style/BlueMaterialButtonStyle" />
+
+    <Spinner
+        android:id="@+id/sort_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/sort_options"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_friend_ic"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="30dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="편집"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/sort_spinner"
+        app:layout_constraintBottom_toBottomOf="@id/sort_spinner"
+        style="@style/BlueMaterialButtonStyle" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
