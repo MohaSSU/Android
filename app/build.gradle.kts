@@ -65,6 +65,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
 
-    // Naver Map
-    implementation("com.naver.maps:map-sdk:3.16.0")
+    // Naver Map SDK
+    implementation("com.naver.maps:map-sdk:3.19.1")
+
+    // Naver Map 위치추적
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }
