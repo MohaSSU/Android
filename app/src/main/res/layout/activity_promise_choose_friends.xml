@@ -174,5 +174,17 @@
             android:id="@+id/friendItem4" />
     </LinearLayout>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:text="추가하기"
+        android:textStyle="bold"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/BlueMaterialButtonStyle" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
