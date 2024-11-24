@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/graphLoginAndSignup"
+    app:startDestination="@id/StartFragment">
+
+    <!--초기 화면-->
+    <fragment
+        android:id="@+id/StartFragment"
+        android:name="com.example.mohassu.LoginAndSignUpFragment.StartFragment"
+        android:label="StartFragment"
+        tools:layout="@layout/fragment_start">
+        <action
+            android:id="@+id/btn_start_login"
+            app:destination="@+id/LoginFragment"/>
+        <action
+            android:id="@+id/btn_start_signup"
+            app:destination="@+id/Signup1Fragment"/>
+    </fragment>
+
+    <!--로그인 화면-->
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="com.example.mohassu.LoginAndSignUpFragment.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_start_login">
+                <action
+                    android:id="@+id/btn_login"
+                    />
+    </fragment>
+
+    <!--회원가입1-->
+    <fragment
+        android:id="@+id/Signup1Fragment"
+        android:name="com.example.mohassu.LoginAndSignUpFragment.Signup1Fragment"
+        android:label="Signup1Fragment"
+        tools:layout="@layout/fragment_sign_up1">
+        <action
+            android:id="@+id/btn_signup1_next"
+            app:destination="@+id/Signup2Fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/Signup2Fragment"
+        android:name="com.example.mohassu.LoginAndSignUpFragment.Signup2Fragment"
+        android:label="Signup2Fragment"
+        tools:layout="@layout/fragment_sign_up2">
+        <action
+            android:id="@+id/btn_signup2_next"
+            app:destination="@+id/Signup3Fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/Signup3Fragment"
+        android:name="com.example.mohassu.LoginAndSignUpFragment.Signup3Fragment"
+        android:label="Signup3Fragment"
+        tools:layout="@layout/fragment_sign_up3">
+        <action
+            android:id="@+id/btn_singup3_next"
+            app:destination="@+id/Signup4Fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/Signup4Fragment"
+        android:name="com.example.mohassu.LoginAndSignUpFragment.Signup4Fragment"
+        android:label="Signup3Fragment"
+        tools:layout="@layout/fragment_sign_up4">
+        <action
+            android:id="@+id/btn_singup4_next"
+            app:destination="@+id/Signup5Fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/Signup5Fragment"
+        android:name="com.example.mohassu.LoginAndSignUpFragment.Signup3Fragment"
+        android:label="Signup3Fragment"
+        tools:layout="@layout/fragment_sign_up5">
+        <action
+            android:id="@+id/btn_singup5_next"
+            app:destination="@+id/SignUpDoneFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/SignUpDoneFragment"
+        android:name="com.example.mohassu.LoginAndSignUpFragment.Signup3Fragment"
+        android:label="Signup3Fragment"
+        tools:layout="@layout/fragment_sign_up_done">
+        <action
+            android:id="@+id/btn_go_to_login"
+            app:destination="@+id/LoginFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+</navigation>
