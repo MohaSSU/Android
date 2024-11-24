@@ -49,12 +49,15 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-//firebase
+//  firebase
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
 
-//    Authentication
+//  Authentication
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-auth:22.0.0")
+
+//  TimeTableView
+    implementation ("com.github.tlaabs:TimetableView:1.0.3-fx1")
 }
