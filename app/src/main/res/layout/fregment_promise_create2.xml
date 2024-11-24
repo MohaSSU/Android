@@ -163,10 +163,10 @@
             android:layout_marginTop="8dp">
 
             <!-- 프로필 1 -->
-            <include layout="@layout/view_profile_in_promise"/>
+            <include layout="@layout/view_promise_profile"/>
 
             <!-- 추가 버튼 -->
-            <include layout="@layout/view_add_profile_in_promise"/>
+            <include layout="@layout/view_promise_add_profile"/>
 
         </LinearLayout>
 
