@@ -77,4 +77,9 @@ dependencies {
 
     // Naver Map
     implementation("com.naver.maps:map-sdk:3.16.0")
+
+
+    // Add the dependency for the Realtime Database library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-database")
 }
