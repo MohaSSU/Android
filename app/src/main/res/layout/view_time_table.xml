@@ -8,13 +8,11 @@
     <com.github.tlaabs.timetableview.TimetableView
         android:id="@+id/timetable"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         app:column_count="6"
         app:row_count="12"
         app:cell_height="50dp"
         app:side_cell_width="30dp"
         app:header_title="@array/header_title"
         app:start_time="9" />
-
 </LinearLayout>
