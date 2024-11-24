@@ -13,7 +13,7 @@
         android:id="@+id/ivLogo"
         android:layout_width="140dp"
         android:layout_height="140dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/img_logo"
         android:contentDescription="회원가입 성공 로고"
         android:layout_marginBottom="24dp" />
 
