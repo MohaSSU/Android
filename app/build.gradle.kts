@@ -1,13 +1,14 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
-    //firebase
-//    id("com.android.application")
-    id("com.google.gms.google-services")
+    id("com.google.gms.google-services") // Firebase 설정
 }
 
 android {
     namespace = "com.example.mohassu"
     compileSdk = 34
+
     buildFeatures {
         dataBinding = true
     }
@@ -20,6 +21,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // 네이버 지도 CLIENT_ID를 로드 (manifestPlaceholders에 전달)
+        val localProperties = File(rootDir, "local.properties")
+        val clientId = if (localProperties.exists()) {
+            val properties = Properties().apply {
+                load(localProperties.inputStream())
+            }
+            properties.getProperty("NAVER_MAPS_CLIENT_ID", "")
+        } else ""
+        manifestPlaceholders["NAVER_CLIENT_ID"] = clientId
     }
 
     buildTypes {
@@ -31,6 +42,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -49,15 +61,18 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-//  firebase
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
 
-//  Authentication
+    //  Authentication
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-auth:22.0.0")
 
-//  TimeTableView
+    //  TimeTableView
     implementation ("com.github.tlaabs:TimetableView:1.0.3-fx1")
+
+    // Naver Map
+    implementation("com.naver.maps:map-sdk:3.16.0")
 }
