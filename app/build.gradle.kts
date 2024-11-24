@@ -60,10 +60,16 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    // Firebase
+//  firebase
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
+
+//  Authentication
+    implementation("com.google.firebase:firebase-auth:22.0.0")
+
+//  TimeTableView
+    implementation ("com.github.tlaabs:TimetableView:1.0.3-fx1")
 
     // Naver Map
     implementation("com.naver.maps:map-sdk:3.16.0")
