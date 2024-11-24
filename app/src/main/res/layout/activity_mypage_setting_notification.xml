@@ -96,7 +96,7 @@
                         android:textColor="@color/gray" />
                 </LinearLayout>
 
-                <SwitchCompat
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchBasicNotification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
                         android:textColor="@color/gray" />
                 </LinearLayout>
 
-                <SwitchCompat
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchMeetingNotification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -192,7 +192,7 @@
                         android:textColor="@color/gray" />
                 </LinearLayout>
 
-                <SwitchCompat
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchFriendRequestNotification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -240,7 +240,7 @@
                         android:textColor="@color/gray" />
                 </LinearLayout>
 
-                <SwitchCompat
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchClassNotification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
