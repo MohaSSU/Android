@@ -65,8 +65,8 @@
 
     <fragment
         android:id="@+id/Signup4Fragment"
-        android:name="com.example.mohassu.fragment.Signup3Fragment"
-        android:label="Signup3Fragment"
+        android:name="com.example.mohassu.fragment.Signup4Fragment"
+        android:label="Signup4Fragment"
         tools:layout="@layout/fragment_sign_up4">
         <action
             android:id="@+id/btn_singup4_next"

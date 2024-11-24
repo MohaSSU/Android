@@ -58,7 +58,8 @@ public class LoginFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null && user.isEmailVerified()) {
+                        if (user != null && user.isEmailVerified()){
+//
                             Toast.makeText(getActivity(), "로그인 성공!", Toast.LENGTH_SHORT).show();
                             // 메인 액티비티로 이동
                             Intent intent = new Intent(getActivity(), MainActivity.class);
