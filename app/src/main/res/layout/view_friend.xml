@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:paddingHorizontal="16dp"
     android:paddingVertical="30dp"
-    android:background="#FFF0F5">
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/background_view_friend"
+    >
 
     <!-- 프로필 이미지 -->
     <ImageView
