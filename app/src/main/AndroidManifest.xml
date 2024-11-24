@@ -13,11 +13,8 @@
         android:theme="@style/Theme.MohaSSU"
         tools:targetApi="31">
         <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Login"
-            android:exported="false" />
+            android:name=".TimeTableActivity"
+            android:exported="true" />
         <activity
             android:name=".Activity"
             android:exported="true">
