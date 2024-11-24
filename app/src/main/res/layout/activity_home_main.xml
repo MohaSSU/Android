@@ -93,27 +93,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageView
-        android:id="@+id/currentLocation"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/img_my_icon"
-        android:elevation="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageView
-        android:id="@+id/friendLocation"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_friends_marker"
-        android:elevation="8dp"
-        android:layout_marginTop="200dp"
-        app:layout_constraintTop_toTopOf="@+id/currentLocation"
-        app:layout_constraintStart_toStartOf="@+id/currentLocation" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,20 +1,26 @@
 package com.example.mohassu;
 
 import android.content.pm.PackageManager;
+import android.Manifest;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
-import android.Manifest;
+import android.widget.ImageButton;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
-import com.naver.maps.map.CameraUpdateParams;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.LocationOverlay;
+import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 
 public class MapViewActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -44,34 +50,85 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         // Set Location Source
         naverMap.setLocationSource(locationSource);
 
-        // Handle location manually in emulator
+        // Remove zoom control buttons
+        naverMap.getUiSettings().setZoomControlEnabled(false);
+
+        // Create the listener as a variable
+        NaverMap.OnLocationChangeListener locationChangeListener = new NaverMap.OnLocationChangeListener() {
+            @Override
+            public void onLocationChange(@NonNull Location location) {
+                LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                // Move camera to current location with a higher zoom level
+                CameraUpdate cameraUpdate = CameraUpdate.scrollAndZoomTo(currentLocation, 17.0); // Zoom level 17
+                naverMap.moveCamera(cameraUpdate);
+
+                // Remove listener after initial camera setup
+                naverMap.removeOnLocationChangeListener(this);
+            }
+        };
+
+
+        // Check and request location permissions
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+
+            // Add the listener
+            naverMap.addOnLocationChangeListener(locationChangeListener);
+
         } else {
-            // Fallback to manual location if permission is not granted
-            LatLng fallbackLocation = new LatLng(37.5666102, 126.9783881); // Seoul City Hall
-            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(fallbackLocation);
-            naverMap.moveCamera(cameraUpdate);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
+
+        // Customize LocationOverlay
+        LocationOverlay locationOverlay = naverMap.getLocationOverlay();
+        locationOverlay.setVisible(true); // Make LocationOverlay visible
+
+        // Load the custom marker image
+        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_marker_red);
+
+        // Scale the bitmap to reduce the size
+        int newWidth = 120; // 원하는 너비 (픽셀)
+        int newHeight = 140; // 원하는 높이 (픽셀)
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true);
+
+        // Set the scaled icon to the LocationOverlay
+        locationOverlay.setIcon(OverlayImage.fromBitmap(scaledBitmap));
+
+
+        // Fix the direction to avoid rotation
+        locationOverlay.setBearing(0); // Prevent rotation based on device orientation
+
+        // Listen for location changes
+        naverMap.addOnLocationChangeListener(location -> {
+            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            locationOverlay.setPosition(currentLocation); // Update the position to the current location
+            locationOverlay.setBearing(0); // Reapply the fixed bearing
+        });
+
+
+        // Custom button to center on current location
+        ImageButton myLocationButton = findViewById(R.id.btnNowLocation);
+        myLocationButton.setOnClickListener(v -> {
+            LatLng currentPosition = locationOverlay.getPosition();
+            if (currentPosition != null) {
+                // Move camera to the current position
+                naverMap.moveCamera(CameraUpdate.scrollTo(currentPosition));
+            } else {
+                Toast.makeText(this, "현재 위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            // Check if permission was granted
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
-                }
-                else {
-                    // If location permission is not granted, fallback to a manual location
-                    LatLng fallbackLocation = new LatLng(37.5666102, 126.9783881); // Seoul City Hall
-                    CameraUpdate cameraUpdate = CameraUpdate.scrollTo(fallbackLocation);
-                    naverMap.moveCamera(cameraUpdate);
-                }
-                return;
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+            } else {
+                Toast.makeText(this, "위치 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show();
             }
         }
     }
