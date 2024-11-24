@@ -1,57 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/white"
-    android:padding="16dp">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <ImageButton
-            android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_back"
-            android:contentDescription="뒤로가기 버튼"
-            android:background="?selectableItemBackground"
-            android:foregroundTint="@color/black" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="모하SSU 회원가입"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_marginStart="8dp"
-            android:textColor="@color/black" />
-    </FrameLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#BDBDBD"
-        android:layout_marginBottom="60dp" />
-
-    <!-- 화면 부제목 -->
-    <TextView
-        android:id="@+id/subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="수업 추가"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:layout_marginBottom="90dp"
-        android:textColor="@android:color/black" />
-
+    android:padding="16dp"
+    android:background="@drawable/background_dialog">
     <!-- 수업명 입력 -->
     <TextView
         android:id="@+id/label_class_name"
@@ -63,32 +16,33 @@
         android:layout_marginBottom="4dp" />
 
     <EditText
-        android:id="@+id/input_class_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="ex) 사용자 인터페이스"
-        android:background="@android:color/transparent"
-        android:inputType="text"
-        android:layout_marginBottom="16dp"
-        android:textColor="@android:color/black"
-        android:padding="8dp"
-        android:backgroundTint="@color/black" />
+    android:id="@+id/input_class_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="ex) 사용자 인터페이스"
+    android:background="@android:color/transparent"
+    android:inputType="text"
+    android:layout_marginBottom="16dp"
+    android:textColor="@android:color/black"
+    android:padding="8dp"
+    android:backgroundTint="@color/black" />
 
-    <!-- 수업 시간 입력 -->
+        <!-- 수업 시간 입력 -->
     <TextView
-        android:id="@+id/label_class_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="수업 시간"
-        android:textSize="14sp"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="4dp" />
+    android:id="@+id/label_class_time"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="수업 시간"
+    android:textSize="14sp"
+    android:textColor="@android:color/black"
+    android:layout_marginBottom="4dp" />
 
+    <!-- 강의 장소 입력 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
 
         <Spinner
             android:id="@+id/spinner_day"
@@ -98,50 +52,45 @@
             android:entries="@array/days_of_week"
             android:spinnerMode="dropdown" />
 
-        <EditText
-            android:id="@+id/input_start_time"
+        <Spinner
+            android:id="@+id/start_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="09:00"
-            android:inputType="time"
-            android:gravity="center"
-            android:backgroundTint="@color/black" />
+            android:entries="@array/time_input"
+            android:spinnerMode="dropdown" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="~"
+            android:layout_marginHorizontal="8dp"
             android:gravity="center"
-            android:layout_marginHorizontal="8dp" />
+            android:text="~" />
 
-        <EditText
-            android:id="@+id/input_end_time"
+        <Spinner
+            android:id="@+id/end_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="10:00"
-            android:inputType="time"
-            android:gravity="center"
-            android:backgroundTint="@color/black" />
+            android:entries="@array/time_input"
+            android:spinnerMode="dropdown" />
+
     </LinearLayout>
 
-    <!-- 강의 장소 입력 -->
     <TextView
-        android:id="@+id/label_class_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="강의 장소"
-        android:textSize="14sp"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="4dp" />
+    android:id="@+id/label_class_location"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="강의 장소"
+    android:textSize="14sp"
+    android:textColor="@android:color/black"
+    android:layout_marginBottom="4dp" />
 
     <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_marginBottom="16dp">
-
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:layout_marginBottom="16dp">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -421,19 +370,6 @@
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp" />
-
         </LinearLayout>
     </HorizontalScrollView>
-
-    <!-- 추가 버튼 -->
-    <Button
-        android:id="@+id/add_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="추가하기"
-        style="@style/BlueMaterialButtonStyle"
-        android:layout_marginTop="120dp"
-        android:layout_marginBottom="16dp" />
-
 </LinearLayout>

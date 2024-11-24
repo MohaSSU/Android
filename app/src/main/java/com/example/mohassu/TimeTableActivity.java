@@ -2,7 +2,7 @@ package com.example.mohassu;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.mohassu.databinding.CheckTimeTableBinding;
+import com.example.mohassu.databinding.ActivityCheckTimeTableBinding;
 import com.github.tlaabs.timetableview.Schedule;
 import com.github.tlaabs.timetableview.Time;
 import com.github.tlaabs.timetableview.TimetableView;
@@ -10,14 +10,14 @@ import com.github.tlaabs.timetableview.TimetableView;
 import java.util.ArrayList;
 
 public class TimeTableActivity extends AppCompatActivity {
-    private CheckTimeTableBinding binding;
+    private ActivityCheckTimeTableBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Initialize View Binding
-        binding = CheckTimeTableBinding.inflate(getLayoutInflater());
+        binding = ActivityCheckTimeTableBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Access the TimetableView from the binding

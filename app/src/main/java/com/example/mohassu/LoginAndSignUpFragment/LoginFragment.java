@@ -1,4 +1,4 @@
-package com.example.mohassu.fragment;
+package com.example.mohassu.LoginAndSignUpFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.mohassu.MainActivity;
+import com.example.mohassu.StartLoginAndSignupActivity;
 import com.example.mohassu.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +27,7 @@ public class LoginFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_start_login, container, false);
 
         // FirebaseAuth 인스턴스 초기화
         mAuth = FirebaseAuth.getInstance();
@@ -61,7 +60,7 @@ public class LoginFragment extends Fragment {
                         if (user != null && user.isEmailVerified()) {
                             Toast.makeText(getActivity(), "로그인 성공!", Toast.LENGTH_SHORT).show();
                             // 메인 액티비티로 이동
-                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            Intent intent = new Intent(getActivity(), StartLoginAndSignupActivity.class);
                             startActivity(intent);
                             requireActivity().finish();
                         } else {

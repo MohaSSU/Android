@@ -1,4 +1,4 @@
-package com.example.mohassu.fragment;
+package com.example.mohassu.LoginAndSignUpFragment;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +35,7 @@ public class Signup1Fragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fregment_sign_up1, container, false);
+        return inflater.inflate(R.layout.fragment_sign_up1, container, false);
     }
 
     @Override
@@ -46,6 +47,11 @@ public class Signup1Fragment extends Fragment {
 
         // FirebaseAuth 초기화
         mAuth = FirebaseAuth.getInstance();
+
+        // 뒤로가기 버튼에 클릭 리스너 추가
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> {
+            navController.navigateUp();
+        });
 
         // UI 요소 초기화
         etPhoneNumber = view.findViewById(R.id.etPhoneNumber);

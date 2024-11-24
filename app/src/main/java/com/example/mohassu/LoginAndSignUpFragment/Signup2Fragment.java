@@ -1,4 +1,4 @@
-package com.example.mohassu.fragment;
+package com.example.mohassu.LoginAndSignUpFragment;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -34,7 +34,7 @@ public class Signup2Fragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fregment_sign_up2, container, false);
+        return inflater.inflate(R.layout.fragment_sign_up2, container, false);
     }
 
     @Override

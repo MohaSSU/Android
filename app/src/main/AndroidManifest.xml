@@ -11,19 +11,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MohaSSU"
-        tools:targetApi="31">
+        tools:targetApi="35">
         <activity
-            android:name=".TimeTableActivity"
-            android:exported="true" />
-        <activity
-            android:name=".Activity"
-            android:exported="true">
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".StartLoginAndSignupActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".TimeTableActivity"
+            android:exported="true" />
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="${NAVER_CLIENT_ID}" />

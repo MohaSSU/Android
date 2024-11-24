@@ -1,4 +1,4 @@
-package com.example.mohassu.fragment;
+package com.example.mohassu.LoginAndSignUpFragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,10 +12,10 @@ import androidx.navigation.Navigation;
 
 import com.example.mohassu.R;
 
-public class Signup4Fragment extends Fragment {
+public class Signup5Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fregment_sign_up4, container, false);
+        return inflater.inflate(R.layout.fragment_sign_up5, container, false);
     }
 
     @Override
@@ -26,10 +26,10 @@ public class Signup4Fragment extends Fragment {
         NavController navController = Navigation.findNavController(view);
 
         // EditText를 클릭 시 검색 Fragment로 이동
-        Button signupNextButton = view.findViewById(R.id.btn_signup4_next);
+        Button signupNextButton = view.findViewById(R.id.btn_signup5_next);
         signupNextButton.setFocusable(false);
         signupNextButton.setOnClickListener(v -> {
-            navController.navigate(R.id.btn_signup4_next);
+            navController.navigate(R.id.btn_signup5_next);
         });
     }
 }
