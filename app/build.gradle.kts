@@ -72,17 +72,22 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
 
+
+    // Naver Map SDK
+    implementation("com.naver.maps:map-sdk:3.19.1")
+
+    // Naver Map 위치추적
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
     //  Authentication
     implementation("com.google.firebase:firebase-auth:22.0.0")
 
     //  TimeTableView
     implementation ("com.github.tlaabs:TimetableView:1.0.3-fx1")
 
-    // Naver Map
-    implementation("com.naver.maps:map-sdk:3.16.0")
-
 
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-database")
+
 }

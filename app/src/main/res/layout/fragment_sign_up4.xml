@@ -89,7 +89,7 @@
             android:layout_height="70dp"
             android:layout_marginLeft="180dp"
             android:layout_marginTop="140dp"
-            android:background="@drawable/button_plus_profile"
+            android:background="@drawable/ic_profile_pic_edit"
             android:contentDescription="프로필 추가 버튼"
             />
     </FrameLayout>
