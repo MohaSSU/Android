@@ -72,6 +72,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
 
+
     // Naver Map SDK
     implementation("com.naver.maps:map-sdk:3.19.1")
 
@@ -83,7 +84,6 @@ dependencies {
 
     //  TimeTableView
     implementation ("com.github.tlaabs:TimetableView:1.0.3-fx1")
-
 
 
     // Add the dependency for the Realtime Database library
