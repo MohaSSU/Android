@@ -11,6 +11,24 @@
         android:layout_height="match_parent"
         android:name="com.naver.maps.map.MapFragment" />
 
+
+    <TextView
+        android:id="@+id/tvBuildingName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="건물 이름"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:padding="16dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        android:background="@android:color/white"
+        android:elevation="4dp" />
+
+
     <ImageButton
         android:id="@+id/btnNotification"
         android:layout_width="56dp"

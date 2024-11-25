@@ -1,18 +1,24 @@
 package com.example.mohassu;
 
+import com.example.mohassu.Constants;
+
 import android.content.pm.PackageManager;
 import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.LocationServices;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
@@ -29,6 +35,8 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
     private FusedLocationSource locationSource;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
 
+    private GeofencingClient geofencingClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +49,8 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
 
         // Initialize LocationSource
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
+
+        geofencingClient = LocationServices.getGeofencingClient(this);
     }
 
     @Override
@@ -104,8 +114,25 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
             LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
             locationOverlay.setPosition(currentLocation); // Update the position to the current location
             locationOverlay.setBearing(0); // Reapply the fixed bearing
-        });
 
+
+            //Geofencing
+            // Check if user is within the geofence
+            for (PlaceInfo place : Constants.PLACES) {
+                float[] results = new float[1];
+                android.location.Location.distanceBetween(
+                        location.getLatitude(), location.getLongitude(),
+                        place.getLocation().latitude, place.getLocation().longitude,
+                        results
+                );
+
+                if (results[0] <= place.getRadius()) {
+                    showBuildingName(place.getName());
+                    return; // 반경 내 첫 번째 장소를 찾으면 종료
+                }
+            }
+            hideBuildingName(); // 반경 내 장소가 없을 경우
+        });
 
         // Custom button to center on current location
         ImageButton myLocationButton = findViewById(R.id.btnNowLocation);
@@ -132,6 +159,18 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
             }
         }
     }
+
+    private void showBuildingName(String buildingName) {
+        TextView tvBuildingName = findViewById(R.id.tvBuildingName);
+        tvBuildingName.setText(buildingName + "에 있어요.");
+        tvBuildingName.setVisibility(View.VISIBLE);
+    }
+
+    private void hideBuildingName() {
+        TextView tvBuildingName = findViewById(R.id.tvBuildingName);
+        tvBuildingName.setVisibility(View.GONE);
+    }
+
 
     @Override
     protected void onStart() {
