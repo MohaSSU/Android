@@ -114,20 +114,28 @@ public class Signup2Fragment extends Fragment {
         tvPasswordError.setVisibility(View.GONE);
 
         // Firebase Authentication 회원가입
-        auth.createUserWithEmailAndPassword(userId + "@example.com", password)
+        auth.createUserWithEmailAndPassword(userId + "@gmail.com", password)
                 .addOnCompleteListener(requireActivity(), task -> {
                     if (task.isSuccessful()) {
-                        // Firebase Realtime Database에 사용자 데이터 저장
-                        databaseReference.child(userId).setValue(userId)
-                                .addOnCompleteListener(dbTask -> {
-                                    if (dbTask.isSuccessful()) {
-                                        Toast.makeText(requireContext(), "회원가입 성공!", Toast.LENGTH_SHORT).show();
+                        // 이메일 인증 메일 전송
+                        auth.getCurrentUser().sendEmailVerification()
+                                .addOnCompleteListener(emailTask -> {
+                                    if (emailTask.isSuccessful()) {
+                                        Toast.makeText(requireContext(), "회원가입 성공! 이메일 인증을 완료해주세요.", Toast.LENGTH_SHORT).show();
 
-                                        // 다음 Fragment로 이동
-                                        NavController navController = Navigation.findNavController(requireView());
-                                        navController.navigate(R.id.btn_signup2_next); // 적절한 Action ID로 변경
+                                        // Firebase Realtime Database에 사용자 데이터 저장
+                                        databaseReference.child(userId).setValue(userId)
+                                                .addOnCompleteListener(dbTask -> {
+                                                    if (dbTask.isSuccessful()) {
+                                                        // 이메일 인증 안내 화면 또는 다음 Fragment로 이동
+                                                        NavController navController = Navigation.findNavController(requireView());
+                                                        navController.navigate(R.id.Signup3Fragment); // 적절한 Action ID로 변경
+                                                    } else {
+                                                        Toast.makeText(requireContext(), "데이터 저장 실패: " + dbTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                     } else {
-                                        Toast.makeText(requireContext(), "데이터 저장 실패: " + dbTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(requireContext(), "인증 이메일 전송 실패: " + emailTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     } else {
