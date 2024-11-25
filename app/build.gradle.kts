@@ -47,6 +47,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    viewBinding {
+        enable = true
+    }
 }
 
 dependencies {
@@ -60,6 +64,9 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    // splash 화면 추가
+    implementation ("androidx.core:core-splashscreen:1.0.1")
+
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
@@ -70,4 +77,17 @@ dependencies {
 
     // Naver Map 위치추적
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    //  Authentication
+    implementation("com.google.firebase:firebase-auth:22.0.0")
+
+    //  TimeTableView
+    implementation ("com.github.tlaabs:TimetableView:1.0.3-fx1")
+
+
+
+    // Add the dependency for the Realtime Database library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-database")
+
 }
