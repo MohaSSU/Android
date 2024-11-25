@@ -16,7 +16,7 @@
             app:destination="@+id/LoginFragment"/>
         <action
             android:id="@+id/btn_start_signup"
-            app:destination="@+id/Signup1Fragment"/>
+            app:destination="@+id/Signup2Fragment"/>
     </fragment>
 
     <!--로그인 화면-->
@@ -31,15 +31,15 @@
     </fragment>
 
     <!--회원가입1-->
-    <fragment
-        android:id="@+id/Signup1Fragment"
-        android:name="com.example.mohassu.LoginAndSignUpFragment.Signup1Fragment"
-        android:label="Signup1Fragment"
-        tools:layout="@layout/fragment_sign_up1">
-        <action
-            android:id="@+id/btn_signup1_next"
-            app:destination="@+id/Signup2Fragment"/>
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/Signup1Fragment"-->
+<!--        android:name="com.example.mohassu.LoginAndSignUpFragment.Signup1Fragment"-->
+<!--        android:label="Signup1Fragment"-->
+<!--        tools:layout="@layout/fragment_sign_up1">-->
+<!--        <action-->
+<!--            android:id="@+id/btn_signup1_next"-->
+<!--            app:destination="@+id/Signup2Fragment"/>-->
+<!--    </fragment>-->
 
     <fragment
         android:id="@+id/Signup2Fragment"
