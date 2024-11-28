@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class Signup3Fragment extends Fragment {
+public class Signup2DetailFragment extends Fragment {
 
     private EditText etNickname, etName;
     private DatePicker dpBirthdate;
@@ -30,12 +30,20 @@ public class Signup3Fragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_sign_up3, container, false);
+        return inflater.inflate(R.layout.fragment_sign_up2, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // NavController 초기화
+        NavController navController = Navigation.findNavController(view);
+
+        // 뒤로가기 버튼에 클릭 리스너 추가
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> {
+            navController.navigateUp();
+        });
 
         // Firebase 초기화
         mAuth = FirebaseAuth.getInstance();
@@ -45,7 +53,7 @@ public class Signup3Fragment extends Fragment {
         etNickname = view.findViewById(R.id.etNickname);
         etName = view.findViewById(R.id.etName);
         dpBirthdate = view.findViewById(R.id.dpSpinner);
-        signupNextButton = view.findViewById(R.id.btn_signup3_next);
+        signupNextButton = view.findViewById(R.id.btnNext);
 
         signupNextButton.setOnClickListener(v -> saveUserProfile(view));
     }
@@ -75,7 +83,7 @@ public class Signup3Fragment extends Fragment {
 
                         // 다음 Fragment로 이동
                         NavController navController = Navigation.findNavController(requireView());
-                        navController.navigate(R.id.Signup4Fragment); // 적절한 Action ID로 변경
+                        navController.navigate(R.id.actionNextToSignup3); // 적절한 Action ID로 변경
                     } else {
                         Toast.makeText(requireContext(), "프로필 저장 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }

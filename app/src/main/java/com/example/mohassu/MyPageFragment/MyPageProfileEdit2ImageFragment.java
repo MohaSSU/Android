@@ -1,4 +1,4 @@
-package com.example.mohassu.LoginAndSignUpFragment;
+package com.example.mohassu.MyPageFragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,10 +12,10 @@ import androidx.navigation.Navigation;
 
 import com.example.mohassu.R;
 
-public class StartFragment extends Fragment {
+public class MyPageProfileEdit2ImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_start, container, false);
+        return inflater.inflate(R.layout.fragment_mypage_profile_edit2, container, false);
     }
 
     @Override
@@ -25,20 +25,16 @@ public class StartFragment extends Fragment {
         // NavController 초기화
         NavController navController = Navigation.findNavController(view);
 
-        //Button를 클릭 시 검색 Fragment로 이동
-        Button loginButton = view.findViewById(R.id.btnGoToLogin);
-        Button signupButton = view.findViewById(R.id.btnGoToSignup);
-
-        loginButton.setFocusable(false);
-        loginButton.setOnClickListener(v -> {
-            navController.navigate(R.id.actionGoToLogin);
+        // 뒤로가기 버튼에 클릭 리스너 추가
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> {
+            navController.navigateUp();
         });
 
-        signupButton.setFocusable(false);
-        signupButton.setOnClickListener(v -> {
-            navController.navigate(R.id.actionGoToSignup);
+        // 마이페이지 메인으로 이동
+        Button saveProfileButton = view.findViewById(R.id.btnSave);
+        saveProfileButton.setFocusable(false);
+        saveProfileButton.setOnClickListener(v -> {
+            navController.navigate(R.id.actionSaveProfile);
         });
     }
-
-
 }

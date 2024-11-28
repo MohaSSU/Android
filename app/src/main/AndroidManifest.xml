@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-    <!--위치 추적 기능 관련 -->
+    xmlns:tools="http://schemas.android.com/tools" >
+    <!-- 위치 추적 기능 관련 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,25 +14,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MohaSSU"
-        tools:targetApi="31">
+        tools:targetApi="31" >
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MapActivity"
+            android:exported="true" >
+        </activity>
+        <activity
+            android:name=".NavigationStartLoginAndSignupActivity"
+            android:exported="true" >
+        </activity>
+        <activity
+            android:name=".NavigationMainActivity"
+            android:exported="true" >
+        </activity>
         <activity
             android:name=".MapViewActivity"
-            android:exported="true"/>
+            android:exported="true" >
+        </activity>
         <activity
-            android:name=".SplashActivity" android:exported="true" android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:name=".TimeTableActivity"
+            android:exported="true" >
         </activity>
-        <activity android:name=".MapActivity" android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".StartLoginAndSignupActivity" android:exported="true"/>
-        <activity android:name=".TimeTableActivity" android:exported="true" />
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="fs9rplnpjv" />

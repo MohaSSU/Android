@@ -68,7 +68,7 @@
 
     <!-- 저장 버튼 -->
     <Button
-        android:id="@+id/btn_save"
+        android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="저장하기"

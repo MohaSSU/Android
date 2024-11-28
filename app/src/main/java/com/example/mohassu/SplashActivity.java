@@ -42,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void navigateToNextScreen() {
-        Intent intent = new Intent(SplashActivity.this, StartLoginAndSignupActivity.class);
+        Intent intent = new Intent(SplashActivity.this, NavigationStartLoginAndSignupActivity.class);
         startActivity(intent);
         finish();
     }

@@ -21,7 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class Signup2Fragment extends Fragment {
+public class Signup1IDAndPWFragment extends Fragment {
 
     private FirebaseAuth auth; // Firebase Auth 인스턴스
     private DatabaseReference databaseReference; // Firebase Database Reference
@@ -34,12 +34,20 @@ public class Signup2Fragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_sign_up2, container, false);
+        return inflater.inflate(R.layout.fragment_sign_up1, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // NavController 초기화
+        NavController navController = Navigation.findNavController(view);
+
+        // 뒤로가기 버튼에 클릭 리스너 추가
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> {
+            navController.navigateUp();
+        });
 
         // Firebase 초기화
         auth = FirebaseAuth.getInstance();
@@ -52,7 +60,7 @@ public class Signup2Fragment extends Fragment {
         tvIdError = view.findViewById(R.id.tvIdError);
         tvPasswordError = view.findViewById(R.id.tvPasswordError);
         btnCheckId = view.findViewById(R.id.btnCheckId);
-        btnSignupNext = view.findViewById(R.id.btn_signup2_next);
+        btnSignupNext = view.findViewById(R.id.btnNext);
 
         // 아이디 중복 검사
         btnCheckId.setOnClickListener(v -> checkIdDuplication());
@@ -129,7 +137,7 @@ public class Signup2Fragment extends Fragment {
                                                     if (dbTask.isSuccessful()) {
                                                         // 이메일 인증 안내 화면 또는 다음 Fragment로 이동
                                                         NavController navController = Navigation.findNavController(requireView());
-                                                        navController.navigate(R.id.Signup3Fragment); // 적절한 Action ID로 변경
+                                                        navController.navigate(R.id.actionNextToSignup2); // 적절한 Action ID로 변경
                                                     } else {
                                                         Toast.makeText(requireContext(), "데이터 저장 실패: " + dbTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                     }

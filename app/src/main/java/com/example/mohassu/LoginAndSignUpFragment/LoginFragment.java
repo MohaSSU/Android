@@ -2,7 +2,10 @@ package com.example.mohassu.LoginAndSignUpFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +16,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.mohassu.StartLoginAndSignupActivity;
+import com.example.mohassu.NavigationMainActivity;
 import com.example.mohassu.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,7 +38,7 @@ public class LoginFragment extends Fragment {
         // UI 요소 초기화
         editTextEmail = view.findViewById(R.id.editTextEmail);
         editTextPassword = view.findViewById(R.id.editTextPassword);
-        buttonLogin = view.findViewById(R.id.buttonLogin);
+        buttonLogin = view.findViewById(R.id.btnLogin);
 
         // 로그인 버튼 클릭 리스너
         buttonLogin.setOnClickListener(v -> {
@@ -60,10 +63,14 @@ public class LoginFragment extends Fragment {
                         if (user != null && user.isEmailVerified()){
 //
                             Toast.makeText(getActivity(), "로그인 성공!", Toast.LENGTH_SHORT).show();
+
                             // 메인 액티비티로 이동
-                            Intent intent = new Intent(getActivity(), StartLoginAndSignupActivity.class);
+                            Intent intent = new Intent(getActivity(), NavigationMainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
+                            Log.d("NavigationDebug", "NavigationMainActivity started");
                             requireActivity().finish();
+                            Log.d("NavigationDebug", "Current activity finished");
                         } else {
                             Toast.makeText(getActivity(), "이메일 인증을 완료해주세요.", Toast.LENGTH_SHORT).show();
                         }

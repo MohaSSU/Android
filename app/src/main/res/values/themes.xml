@@ -5,4 +5,10 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
     <style name="Theme.MohaSSU" parent="Base.Theme.MohaSSU" />
+    <style name="Theme.MohaSSU.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.MohaSSU.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.MohaSSU.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
