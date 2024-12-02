@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NavigationStartLoginAndSignupActivity">
+    tools:context=".NavigationMainActivity">
 
     <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
@@ -23,6 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_start_login_and_signup_graph"/>
+        app:navGraph="@navigation/nav_main_graph"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

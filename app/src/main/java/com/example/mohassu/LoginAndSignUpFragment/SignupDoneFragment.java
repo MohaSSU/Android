@@ -27,10 +27,10 @@ public class SignupDoneFragment extends Fragment {
         NavController navController = Navigation.findNavController(view);
 
         // EditText를 클릭 시 검색 Fragment로 이동
-        Button signupNextButton = view.findViewById(R.id.btn_go_to_login);
+        Button signupNextButton = view.findViewById(R.id.btnGoToLogin);
         signupNextButton.setFocusable(false);
         signupNextButton.setOnClickListener(v -> {
-            navController.navigate(R.id.btn_go_to_login);
+            navController.navigate(R.id.btnGoToLogin);
         });
     }
 }

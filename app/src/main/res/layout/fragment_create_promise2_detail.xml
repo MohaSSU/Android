@@ -36,7 +36,7 @@
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/btn_back"
+                android:id="@+id/btnBack"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
                 android:background="?selectableItemBackground"
@@ -159,7 +159,14 @@
             <include layout="@layout/view_promise_profile"/>
 
             <!-- 추가 버튼 -->
-            <include layout="@layout/view_promise_add_profile"/>
+            <include
+                android:id="@+id/btnAddFriends"
+                layout="@layout/view_promise_add_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground" />
 
         </LinearLayout>
 
@@ -171,7 +178,7 @@
             android:layout_marginTop="16dp">
 
             <Button
-                android:id="@+id/btn_modify_promise"
+                android:id="@+id/btnSave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="약속 저장하기"

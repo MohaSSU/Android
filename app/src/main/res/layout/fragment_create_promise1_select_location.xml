@@ -19,7 +19,7 @@
 
         <!-- 뒤로가기 아이콘 -->
         <ImageButton
-            android:id="@+id/backButton"
+            android:id="@+id/bntBack"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="start|bottom"
@@ -42,7 +42,7 @@
 
         <!-- 다음 아이콘 -->
         <ImageButton
-            android:id="@+id/nextButton"
+            android:id="@+id/bntNext"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="end|bottom"
