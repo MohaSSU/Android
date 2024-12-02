@@ -7,17 +7,17 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.mohassu.databinding.ActivityNavigationStartLoginAndSignupBinding;
-public class StartLoginAndSignupActivity extends AppCompatActivity {
+import com.example.mohassu.databinding.ActivityNavigationMainBinding;
 
+public class NavigationMainActivity extends AppCompatActivity {
+    private ActivityNavigationMainBinding binding;
     private NavController navController;
-    private ActivityNavigationStartLoginAndSignupBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityNavigationStartLoginAndSignupBinding.inflate(getLayoutInflater());
+        binding = ActivityNavigationMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Toolbar를 ActionBar로 설정

@@ -23,7 +23,7 @@ import com.example.mohassu.R;
 
 import java.io.IOException;
 
-public class Signup4Fragment extends Fragment {
+public class Signup3ProfileFragment extends Fragment {
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -34,7 +34,7 @@ public class Signup4Fragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_sign_up4, container, false);
+        return inflater.inflate(R.layout.fragment_sign_up3, container, false);
     }
 
     @Override
@@ -44,11 +44,16 @@ public class Signup4Fragment extends Fragment {
         // NavController 초기화
         NavController navController = Navigation.findNavController(view);
 
+        // 뒤로가기 버튼에 클릭 리스너 추가
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> {
+            navController.navigateUp();
+        });
+
         // UI 요소 초기화
         addProfileButton = view.findViewById(R.id.add_profile_button);
         profileImageView = view.findViewById(R.id.basic_profile);
-        signupNextButton = view.findViewById(R.id.btn_signup4_next);
-        skipButton = view.findViewById(R.id.skip_button);
+        signupNextButton = view.findViewById(R.id.btnNext);
+        skipButton = view.findViewById(R.id.btnSkip);
 
         // 프로필 추가 버튼 클릭 리스너
         addProfileButton.setOnClickListener(v -> openImagePicker());
@@ -62,13 +67,13 @@ public class Signup4Fragment extends Fragment {
                 Toast.makeText(requireContext(), "프로필을 선택하지 않았습니다.", Toast.LENGTH_SHORT).show();
             }
             // 다음 Fragment로 이동
-            navController.navigate(R.id.btn_signup4_next);
+            navController.navigate(R.id.actionNextToSignup4);
         });
 
         // 건너뛰기 버튼 클릭 리스너
         skipButton.setOnClickListener(v -> {
             Toast.makeText(requireContext(), "프로필 추가가 건너뛰어졌습니다.", Toast.LENGTH_SHORT).show();
-            navController.navigate(R.id.btn_signup4_next);
+            navController.navigate(R.id.actionSkipToSignup4);
         });
     }
 

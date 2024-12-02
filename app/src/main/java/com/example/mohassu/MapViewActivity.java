@@ -32,7 +32,7 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_main);
+        setContentView(R.layout.activity_map_view);
 
         // Initialize MapView
         mapView = findViewById(R.id.map);

@@ -41,123 +41,89 @@
         android:background="#BDBDBD"
         android:layout_marginBottom="40dp" />
 
-    <!-- 화면 간격 -->
+    <!-- 안내문구 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="아이디와 비밀번호를 입력해주세요!"
+        android:text="앱에서 쓰실 닉네임과\n이름과 생년월일을 입력해주세요"
         android:textStyle="bold"
         android:textSize="24sp"
         android:gravity="center"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="36dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
         android:textColor="@color/black" />
 
-    <!-- 아이디 입력 영역 -->
+    <!-- 닉네임 입력 -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="아이디"
+        android:text="닉네임"
         android:textSize="16sp"
         android:textColor="@color/black"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/etNickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="닉네임"
+        android:inputType="text"
+        android:padding="12dp"
+        android:textColor="@color/black" />
+
+    <!-- 이름 입력 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이름"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="이름"
+        android:inputType="text"
+        android:padding="12dp"
+        android:textColor="@color/black" />
+
+    <!-- 생년월일 입력 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="생년월일"
+        android:textSize="16sp"
+        android:textColor="@color/black"
         android:layout_marginTop="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:layout_marginTop="8dp">
 
-        <EditText
-            android:id="@+id/etId"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:hint="아이디를 입력해주세요"
-            android:inputType="text"
-            android:padding="12dp"
-            android:textColor="@color/black" />
-
-        <Button
-            android:id="@+id/btnCheckId"
+        <DatePicker
+            android:id="@+id/dpSpinner"
+            android:datePickerMode="spinner"
+            android:calendarViewShown="false"
+            android:color="@color/black"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="중복 검사"
-            android:layout_marginStart="8dp"
-            style="@style/BlueMaterialButtonStyle"
-            android:textColor="@android:color/white" />
+            android:layout_height="wrap_content"/>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvIdError"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="*아이디 중복검사를 먼저 해주세요"
-        android:textSize="14sp"
-        android:textColor="@color/red"
-        android:layout_marginTop="4dp"
-        android:visibility="gone" />
-
-    <!-- 비밀번호 입력 영역 -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="비밀번호"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="16dp" />
-
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="비밀번호를 입력해주세요"
-        android:inputType="textPassword"
-        android:padding="12dp"
-        android:textColor="@color/black" />
-
-    <!-- 비밀번호 재확인 입력 영역 -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="비밀번호 재확인"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="16dp" />
-
-    <EditText
-        android:id="@+id/etConfirmPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="비밀번호를 입력해주세요"
-        android:inputType="textPassword"
-        android:padding="12dp"
-        android:textColor="@color/black" />
-
-    <TextView
-        android:id="@+id/tvPasswordError"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="*비밀번호가 일치하지 않습니다"
-        android:textSize="14sp"
-        android:textColor="@color/red"
-        android:layout_marginTop="4dp"
-        android:visibility="gone" />
 
     <!-- 다음 버튼 -->
     <Button
-        android:id="@+id/btn_signup2_next"
+        android:id="@+id/btnNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="다음"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="24dp"
         style="@style/BlueMaterialButtonStyle"
-        android:textColor="@android:color/white" />
+        />
 
 </LinearLayout>

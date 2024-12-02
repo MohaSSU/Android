@@ -7,7 +7,6 @@
     android:background="@android:color/white"
     android:padding="16dp">
 
-    <!-- 상단 Back 버튼과 제목 -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,88 +40,92 @@
         android:background="#BDBDBD"
         android:layout_marginBottom="40dp" />
 
-    <!-- 안내문구 -->
+    <!-- 안내 메시지 -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="앱에서 쓰실 닉네임과\n이름과 생년월일을 입력해주세요"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="24dp"
-        android:textColor="@color/black" />
-
-    <!-- 닉네임 입력 -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="닉네임"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="8dp" />
-
-    <EditText
-        android:id="@+id/etNickname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="닉네임"
-        android:inputType="text"
-        android:padding="12dp"
-        android:textColor="@color/black" />
-
-    <!-- 이름 입력 -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="이름"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="16dp" />
-
-    <EditText
-        android:id="@+id/etName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="이름"
-        android:inputType="text"
-        android:padding="12dp"
-        android:textColor="@color/black" />
-
-    <!-- 생년월일 입력 -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="생년월일"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="16dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp">
-
-        <DatePicker
-            android:id="@+id/dpSpinner"
-            android:datePickerMode="spinner"
-            android:calendarViewShown="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-    <!-- 다음 버튼 -->
-    <Button
-        android:id="@+id/btn_signup3_next"
+        android:id="@+id/subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="다음"
-        android:textSize="16sp"
+        android:text="나를 보여줄 프로필 이미지를 추가해주세요!"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:layout_marginTop="24dp"
-        style="@style/BlueMaterialButtonStyle"
-        />
+        android:layout_below="@id/title"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="80dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/black" />
+
+    <!-- 프로필 이미지 영역 -->
+    <FrameLayout
+        android:id="@+id/profile_container"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true">
+
+        <!-- 기본 마커 이미지 -->
+        <ImageView
+            android:id="@+id/profile_marker"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/pic_profile_marker" />
+
+        <!-- 기본 프로필 이미지 -->
+        <ImageView
+            android:id="@+id/basic_profile"
+            android:layout_width="165dp"
+            android:layout_height="165dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="47dp"
+            android:src="@drawable/pic_basic_profile" />
+
+        <!-- 프로필 추가 + 버튼 -->
+        <ImageButton
+            android:id="@+id/add_profile_button"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="180dp"
+            android:layout_marginTop="140dp"
+            android:background="@drawable/ic_profile_pic_edit"
+            android:contentDescription="프로필 추가 버튼"
+            />
+    </FrameLayout>
+
+
+    <!-- 버튼 영역 -->
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="60dp"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        android:gravity="center">
+
+        <!-- 다음 버튼 -->
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="다음"
+            style="@style/BlueMaterialButtonStyle"
+            android:layout_marginEnd="10dp" />
+
+        <!-- 건너뛰기 버튼 -->
+        <Button
+            android:id="@+id/btnSkip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="건너뛰기"
+            android:backgroundTint="@android:color/darker_gray"
+            style="@style/GrayMaterialButtonStyle"
+            />
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/graph"
+    app:startDestination="@id/MainHomeFragment">
+
+    <!--메인 화면-->
+    <fragment
+        android:id="@+id/MainHomeFragment"
+        android:name="com.example.mohassu.MainFragment.MainHomeFragment"
+        android:label="MainHomeFragment"
+        tools:layout="@layout/fragment_main_home">
+        <action
+            android:id="@+id/actionNotification"
+            app:destination="@+id/MainNotificationFragment"/>
+        <action
+            android:id="@+id/actionPromiseList"
+            app:destination="@+id/MainPromiseListFragment"/>
+        <action
+            android:id="@+id/actionFriendList"
+            app:destination="@+id/MainFriendListFragment"/>
+        <action
+            android:id="@+id/actionAddPlan"
+            app:destination="@+id/CreatePromise1SelectLocationFragment"/>
+        <action
+            android:id="@+id/actionMyPage"
+            app:destination="@+id/MyPageHomeFragment"/>
+    </fragment>
+
+    <!--알림 페이지-->
+    <fragment
+        android:id="@+id/MainNotificationFragment"
+        android:name="com.example.mohassu.MainFragment.MainNotificationFragment"
+        android:label="MainNotificationFragment"
+        tools:layout="@layout/fragment_main_notification">
+    </fragment>
+
+    <!--약속 리스트 페이지-->
+    <fragment
+        android:id="@+id/MainPromiseListFragment"
+        android:name="com.example.mohassu.MainFragment.MainPromiseListFragment"
+        android:label="MainPromiseListFragment"
+        tools:layout="@layout/fragment_main_promise_list">
+    </fragment>
+
+    <!--친구 리스트 페이지-->
+    <fragment
+        android:id="@+id/MainFriendListFragment"
+        android:name="com.example.mohassu.MainFragment.MainFriendListFragment"
+        android:label="MainFriendListFragment"
+        tools:layout="@layout/fragment_main_friend_list">
+    </fragment>
+
+    <!--약속 생성 페이지-->
+    <fragment
+        android:id="@+id/CreatePromise1SelectLocationFragment"
+        android:name="com.example.mohassu.CreatePromiseFragment.CreatePromise1SelectLocationFragment"
+        android:label="CreatePromise1SelectLocationFragment"
+        tools:layout="@layout/fragment_create_promise1_select_location">
+        <action
+            android:id="@+id/actionNextToCreatePromise2"
+            app:destination="@+id/CreatePromise2DetailFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/CreatePromise2DetailFragment"
+        android:name="com.example.mohassu.CreatePromiseFragment.CreatePromise2DetailFragment"
+        android:label="CreatePromise2DetailFragment"
+        tools:layout="@layout/fragment_create_promise2_detail">
+        <action
+            android:id="@+id/actionSavePromise"
+            app:destination="@+id/MainHomeFragment"/>
+        <action
+            android:id="@+id/actionNextToCreatePromise3"
+            app:destination="@+id/CreatePromise3ChooseFriendsFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/CreatePromise3ChooseFriendsFragment"
+        android:name="com.example.mohassu.CreatePromiseFragment.CreatePromise3ChooseFriendsFragment"
+        android:label="CreatePromise3ChooseFriendsFragment"
+        tools:layout="@layout/fragment_create_promise3_choose_friends">
+        <action
+            android:id="@+id/actionSaveFriendsToPromise"
+            app:destination="@+id/CreatePromise2DetailFragment"/>
+    </fragment>
+
+    <!--마이 페이지-->
+    <fragment
+        android:id="@+id/MyPageHomeFragment"
+        android:name="com.example.mohassu.MyPageFragment.MyPageHomeFragment"
+        android:label="MyPageHomeFragment"
+        tools:layout="@layout/fragment_mypage_main">
+        <action
+            android:id="@+id/actionProfileEdit"
+            app:destination="@+id/MyPageProfileEdit1DetailFragment"/>
+        <action
+            android:id="@+id/actionSchedule"
+            app:destination="@+id/MyPageTimeTableFragment"/>
+        <action
+            android:id="@+id/actionSettingNotification"
+            app:destination="@+id/MyPageSettingNotificationFragment"/>
+    </fragment>
+
+    <!--마이페이지 : 내 시간표 확인 페이지-->
+    <fragment
+        android:id="@+id/MyPageTimeTableFragment"
+        android:name="com.example.mohassu.MyPageFragment.MyPageMyTimeTableFragment"
+        android:label="MyPageMyTimeTableFragment"
+        tools:layout="@layout/fragment_mypage_mytimetable">
+        <action
+            android:id="@+id/actionEditClass"
+            app:destination="@+id/MyPageTimeTableEditFragment"/>
+    </fragment>
+
+    <!--마이페이지 : 내 시간표 수정 페이지-->
+    <fragment
+        android:id="@+id/MyPageTimeTableEditFragment"
+        android:name="com.example.mohassu.MyPageFragment.MyPageMyTimeTableEditFragment"
+        android:label="MyPageMyTimeTableEditFragment"
+        tools:layout="@layout/fragment_mypage_mytimetable_edit">
+        <action
+            android:id="@+id/actionSaveMyClass"
+            app:destination="@+id/MyPageHomeFragment"/>
+    </fragment>
+
+    <!--마이페이지 : 내 프로필 수정 페이지 1-->
+    <fragment
+        android:id="@+id/MyPageProfileEdit1DetailFragment"
+        android:name="com.example.mohassu.MyPageFragment.MyPageProfileEdit1DetailFragment"
+        android:label="MyPageProfileEdit1DetailFragment"
+        tools:layout="@layout/fragment_mypage_profile_edit1">
+        <action
+            android:id="@+id/actionNextToEditProfile2"
+            app:destination="@+id/MyPageProfileEdit2ImageFragment"/>
+    </fragment>
+
+    <!--마이페이지 : 내 프로필 수정 페이지 2-->
+    <fragment
+        android:id="@+id/MyPageProfileEdit2ImageFragment"
+        android:name="com.example.mohassu.MyPageFragment.MyPageProfileEdit2ImageFragment"
+        android:label="MyPageProfileEdit2ImageFragment"
+        tools:layout="@layout/fragment_mypage_profile_edit2">
+        <action
+            android:id="@+id/actionSaveProfile"
+            app:destination="@+id/MyPageHomeFragment" />
+    </fragment>
+
+    <!--마이페이지 : 내 알람 설정 페이지-->
+    <fragment
+        android:id="@+id/MyPageSettingNotificationFragment"
+        android:name="com.example.mohassu.MyPageFragment.MyPageSettingNotificationFragment"
+        android:label="MyPageSettingNotificationFragment"
+        tools:layout="@layout/fragment_mypage_setting_notification">
+    </fragment>
+
+</navigation>
