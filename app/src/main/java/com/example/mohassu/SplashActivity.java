@@ -1,6 +1,8 @@
 package com.example.mohassu;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
@@ -33,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
                 // UI 스레드에서 다음 화면으로 전환
                 runOnUiThread(() -> {
                     isReady = true;  // 초기화 완료 표시
-                    navigateToNextScreen();
+                    navigateToNextActivity();
                 });
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -41,9 +43,20 @@ public class SplashActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void navigateToNextScreen() {
-        Intent intent = new Intent(SplashActivity.this, NavigationStartLoginAndSignupActivity.class);
-        startActivity(intent);
+    private void navigateToNextActivity() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        String email = sharedPreferences.getString("email", null);
+        String password = sharedPreferences.getString("password", null);
+
+        if (email != null && password != null) {
+            // 메인 네비게이션 액티비티 실행 -> 자동 로그인
+            Intent intent = new Intent(SplashActivity.this, NavigationMainActivity.class);
+            startActivity(intent);
+        } else {
+            // 로그인 및 회원가입 네비게이션 액티비티 실행 -> 로그인 화면으로 이동
+            Intent intent = new Intent(SplashActivity.this, NavigationStartLoginAndSignupActivity.class);
+            startActivity(intent);
+        }
         finish();
     }
 }

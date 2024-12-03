@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="모하SSU 로그인"
+            android:textStyle="bold"
             android:textSize="20sp"
             android:layout_marginStart="8dp"
             android:textColor="@color/black" />
@@ -42,48 +43,64 @@
         android:layout_marginBottom="150dp" />
 
     <!-- 아이디 텍스트와 EditText -->
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/pretendardregular"
-        android:text="아이디"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:layout_gravity="left"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="8dp" />
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
 
-    <EditText
-        android:id="@+id/editTextEmail"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:textSize="16sp"
-        android:layout_gravity="center"
-        android:hint="아이디를 입력해주세요"
-        android:paddingRight="16dp" />
+        <!-- 아이디 텍스트 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendardregular"
+            android:text="아이디 (이메일)"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginBottom="8dp" />
 
-    <!-- 비밀번호 텍스트와 EditText -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="비밀번호"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:fontFamily="@font/pretendardregular"
-        android:layout_gravity="left"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="8dp" />
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textSize="16sp"
+            android:hint="아이디를 입력해주세요"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:backgroundTint="@color/black"
+            android:inputType="textEmailAddress"
+            android:imeOptions="actionNext"/>
 
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:textSize="16sp"
-        android:layout_gravity="center"
-        android:hint="비밀번호를 입력해주세요"
-        android:paddingRight="16dp" />
+        <!-- 비밀번호 텍스트 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:fontFamily="@font/pretendardregular"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textSize="16sp"
+            android:hint="비밀번호를 입력해주세요"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:backgroundTint="@color/black"
+            android:inputType="textPassword"
+            android:imeOptions="actionDone"/>
+    </LinearLayout>
+
 
     <!-- 로그인 버튼 -->
     <Button
