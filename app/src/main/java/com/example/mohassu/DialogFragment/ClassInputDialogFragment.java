@@ -1,15 +1,17 @@
-package com.example.mohassu;
+package com.example.mohassu.DialogFragment;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import com.example.mohassu.databinding.ActivityCheckTimeTableBinding;
+
+import androidx.fragment.app.DialogFragment;
+
 import com.github.tlaabs.timetableview.Schedule;
 import com.github.tlaabs.timetableview.Time;
 import com.github.tlaabs.timetableview.TimetableView;
 
 import java.util.ArrayList;
 
-public class TimeTableActivity extends AppCompatActivity {
+public class ClassInputDialogFragment extends DialogFragment{
+    /*
     private ActivityCheckTimeTableBinding binding;
 
     @Override
@@ -59,4 +61,5 @@ public class TimeTableActivity extends AppCompatActivity {
         // Add schedules to TimetableView
         timetableView.add(schedules);
     }
+    */
 }

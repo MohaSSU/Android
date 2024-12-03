@@ -26,6 +26,10 @@ public class MyPageHomeFragment extends Fragment {
         // NavController 초기화
         NavController navController = Navigation.findNavController(view);
 
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> {
+            navController.navigateUp();
+        });
+
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
         ImageButton profileEditButton = view.findViewById(R.id.btnProfileEdit);
         profileEditButton.setFocusable(false);
@@ -34,14 +38,14 @@ public class MyPageHomeFragment extends Fragment {
         });
 
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
-        Button timeTableViewButton = view.findViewById(R.id.btnSchedule);
+        ImageButton timeTableViewButton = view.findViewById(R.id.btnSchedule);
         timeTableViewButton.setFocusable(false);
         timeTableViewButton.setOnClickListener(v -> {
             navController.navigate(R.id.actionSchedule);
         });
 
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
-        Button notificationButton = view.findViewById(R.id.btnNotification);
+        ImageButton notificationButton = view.findViewById(R.id.btnNotification);
         notificationButton.setFocusable(false);
         notificationButton.setOnClickListener(v -> {
             navController.navigate(R.id.actionSettingNotification);
