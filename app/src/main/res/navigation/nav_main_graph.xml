@@ -122,7 +122,7 @@
         tools:layout="@layout/fragment_mypage_mytimetable_edit">
         <action
             android:id="@+id/actionSaveMyClass"
-            app:destination="@+id/MyPageHomeFragment"
+            app:destination="@+id/MyPageTimeTableFragment"
             app:popUpTo="@id/MyPageTimeTableFragment"
             app:popUpToInclusive="true"/>
     </fragment>

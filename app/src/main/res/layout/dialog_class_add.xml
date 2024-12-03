@@ -3,45 +3,38 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
     android:background="@drawable/background_dialog">
 
     <!-- 헤더 -->
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:background="@android:color/transparent"
+        >
 
         <!-- 뒤로가기 버튼 -->
         <ImageButton
             android:id="@+id/btn_close"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_gravity="left"
             android:background="?selectableItemBackground"
             android:src="@drawable/ic_clear"
             android:contentDescription="닫기 버튼" />
 
         <TextView
             android:id="@+id/tv_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:gravity="center"
             android:text="수업 정보 추가"
-            android:textStyle="bold"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
-            android:textColor="@android:color/black" />
+            android:textStyle="bold" />
 
-        <!-- 완료 버튼 -->
-        <Button
-            android:id="@+id/btn_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
-            android:text="완료"
-            style="@style/GrayMaterialButtonStyle"/>
-    </LinearLayout>
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
@@ -49,6 +42,123 @@
         android:background="#BDBDBD"
         android:layout_marginBottom="12dp" />
 
-    <include layout="@layout/view_class_input"/>
+    <!-- 수업명 입력 -->
+    <TextView
+        android:id="@+id/label_class_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="수업명"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/input_class_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ex) 사용자 인터페이스"
+        android:textColorHint="@color/gray"
+        android:inputType="text"
+        android:layout_marginBottom="16dp"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:padding="8dp" />
+
+    <!-- 수업 시간 입력 -->
+    <TextView
+        android:id="@+id/label_class_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="수업 시간"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="6dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/days_of_week"
+            android:spinnerMode="dropdown"
+            android:theme="@style/CustomSpinner"
+            android:popupBackground="@color/lightGray"/>
+
+        <Spinner
+            android:id="@+id/start_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/time_input"
+            android:spinnerMode="dropdown"
+            android:theme="@style/CustomSpinner"
+            android:background="@color/white"
+            android:popupBackground="@color/lightGray"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:gravity="center"
+            android:text="~"
+            android:textColor="@color/black"/>
+
+        <Spinner
+            android:id="@+id/end_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/time_input"
+            android:spinnerMode="dropdown"
+            android:theme="@style/CustomSpinner"
+            android:popupBackground="@color/lightGray"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/label_class_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="강의 장소"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="6dp" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/horizontal_spinner_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <!-- 여기에 동적으로 버튼 추가 -->
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <EditText
+        android:id="@+id/input_class_place"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <!-- 완료 버튼 -->
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="완료"
+        android:textSize="14sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        style="@style/GrayMaterialButtonStyle"
+        />
 
 </LinearLayout>
