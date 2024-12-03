@@ -1,6 +1,10 @@
 package com.example.mohassu.LoginAndSignUpFragment;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,12 +13,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.mohassu.NavigationMainActivity;
 import com.example.mohassu.R;
@@ -25,7 +33,6 @@ public class LoginFragment extends Fragment {
 
     private EditText editTextEmail, editTextPassword;
     private Button buttonLogin;
-    private TextView textViewSignUp;
     private FirebaseAuth mAuth;
 
     @Override
@@ -35,10 +42,26 @@ public class LoginFragment extends Fragment {
         // FirebaseAuth 인스턴스 초기화
         mAuth = FirebaseAuth.getInstance();
 
+        view.findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavController navController = Navigation.findNavController(view);
+                navController.popBackStack(); // 네비게이션 스택에서 이전 프래그먼트로 이동
+            }
+        });
+
         // UI 요소 초기화
         editTextEmail = view.findViewById(R.id.editTextEmail);
         editTextPassword = view.findViewById(R.id.editTextPassword);
         buttonLogin = view.findViewById(R.id.btnLogin);
+
+        editTextEmail.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                editTextPassword.requestFocus(); // 비밀번호 입력 필드로 포커스 이동
+                return true;
+            }
+            return false;
+        });
 
         // 로그인 버튼 클릭 리스너
         buttonLogin.setOnClickListener(v -> {
@@ -64,6 +87,9 @@ public class LoginFragment extends Fragment {
 //
                             Toast.makeText(getActivity(), "로그인 성공!", Toast.LENGTH_SHORT).show();
 
+                            // SharedPreferences에 이메일과 비밀번호 저장
+                            saveCredentialsToPreferences(email, password);
+
                             // 메인 액티비티로 이동
                             Intent intent = new Intent(getActivity(), NavigationMainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -78,5 +104,13 @@ public class LoginFragment extends Fragment {
                         Toast.makeText(getActivity(), "로그인 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    private void saveCredentialsToPreferences(String email, String password) {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("email", email);
+        editor.putString("password", password);
+        editor.apply(); // 비동기로 저장
+        Log.d("SharedPreferences", "이메일과 비밀번호가 저장되었습니다.");
     }
 }

@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
+    xmlns:tool="http://schemas.android.com/tools"
     android:background="@color/white"
+
     android:paddingBottom="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,16 +18,17 @@
         android:background="@drawable/background_gradient"
         >
 
-    <ImageButton
-        android:id="@+id/btn_close"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_clear"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="?selectableItemBackground"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_clear"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/img_profile"
@@ -44,7 +46,7 @@
 
 
         <TextView
-            android:id="@+id/text_Nickname"
+            android:id="@+id/text_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/img_profile"
@@ -52,20 +54,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="30dp"
             android:textSize="35dp"
-            android:text="호근찡"
+            tool:text="호근찡"
             android:textStyle="bold"
             android:textColor="@color/white"
             />
 
         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/text_Nickname"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="25dp"
-        android:text="이호근"
+            android:id="@+id/text_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/text_nickname"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="25dp"
+            tool:text="이호근"
             android:textColor="@color/white"
             android:layout_marginBottom="20dp"
             />
@@ -83,6 +86,7 @@
         android:background="@color/white">
 
         <Button
+            android:id="@+id/view_time_table_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"

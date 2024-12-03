@@ -38,8 +38,8 @@
             android:id="@+id/btn_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
             android:text="완료"
+            android:textSize="14sp"
             style="@style/GrayMaterialButtonStyle"/>
     </LinearLayout>
 
@@ -49,6 +49,104 @@
         android:background="#BDBDBD"
         android:layout_marginBottom="12dp" />
 
-    <include layout="@layout/view_class_input"/>
+    <!-- 수업명 입력 -->
+    <TextView
+        android:id="@+id/label_class_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="수업명"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/input_class_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ex) 사용자 인터페이스"
+        android:background="@android:color/transparent"
+        android:inputType="text"
+        android:layout_marginBottom="16dp"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:padding="8dp"
+        android:backgroundTint="@color/black" />
+
+    <!-- 수업 시간 입력 -->
+    <TextView
+        android:id="@+id/label_class_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="수업 시간"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/days_of_week"
+            android:spinnerMode="dropdown" />
+
+        <Spinner
+            android:id="@+id/start_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/time_input"
+            android:spinnerMode="dropdown" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:gravity="center"
+            android:text="~" />
+
+        <Spinner
+            android:id="@+id/end_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/time_input"
+            android:spinnerMode="dropdown" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/label_class_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="강의 장소"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="4dp" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/horizontal_spinner_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <!-- 여기에 동적으로 버튼 추가 -->
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <EditText
+        android:id="@+id/input_class_place"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
 
 </LinearLayout>

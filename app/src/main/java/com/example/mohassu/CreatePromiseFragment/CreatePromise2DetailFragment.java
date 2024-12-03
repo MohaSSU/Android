@@ -1,11 +1,14 @@
 package com.example.mohassu.CreatePromiseFragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -31,11 +34,17 @@ public class CreatePromise2DetailFragment extends Fragment {
             navController.navigateUp();
         });
 
-        ImageButton addFriendsButton = view.findViewById(R.id.btnAddFriends);
-        addFriendsButton.setFocusable(false);
-        addFriendsButton.setOnClickListener(v -> {
-            navController.navigate(R.id.actionNextToCreatePromise3);
-        });
+        LinearLayout addFriendsButton = view.findViewById(R.id.btnAddFriends);
+        if (addFriendsButton != null) {
+            addFriendsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    navController.navigate(R.id.actionNextToCreatePromise3);
+                }
+            });
+        } else {
+            Log.e("CreatePromise2Detail", "btnAddFriends is null");
+        }
 
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
         Button saveButton = view.findViewById(R.id.btnSave);

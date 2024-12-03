@@ -28,6 +28,10 @@
         <item>15:15</item>
         <item>15:30</item>
         <item>15:45</item>
+        <item>16:00</item>
+        <item>16:15</item>
+        <item>16:30</item>
+        <item>16:45</item>
         <item>17:00</item>
         <item>17:15</item>
         <item>17:30</item>
@@ -41,18 +45,6 @@
         <item>19:30</item>
         <item>19:45</item>
         <item>20:00</item>
-        <item>20:15</item>
-        <item>20:30</item>
-        <item>20:45</item>
-        <item>21:00</item>
-        <item>21:15</item>
-        <item>21:30</item>
-        <item>21:45</item>
-        <item>22:00</item>
-        <item>22:15</item>
-        <item>22:30</item>
-        <item>22:45</item>
-        <item>23:00</item>
     </string-array>
 </resources>
 

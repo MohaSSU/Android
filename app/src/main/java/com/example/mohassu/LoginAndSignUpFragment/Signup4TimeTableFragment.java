@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.mohassu.DialogFragment.ClassAddDialogFragment;
+import com.example.mohassu.DialogFragment.ClassEditDialogFragment;
 import com.example.mohassu.R;
 
 public class Signup4TimeTableFragment extends Fragment {
@@ -28,6 +30,12 @@ public class Signup4TimeTableFragment extends Fragment {
         // 뒤로가기 버튼에 클릭 리스너 추가
         view.findViewById(R.id.btnBack).setOnClickListener(v -> {
             navController.navigateUp();
+        });
+
+        // 수업 추가하기 dialog
+        view.findViewById(R.id.btnAddClass).setOnClickListener(v -> {
+            ClassAddDialogFragment classAddDialogFragment = new ClassAddDialogFragment();
+            classAddDialogFragment.show(requireActivity().getSupportFragmentManager(), "ClassAddDialog");
         });
 
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
