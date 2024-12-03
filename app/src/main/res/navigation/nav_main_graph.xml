@@ -69,7 +69,9 @@
         tools:layout="@layout/fragment_create_promise2_detail">
         <action
             android:id="@+id/actionSavePromise"
-            app:destination="@+id/MainHomeFragment"/>
+            app:destination="@+id/MainHomeFragment"
+            app:popUpTo="@id/CreatePromise1SelectLocationFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/actionNextToCreatePromise3"
             app:destination="@+id/CreatePromise3ChooseFriendsFragment"/>
@@ -120,7 +122,9 @@
         tools:layout="@layout/fragment_mypage_mytimetable_edit">
         <action
             android:id="@+id/actionSaveMyClass"
-            app:destination="@+id/MyPageHomeFragment"/>
+            app:destination="@+id/MyPageHomeFragment"
+            app:popUpTo="@id/MyPageTimeTableFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <!--마이페이지 : 내 프로필 수정 페이지 1-->
@@ -142,7 +146,9 @@
         tools:layout="@layout/fragment_mypage_profile_edit2">
         <action
             android:id="@+id/actionSaveProfile"
-            app:destination="@+id/MyPageHomeFragment" />
+            app:destination="@+id/MyPageHomeFragment"
+            app:popUpTo="@id/MyPageProfileEdit1DetailFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <!--마이페이지 : 내 알람 설정 페이지-->

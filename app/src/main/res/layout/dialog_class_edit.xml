@@ -31,16 +31,20 @@
             android:text="수업 정보 수정"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
         <!-- 완료 버튼 -->
-        <Button
+        <TextView
             android:id="@+id/btn_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackground"
             android:text="완료"
-            style="@style/GrayMaterialButtonStyle"/>
+            android:textSize="18sp"
+            style="@style/GrayMaterialButtonStyle"
+            />
     </LinearLayout>
 
     <View
