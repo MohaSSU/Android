@@ -83,6 +83,7 @@
         <action
             android:id="@+id/actionMoveToLogin"
             app:destination="@+id/LoginFragment"
+            app:popUpTo="@id/Signup1IDAndPWFragment"
             app:popUpToInclusive="true"/>
     </fragment>
 
