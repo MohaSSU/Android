@@ -73,6 +73,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
 
+    implementation ("com.google.firebase:firebase-firestore:24.7.0")
+    implementation ("com.google.firebase:firebase-storage:20.2.0")// 최신 버전 확인
 
     // Naver Map SDK
     implementation("com.naver.maps:map-sdk:3.19.1")
