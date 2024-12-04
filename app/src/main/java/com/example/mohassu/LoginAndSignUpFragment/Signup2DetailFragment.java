@@ -196,9 +196,11 @@ public class Signup2DetailFragment extends Fragment {
 
         // 현재 사용자 UID 가져오기
         String uid = mAuth.getCurrentUser().getUid();
+        String email = mAuth.getCurrentUser().getEmail();
 
         // Firestore에 사용자 정보 저장
         Map<String, Object> userProfile = new HashMap<>();
+        userProfile.put("email",email);
         userProfile.put("nickname", nickname);
         userProfile.put("name", name);
         userProfile.put("birthDate", birthdate);
