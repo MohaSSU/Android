@@ -70,17 +70,17 @@
         android:gravity="center_vertical">
 
         <EditText
-            android:id="@+id/etId"
+            android:id="@+id/etEmail"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:hint="아이디를 입력해주세요"
+            android:hint="이메일을 입력해주세요"
             android:inputType="text"
             android:padding="12dp"
             android:textColor="@color/black" />
 
         <Button
-            android:id="@+id/btnCheckId"
+            android:id="@+id/btnCheckEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="중복 검사"
@@ -89,11 +89,21 @@
             android:textColor="@android:color/white" />
     </LinearLayout>
 
+<!--    <TextView-->
+<!--        android:id="@+id/tvIdError"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="*아이디 중복검사를 먼저 해주세요"-->
+<!--        android:textSize="14sp"-->
+<!--        android:textColor="@color/red"-->
+<!--        android:layout_marginTop="4dp"-->
+<!--        android:visibility="gone" />-->
+
     <TextView
-        android:id="@+id/tvIdError"
+        android:id="@+id/tvEmaildError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="*아이디 중복검사를 먼저 해주세요"
+        android:text="*이메일을 입력해주세요"
         android:textSize="14sp"
         android:textColor="@color/red"
         android:layout_marginTop="4dp"
