@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.mohassu.DialogFragment.AddFriendDialogFragment;
 import com.example.mohassu.R;
 
 public class MainFriendListFragment extends Fragment {
@@ -27,6 +28,11 @@ public class MainFriendListFragment extends Fragment {
         // 뒤로가기 버튼에 클릭 리스너 추가
         view.findViewById(R.id.btnBack).setOnClickListener(v -> {
             navController.navigateUp();
+        });
+
+        view.findViewById(R.id.add_friend_button).setOnClickListener(v -> {
+            AddFriendDialogFragment dialog = new AddFriendDialogFragment();
+            dialog.show(getParentFragmentManager(), "AddFriendDialog");
         });
     }
 }
