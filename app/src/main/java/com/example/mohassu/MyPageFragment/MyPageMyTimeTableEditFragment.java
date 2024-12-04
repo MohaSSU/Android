@@ -3,6 +3,7 @@ package com.example.mohassu.MyPageFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.mohassu.DialogFragment.ClassAddDialogFragment;
+import com.example.mohassu.DialogFragment.ClassEditOrDeleteDialogFragment;
 import com.example.mohassu.R;
 import com.github.tlaabs.timetableview.Schedule;
 import com.github.tlaabs.timetableview.Time;
@@ -61,16 +63,43 @@ public class MyPageMyTimeTableEditFragment extends Fragment {
                     }
                 } else {
                     addScheduleToTimetable(className, classPlace, day, startHour, startMinute, endHour, endMinute);
-                    saveTimetable();
                 }
             });
             classAddDialogFragment.show(requireActivity().getSupportFragmentManager(), "ClassAddDialog");
+        });
+
+        timetable.setOnStickerSelectEventListener(new TimetableView.OnStickerSelectedListener() {
+            @Override
+            public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
+                // 다이얼로그 프래그먼트 호출
+                ClassEditOrDeleteDialogFragment classEditOrDeleteDialogFragment = ClassEditOrDeleteDialogFragment.newInstance(schedules.get(0));
+                Log.d("schedule index","schedule idx : "+idx);
+                classEditOrDeleteDialogFragment.setOnClassEditOrDeleteListener(new ClassEditOrDeleteDialogFragment.OnClassEditOrDeleteListener() {
+                    @Override
+                    public void onEdit(Schedule editedSchedule) {
+                        // 기존 스티커 수정
+                        ArrayList<Schedule> updatedSchedules = new ArrayList<>();
+                        updatedSchedules.add(editedSchedule);
+                        timetable.edit(idx, updatedSchedules);
+                        Toast.makeText(requireContext(), "수업 정보가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onDelete() {
+                        // 스티커 삭제
+                        timetable.remove(idx);
+                        Toast.makeText(requireContext(), "수업 정보가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                classEditOrDeleteDialogFragment.show(requireActivity().getSupportFragmentManager(), "ClassEditDialog");
+            }
         });
 
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
         Button timeTableSaveButton = view.findViewById(R.id.btnSave);
         timeTableSaveButton.setFocusable(false);
         timeTableSaveButton.setOnClickListener(v -> {
+            saveTimetable();
             navController.navigate(R.id.actionSaveMyClass);
         });
     }
