@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,21 +18,21 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.mohassu.R;
 import com.github.tlaabs.timetableview.Schedule;
+import com.github.tlaabs.timetableview.Time;
 
-public class ClassEditDialogFragment extends DialogFragment {
-    private Schedule schedule;
-    private OnClassEditListener listener;
+public class ClassEditOrDeleteDialogFragment extends DialogFragment {
 
-    private TextView selectedLocationButton = null;
-
-    public interface OnClassEdittedListener {
-        void onClassAdded(String className, String classPlace, int day, int startHour, int startMinute, int endHour, int endMinute);
-    }
-
-    private ClassAddDialogFragment.OnClassAddedListener listener;
+    private TextView selectedLocationButton = null; // 강의 장소 선택 로직을 위해서 정의
     private String selectedClassPlace = ""; // 선택된 강의 장소를 저장하는 변수
 
-    public void setOnClassAddedListener(ClassAddDialogFragment.OnClassAddedListener listener) {
+    public interface OnClassEditOrDeleteListener {
+        void onEdit(Schedule editedSchedule);
+        void onDelete();
+    }
+
+    private OnClassEditOrDeleteListener listener;
+
+    public void setOnClassEditOrDeleteListener(OnClassEditOrDeleteListener listener) {
         this.listener = listener;
     }
 
@@ -43,29 +44,41 @@ public class ClassEditDialogFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        // 다이얼로그의 크기 조정
         if (getDialog() != null && getDialog().getWindow() != null) {
-            // 가로 크기를 화면 전체로 설정하고 세로는 WRAP_CONTENT
             getDialog().getWindow().setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT, // 가로를 화면 크기로 설정
-                    ViewGroup.LayoutParams.WRAP_CONTENT // 세로는 내용에 맞춤
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
             );
         }
+    }
+
+    public static ClassEditOrDeleteDialogFragment newInstance(Schedule existingSchedule) {
+        ClassEditOrDeleteDialogFragment fragment = new ClassEditOrDeleteDialogFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("schedule", existingSchedule);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_class_add, container, false);
+        View view = inflater.inflate(R.layout.dialog_class_edit_or_delete, container, false);
 
-        ImageButton closeButton = view.findViewById(R.id.btn_close);
-        EditText inputClassName = view.findViewById(R.id.input_class_name);
+        EditText classTitle = view.findViewById(R.id.input_class_name);
         Spinner spinnerDay = view.findViewById(R.id.spinner_day);
         Spinner spinnerStartTime = view.findViewById(R.id.start_time);
         Spinner spinnerEndTime = view.findViewById(R.id.end_time);
         EditText inputClassPlace = view.findViewById(R.id.input_class_place);
+        Button editSaveButton = view.findViewById(R.id.btn_edit_save);
+        Button deleteButton = view.findViewById(R.id.btn_delete);
+        ImageButton closeButton = view.findViewById(R.id.btn_close);
         LinearLayout horizontalContainer = view.findViewById(R.id.horizontal_spinner_container);
 
+        Schedule existingSchedule = new Schedule();
+        existingSchedule = (Schedule) getArguments().getSerializable("schedule");
+
+        // 닫기 버튼 동작
         closeButton.setOnClickListener(v -> dismiss());
 
         // strings.xml에서 강의 장소 배열 가져오기
@@ -106,25 +119,75 @@ public class ClassEditDialogFragment extends DialogFragment {
                 inputClassPlace.setText(location); // EditText에 설정
             });
 
+            // 이전에 저장된 장소 선택
+            if (existingSchedule != null && location.equals(existingSchedule.getClassPlace())) {
+                selectedLocationButton = locationButton;
+                selectedLocationButton.setBackgroundResource(R.drawable.background_banner_selected);
+                selectedLocationButton.setTextColor(getResources().getColor(android.R.color.white));
+            }
+
             horizontalContainer.addView(locationButton);
         }
 
-        Button saveButton = view.findViewById(R.id.btn_save);
-        saveButton.setOnClickListener(v -> {
-            String className = inputClassName.getText().toString();
-            String classPlace = inputClassPlace.getText().toString();
-            int day = spinnerDay.getSelectedItemPosition(); // 0: Monday, 1: Tuesday, ...
-            int startHour = Integer.parseInt(spinnerStartTime.getSelectedItem().toString().split(":")[0]);
-            int startMinute = Integer.parseInt(spinnerStartTime.getSelectedItem().toString().split(":")[1]);
-            int endHour = Integer.parseInt(spinnerEndTime.getSelectedItem().toString().split(":")[0]);
-            int endMinute = Integer.parseInt(spinnerEndTime.getSelectedItem().toString().split(":")[1]);
+        // 기존 데이터 설정
+        if (existingSchedule != null) {
+            classTitle.setText(existingSchedule.getClassTitle());
+            inputClassPlace.setText(existingSchedule.getClassPlace());
 
+            // Day 스피너 설정 (0: Monday, 1: Tuesday, ...)
+            spinnerDay.setSelection(existingSchedule.getDay());
+
+            // Start Time 설정
+            String startTime = String.format("%02d:%02d", existingSchedule.getStartTime().getHour(), existingSchedule.getStartTime().getMinute());
+            setSpinnerSelection(spinnerStartTime, startTime);
+
+            // End Time 설정
+            String endTime = String.format("%02d:%02d", existingSchedule.getEndTime().getHour(), existingSchedule.getEndTime().getMinute());
+            setSpinnerSelection(spinnerEndTime, endTime);
+        }
+
+        // 수정 버튼 동작
+        editSaveButton.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onClassAdded(className, classPlace, day, startHour, startMinute, endHour, endMinute);
+                String classTitleText = classTitle.getText().toString();
+                String classPlaceText = inputClassPlace.getText().toString();
+                int day = spinnerDay.getSelectedItemPosition();
+                int startHour = Integer.parseInt(spinnerStartTime.getSelectedItem().toString().split(":")[0]);
+                int startMinute = Integer.parseInt(spinnerStartTime.getSelectedItem().toString().split(":")[1]);
+                int endHour = Integer.parseInt(spinnerEndTime.getSelectedItem().toString().split(":")[0]);
+                int endMinute = Integer.parseInt(spinnerEndTime.getSelectedItem().toString().split(":")[1]);
+
+                // 수정된 Schedule 객체 생성
+                Schedule editedSchedule = new Schedule();
+                editedSchedule.setClassTitle(classTitleText);
+                editedSchedule.setClassPlace(classPlaceText);
+                editedSchedule.setDay(day);
+                editedSchedule.setStartTime(new Time(startHour, startMinute));
+                editedSchedule.setEndTime(new Time(endHour, endMinute));
+
+                // 수정된 데이터를 listener를 통해 전달
+                listener.onEdit(editedSchedule);
+            }
+            dismiss();
+        });
+
+        // 삭제 버튼 동작
+        deleteButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onDelete();
             }
             dismiss();
         });
 
         return view;
+    }
+
+    private void setSpinnerSelection(Spinner spinner, String value) {
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equals(value)) {
+                spinner.setSelection(i);
+                break;
+            }
+        }
     }
 }

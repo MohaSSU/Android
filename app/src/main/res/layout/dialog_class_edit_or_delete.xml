@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center"
-            android:text="수업 정보 추가"
+            android:text="수업 정보 수정"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -161,7 +161,7 @@
 
     <!-- 완료 버튼 -->
     <Button
-        android:id="@+id/btn_save"
+        android:id="@+id/btn_edit_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="완료"
