@@ -17,6 +17,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.mohassu.R;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Signup1IDAndPWFragment extends Fragment {
@@ -28,6 +29,7 @@ public class Signup1IDAndPWFragment extends Fragment {
     private Button btnCheckEmail, btnSignupNext;
 
     private boolean isEmailChecked = false; // 이메일 중복 검사 여부
+    private ActionCodeSettings actionCodeSettings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -136,10 +138,18 @@ public class Signup1IDAndPWFragment extends Fragment {
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity(), task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(requireContext(), "회원가입 성공!", Toast.LENGTH_SHORT).show();
-                        // 다음 Fragment로 이동
-                        NavController navController = Navigation.findNavController(requireView());
-                        navController.navigate(R.id.actionNextToSignup2); // 적절한 Action ID로 변경
+                        // 인증 이메일 발송
+                        auth.getCurrentUser().sendEmailVerification()
+                                .addOnCompleteListener(emailTask -> {
+                                    if (emailTask.isSuccessful()) {
+                                        Toast.makeText(requireContext(), "회원가입 성공! 인증 이메일을 확인해주세요.", Toast.LENGTH_SHORT).show();
+                                        // 다음 Fragment로 이동
+                                        NavController navController = Navigation.findNavController(requireView());
+                                        navController.navigate(R.id.actionNextToSignup2); // 적절한 Action ID로 변경
+                                    } else {
+                                        Toast.makeText(requireContext(), "인증 이메일 발송 실패: " + emailTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     } else {
                         Toast.makeText(requireContext(), "회원가입 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -150,4 +160,6 @@ public class Signup1IDAndPWFragment extends Fragment {
     private boolean isValidEmail(String email) {
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
+
 }
