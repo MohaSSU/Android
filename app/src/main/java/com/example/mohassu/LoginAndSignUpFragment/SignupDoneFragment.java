@@ -30,7 +30,7 @@ public class SignupDoneFragment extends Fragment {
         Button signupNextButton = view.findViewById(R.id.btnGoToLogin);
         signupNextButton.setFocusable(false);
         signupNextButton.setOnClickListener(v -> {
-            navController.navigate(R.id.btnGoToLogin);
+            navController.navigate(R.id.actionMoveToLogin);
         });
     }
 }
