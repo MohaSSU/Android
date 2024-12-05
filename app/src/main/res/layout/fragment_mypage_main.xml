@@ -86,7 +86,7 @@
                 android:layout_gravity="top" />
 
             <TextView
-                android:id="@+id/userName"
+                android:id="@+id/usernickName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="준혁핑"
@@ -140,7 +140,7 @@
                     android:layout_marginStart="3dp" />
 
             <TextView
-                android:id="@+id/userRealName"
+                android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="배준혁"

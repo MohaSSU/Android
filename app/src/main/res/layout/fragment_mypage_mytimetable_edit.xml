@@ -73,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="저장하기"
+        android:textSize="20sp"
         style="@style/BlueMaterialButtonStyle"
         android:layout_marginEnd="10dp" />
 

@@ -20,8 +20,15 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.mohassu.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class Signup3ProfileFragment extends Fragment {
 
@@ -32,6 +39,9 @@ public class Signup3ProfileFragment extends Fragment {
     private Button signupNextButton, skipButton;
     private Uri selectedImageUri; // 선택된 이미지의 URI 저장
 
+    private FirebaseStorage storage;
+    private FirebaseFirestore db;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_sign_up3, container, false);
@@ -40,6 +50,10 @@ public class Signup3ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Firebase 초기화
+        storage = FirebaseStorage.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         // NavController 초기화
         NavController navController = Navigation.findNavController(view);
@@ -61,13 +75,11 @@ public class Signup3ProfileFragment extends Fragment {
         // 다음 버튼 클릭 리스너
         signupNextButton.setOnClickListener(v -> {
             if (selectedImageUri != null) {
-                // 선택된 이미지 URI를 저장하거나 업로드 로직 추가
-                Toast.makeText(requireContext(), "프로필이 저장되었습니다!", Toast.LENGTH_SHORT).show();
+                // 프로필 사진 업로드
+                uploadProfileImage(navController);
             } else {
                 Toast.makeText(requireContext(), "프로필을 선택하지 않았습니다.", Toast.LENGTH_SHORT).show();
             }
-            // 다음 Fragment로 이동
-            navController.navigate(R.id.actionNextToSignup4);
         });
 
         // 건너뛰기 버튼 클릭 리스너
@@ -98,6 +110,35 @@ public class Signup3ProfileFragment extends Fragment {
                 e.printStackTrace();
                 Toast.makeText(requireContext(), "이미지를 로드할 수 없습니다.", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    // Firebase Storage에 프로필 사진 업로드
+    private void uploadProfileImage(NavController navController) {
+        if (selectedImageUri != null) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            StorageReference storageRef = storage.getReference().child("profilePictures/" + UUID.randomUUID().toString());
+
+            storageRef.putFile(selectedImageUri)
+                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        // Firestore에 사진 URL 저장
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("photoUrl", uri.toString());
+
+                        db.collection("users").document(userId)
+                                .update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(requireContext(), "프로필 사진 저장 성공!", Toast.LENGTH_SHORT).show();
+                                    // 다음 Fragment로 이동
+                                    navController.navigate(R.id.actionNextToSignup4);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(requireContext(), "Firestore 저장 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    }))
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(requireContext(), "사진 업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
         }
     }
 }

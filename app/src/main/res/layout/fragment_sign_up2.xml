@@ -87,7 +87,8 @@
         android:hint="이름"
         android:inputType="text"
         android:padding="12dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        android:imeOptions="actionDone"/>
 
     <!-- 생년월일 입력 -->
     <TextView
@@ -107,8 +108,8 @@
         <DatePicker
             android:id="@+id/dpSpinner"
             android:datePickerMode="spinner"
+            android:theme="@style/WhiteBackgroundBlackTextDatePicker"
             android:calendarViewShown="false"
-            android:color="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
