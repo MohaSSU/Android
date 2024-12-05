@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.mohassu.CheckProfileAndTimeTableFragment.BottomSheetCheckProfileFragment;
 import com.example.mohassu.Constants;
 import com.example.mohassu.PlaceInfo;
 import com.example.mohassu.R;
@@ -44,7 +45,7 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 
-public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
+public class MainHomeFriendTestFragment extends Fragment implements OnMapReadyCallback {
 
     private NaverMap naverMap;
     private FusedLocationSource locationSource;
@@ -60,6 +61,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     ImageButton myPageButton;
     ImageButton myLocationButton;
     TextView tvBuildingName;
+    boolean focusMode = false;
 
     private GeofencingClient geofencingClient;
 
@@ -113,38 +115,38 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         }
 
         // NavController 초기화
-        NavController navController = Navigation.findNavController(view);
+        //NavController navController = Navigation.findNavController(view);
 
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
         // 알림 페이지 이동
         notificationButton = view.findViewById(R.id.btnNotification);
         notificationButton.setFocusable(false);
         notificationButton.setOnClickListener(v -> {
-            navController.navigate(R.id.actionNotification);
+            //navController.navigate(R.id.actionNotification);
         });
         // 약속 리스트 페이지 이동
         promiseListButton = view.findViewById(R.id.btnPromiseList);
         promiseListButton.setFocusable(false);
         promiseListButton.setOnClickListener(v -> {
-            navController.navigate(R.id.actionPromiseList);
+            //navController.navigate(R.id.actionPromiseList);
         });
         // 친구 리스트 페이지 이동
         signupNextButton = view.findViewById(R.id.btnFriendList);
         signupNextButton.setFocusable(false);
         signupNextButton.setOnClickListener(v -> {
-            navController.navigate(R.id.actionFriendList);
+            //navController.navigate(R.id.actionFriendList);
         });
         //약속 추가 페이지 이동
         createPromiseButton = view.findViewById(R.id.btnAddPlan);
         createPromiseButton.setFocusable(false);
         createPromiseButton.setOnClickListener(v -> {
-            navController.navigate(R.id.actionAddPlan);
+            //navController.navigate(R.id.actionAddPlan);
         });
         // 마이페이지 이동
         myPageButton = view.findViewById(R.id.btnMyPage);
         myPageButton.setFocusable(false);
         myPageButton.setOnClickListener(v -> {
-            navController.navigate(R.id.actionMyPage);
+            //navController.navigate(R.id.actionMyPage);
         });
     }
 
@@ -171,15 +173,23 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
             if (reason == REASON_GESTURE) {
                 isCameraMovedByUser = true; // 사용자가 화면을 이동했을 때 플래그 설정
                 isMarkerClicked = false; // 사용자가 화면을 이동하면 마커 클릭 상태 해제
-                View alarmButton = getView().findViewById(R.id.btnNotification);
-                if (alarmButton.getVisibility() == View.GONE) {
+                if (focusMode) {
                     resetMarkerFocusMode();
                 }
                 FrameLayout mapContainer = requireActivity().findViewById(R.id.fragment_map);
-                View balloonView = mapContainer.findViewById(R.id.dialog_edit_message); // ID로 찾기
+                View balloonView = mapContainer.findViewById(R.id.dialog_text_message); // ID로 찾기
                 if (balloonView != null) {
                     mapContainer.removeView(balloonView); // 말풍선 제거
                 }
+                View bannerView = mapContainer.findViewById(R.id.fragment_status_banner); // ID로 찾기
+                if (bannerView != null) {
+                    mapContainer.removeView(bannerView); // 말풍선 제거
+                }
+                View profileButton = mapContainer.findViewById(R.id.dialog_show_profile); // ID로 찾기
+                if (profileButton != null) {
+                    mapContainer.removeView(profileButton); // 말풍선 제거
+                }
+
             }
         });
 
@@ -198,15 +208,22 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
         // 지도 클릭 이벤트 설정 (말풍선 닫기)
         naverMap.setOnMapClickListener((point, coord) -> {
-            View alarmButton = getView().findViewById(R.id.btnNotification);
-            if (alarmButton.getVisibility() == View.GONE) {
+            if (focusMode) {
                 resetMarkerFocusMode();
             }
             resetMarkerFocusMode();
             FrameLayout mapContainer = requireActivity().findViewById(R.id.fragment_map);
-            View balloonView = mapContainer.findViewById(R.id.dialog_edit_message); // ID로 찾기
+            View balloonView = mapContainer.findViewById(R.id.dialog_text_message); // ID로 찾기
             if (balloonView != null) {
                 mapContainer.removeView(balloonView); // 말풍선 제거
+            }
+            View bannerView = mapContainer.findViewById(R.id.fragment_status_banner); // ID로 찾기
+            if (bannerView != null) {
+                mapContainer.removeView(bannerView); // 말풍선 제거
+            }
+            View profileButton = mapContainer.findViewById(R.id.dialog_show_profile); // ID로 찾기
+            if (profileButton != null) {
+                mapContainer.removeView(profileButton); // 말풍선 제거
             }
             isMarkerClicked = false; // 마커 클릭 상태 해제
         });
@@ -243,7 +260,9 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                 if (results[0] <= place.getRadius()) {
                     String buildingName = place.getName();
                     tvBuildingName.setText(buildingName + "에 있어요.");
-                    tvBuildingName.setVisibility(View.VISIBLE);
+                    if (!focusMode) {
+                        tvBuildingName.setVisibility(View.VISIBLE);
+                    }
                     return; // 반경 내 첫 번째 장소를 찾으면 종료
                 }
             }
@@ -257,49 +276,52 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         locationMarker = new Marker();
         LatLng defaultPosition = new LatLng(0, 0); // 최초 좌표
         locationMarker.setPosition(defaultPosition);
-        locationMarker.setIcon(OverlayImage.fromResource(R.drawable.img_marker_red)); // 마커 이미지 설정
+        locationMarker.setIcon(OverlayImage.fromResource(R.drawable.img_marker_blue)); // 마커 이미지 설정
         locationMarker.setWidth(120); // 마커 크기 조정
         locationMarker.setHeight(140);
         locationMarker.setMap(naverMap); // 지도에 마커 추가
 
         // 클릭 이벤트 설정
         locationMarker.setOnClickListener(overlay -> {
+            if (naverMap == null || getView() == null) {
+                // 지도 초기화가 완료되지 않은 경우
+                Toast.makeText(requireContext(), "지도가 아직 초기화되지 않았습니다.", Toast.LENGTH_SHORT).show();
+                return true; // 이벤트 소비
+            }
 
             //다른 버튼 안 보이게
             showMarkerFocusMode();
 
             // 현재 위치 가져오기
-            LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-            LatLng currentLocation = locationOverlay.getPosition(); // 현재 위치 좌표 가져오기
-            CameraUpdate update = CameraUpdate.scrollAndZoomTo(currentLocation, 20.0)
-                    .animate(CameraAnimation.Easing);// 줌 레벨 17.0
-            naverMap.moveCamera(update);
-            isMarkerClicked = true;
-
+                LocationOverlay locationOverlay = naverMap.getLocationOverlay();
+                LatLng currentLocation = locationOverlay.getPosition(); // 현재 위치 좌표 가져오기
+                CameraUpdate update = CameraUpdate.scrollAndZoomTo(currentLocation, 20.0)
+                        .animate(CameraAnimation.Easing);// 줌 레벨 17.0
+                naverMap.moveCamera(update);
+                isMarkerClicked = true;
 
             FrameLayout mapContainer = requireActivity().findViewById(R.id.fragment_map);
-            // 기존 말풍선 제거
-            View existingBalloon = mapContainer.findViewById(R.id.dialog_edit_message);
-            if (existingBalloon != null) {
-                mapContainer.removeView(existingBalloon);
-            }
 
             // 말풍선 View 인플레이트
-            View balloonView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_message, mapContainer, false);
-            balloonView.setId(R.id.dialog_edit_message); // ID 설정
+            View balloonView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_text_message, mapContainer, false);
+            //balloonView.setId(R.id.dialog_text_message); // ID 설정
             mapContainer.addView(balloonView); // 말풍선 추가
 
-            // 화면 중심으로 말풍선 배치
-            balloonView.post(() -> {
-                int balloonWidth = balloonView.getWidth();
-                int balloonHeight = balloonView.getHeight();
+            // 배너 View 인플레이트
+            View bannerView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_status_banner, mapContainer, false);
+            //bannerView.setId(R.id.fragment_status_banner);
+            mapContainer.addView(bannerView);
 
-                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) balloonView.getLayoutParams();
-
-                // 화면 중앙 좌표를 기준으로 배치
-                params.leftMargin = (mapContainer.getWidth() / 2) - (balloonWidth / 2);
-                params.topMargin = (mapContainer.getHeight() / 2) - balloonHeight - 100; // 약간 위로 올림
-                balloonView.setLayoutParams(params);
+            // 프로필버튼 View 인플레이트
+            View profileButton = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_show_profile, mapContainer, false);
+            //profileButton.setId(R.id.dialog_show_profile);
+            mapContainer.addView(profileButton);
+            // 클릭 이벤트 설정
+            // 프로필 보기 버튼 클릭 이벤트
+            profileButton.findViewById(R.id.showProfileButton).setOnClickListener(v -> {
+                // BottomSheetDialogFragment 호출
+                EmptyBottomSheetProfile bottomSheet = new EmptyBottomSheetProfile();
+                bottomSheet.show(getParentFragmentManager(), "ProfileBottomSheet");
             });
 
             return true; // 클릭 이벤트 소비
@@ -308,6 +330,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void showMarkerFocusMode() {
+        focusMode = true;
         // 버튼 숨기기
         notificationButton.setVisibility(View.GONE);
         promiseListButton.setVisibility(View.GONE);
@@ -320,6 +343,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
 
     private void resetMarkerFocusMode() {
+        focusMode = false;
         // 버튼 다시 표시
         notificationButton.setVisibility(View.VISIBLE);
         promiseListButton.setVisibility(View.VISIBLE);
