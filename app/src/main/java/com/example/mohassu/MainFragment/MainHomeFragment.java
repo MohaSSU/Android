@@ -36,15 +36,16 @@ import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.LocationOverlay;
+import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 
 public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
     private NaverMap naverMap;
-    private FusedLocationSource locationSource;
+    //private FusedLocationSource locationSource;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
-
+    private Marker currentLocationMarker; // 현재 위치를 표시할 마커
     private GeofencingClient geofencingClient;
 
     // ActivityResultLauncher for permission requests
@@ -77,7 +78,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
         // Initialize LocationSource
-        locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
+        //locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
         geofencingClient = LocationServices.getGeofencingClient(requireContext());
 
@@ -136,18 +137,18 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         this.naverMap = naverMap;
 
         // 초기 좌표를 보이지 않는 위치로 설정 (예: 바다 위의 좌표)
-        CameraUpdate initialUpdate = CameraUpdate.scrollTo(new LatLng(0, 0));
-        naverMap.moveCamera(initialUpdate);
+        LatLng defaultPosition = new LatLng(0, 0); // 서울시청
+        naverMap.moveCamera(CameraUpdate.scrollTo(defaultPosition));
 
         // 위치 정보 가져오기
-        naverMap.setLocationSource(locationSource);
+        //naverMap.setLocationSource(locationSource);
 
         // +- 줌컨트롤 버튼 비활성화
         naverMap.getUiSettings().setZoomControlEnabled(false);
 
         // 위치 아이콘 활성화
-        LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-        locationOverlay.setVisible(true); // Make LocationOverlay visible
+        //LocationOverlay locationOverlay = naverMap.getLocationOverlay();
+        //locationOverlay.setVisible(true); // Make LocationOverlay visible
 
 
         // 첫 번째 위치 업데이트 여부를 판단하는 플래그
@@ -155,13 +156,14 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
         // 위치 요청 수락 시 트래킹모드 가동, 거부 시 다시 묻기
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+            initializeCurrentLocationMarker(); // 현재 위치 마커 초기화
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
         }
 
-        updateLocationOverlay();
+        //updateLocationOverlay();
 
+        /*
         // 위치 변화 업데이트
         naverMap.addOnLocationChangeListener(location -> {
             LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
@@ -196,32 +198,63 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
             }
             tvBuildingName.setVisibility(View.GONE); // 반경 내 장소가 없을 경우
         });
+         */
     }
 
-    private void updateLocationOverlay() {
-        LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-        locationOverlay.setVisible(true);
+    private void initializeCurrentLocationMarker() {
+        // 현재 위치 마커 초기화
+        currentLocationMarker = new Marker();
+        LatLng initialPosition = new LatLng(0, 0); // 바다
+        currentLocationMarker.setPosition(initialPosition);
+        currentLocationMarker.setMap(naverMap);
 
-        // 마커 이미지 로드
-        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_marker_red);
+        // 마커 클릭 이벤트 추가
+        currentLocationMarker.setOnClickListener(overlay -> {
+            Toast.makeText(requireContext(), "현재 위치 클릭됨!", Toast.LENGTH_SHORT).show();
+            return true; // 이벤트 소비
+        });
 
-        // 이미지 사이즈 조정
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, 120, 140, true);
+        // 위치 추적 모드 활성화
+        //naverMap.setLocationTrackingMode(LocationTrackingMode.None); // LocationOverlay 사용 안 함
 
-        // 위치 아이콘에 마커 적용
-        locationOverlay.setIcon(OverlayImage.fromBitmap(scaledBitmap));
+        // 위치 업데이트 리스너 등록
+        naverMap.addOnLocationChangeListener(location -> updateMarkerLocation(location));
+    }
 
-        // 방향에 따라 마커가 돌아가지 않게 고정
-        locationOverlay.setBearing(0);
+    private void updateMarkerLocation(@NonNull Location location) {
+        if (currentLocationMarker != null) {
+            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+            // 마커 위치 업데이트
+            currentLocationMarker.setPosition(currentLatLng);
+
+            // 처음 위치 업데이트 시 지도 카메라 이동
+            if (naverMap.getCameraPosition().target.latitude == 0 && naverMap.getCameraPosition().target.longitude == 0) {
+                CameraUpdate cameraUpdate = CameraUpdate.scrollAndZoomTo(currentLatLng, 15.0); // 줌 레벨 15
+                naverMap.moveCamera(cameraUpdate);
+            }
+
+            // 마커 아이콘 커스텀
+            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_marker_red);
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, 120, 140, true);
+            currentLocationMarker.setIcon(OverlayImage.fromBitmap(scaledBitmap));
+            // 카메라 이동
+            naverMap.moveCamera(CameraUpdate.scrollAndZoomTo(currentLatLng, 15.0));
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        // naverMap이 초기화된 경우 위치 오버레이를 다시 설정
+        // naverMap이 초기화된 경우 마커 업데이트
         if (naverMap != null) {
-            updateLocationOverlay();
+            if (currentLocationMarker != null) {
+                LatLng markerPosition = currentLocationMarker.getPosition();
+                if (markerPosition != null) {
+                    naverMap.moveCamera(CameraUpdate.scrollTo(markerPosition));
+                }
+            }
         }
     }
 
