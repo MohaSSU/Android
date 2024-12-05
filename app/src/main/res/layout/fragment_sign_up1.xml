@@ -1,113 +1,111 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/white"
+    android:orientation="vertical"
     android:padding="16dp">
 
     <!-- 상단 Back 버튼과 제목 -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_back"
-            android:contentDescription="뒤로가기 버튼"
             android:background="?selectableItemBackground"
-            android:foregroundTint="@color/black" />
+            android:contentDescription="뒤로가기 버튼"
+            android:foregroundTint="@color/black"
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="모하SSU 회원가입"
-            android:textStyle="bold"
-            android:textSize="20sp"
             android:layout_marginStart="8dp"
-            android:textColor="@color/black" />
+            android:text="모하SSU 회원가입"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
     </FrameLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#BDBDBD"
-        android:layout_marginBottom="40dp" />
+        android:layout_marginBottom="40dp"
+        android:background="#BDBDBD" />
 
     <!-- 화면 간격 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="아이디와 비밀번호를 입력해주세요!"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:gravity="center"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="36dp"
-        android:textColor="@color/black" />
+        android:gravity="center"
+        android:text="아이디와 비밀번호를 입력해주세요!"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <!-- 아이디 입력 영역 -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="아이디"
-        android:textSize="16sp"
-        android:textColor="@color/black"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="16dp" />
+        android:text="아이디"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/etId"
+            android:id="@+id/etEmail"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:hint="아이디를 입력해주세요"
+            android:layout_weight="1"
+            android:hint="이메일을 입력해주세요"
             android:inputType="text"
             android:padding="12dp"
             android:textColor="@color/black" />
 
         <Button
-            android:id="@+id/btnCheckId"
+            android:id="@+id/btnCheckEmail"
+            style="@style/BlueMaterialButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="중복 검사"
             android:layout_marginStart="8dp"
-            style="@style/BlueMaterialButtonStyle"
+            android:text="중복 검사"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvIdError"
+        android:id="@+id/tvEmaildError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="*아이디 중복검사를 먼저 해주세요"
-        android:textSize="14sp"
-        android:textColor="@color/red"
         android:layout_marginTop="4dp"
+        android:text="*이메일을 입력해주세요"
+        android:textColor="@color/red"
+        android:textSize="14sp"
         android:visibility="gone" />
 
     <!-- 비밀번호 입력 영역 -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="비밀번호"
-        android:textSize="16sp"
-        android:textColor="@color/black"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="16dp" />
+        android:text="비밀번호"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/etPassword"
@@ -122,11 +120,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="비밀번호 재확인"
-        android:textSize="16sp"
-        android:textColor="@color/black"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="16dp" />
+        android:text="비밀번호 재확인"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/etConfirmPassword"
@@ -141,23 +139,43 @@
         android:id="@+id/tvPasswordError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="*비밀번호가 일치하지 않습니다"
-        android:textSize="14sp"
-        android:textColor="@color/red"
         android:layout_marginTop="4dp"
+        android:text="*비밀번호가 일치하지 않습니다"
+        android:textColor="@color/red"
+        android:textSize="14sp"
         android:visibility="gone" />
 
-    <!-- 다음 버튼 -->
-    <Button
-        android:id="@+id/btnNext"
-        android:layout_width="wrap_content"
+    <!-- 버튼 영역 -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="다음"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginTop="160dp"
-        style="@style/BlueMaterialButtonStyle"
-        android:textColor="@android:color/white" />
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSendVerification"
+            style="@style/BlueMaterialButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="인증 메일 발송"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnNext"
+            style="@style/BlueMaterialButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="다음"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </LinearLayout>

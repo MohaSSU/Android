@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_edit_message"
+    android:layout_width="300dp"
+    android:layout_height="80dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/pic_status_chat">
+
+    <EditText
+        android:id="@+id/markerMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="여기에 상태 메시지를 입력하세요"
+        android:inputType="text"
+        android:background="#00000000"
+        />
+
+</LinearLayout>

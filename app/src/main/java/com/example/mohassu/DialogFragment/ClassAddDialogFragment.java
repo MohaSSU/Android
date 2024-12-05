@@ -19,14 +19,15 @@ import com.example.mohassu.R;
 
 public class ClassAddDialogFragment extends DialogFragment {
 
-    private TextView selectedLocationButton = null;
+    private TextView selectedLocationButton = null; // 강의 장소 선택 로직을 위해서 정의
+    private String selectedClassPlace = ""; // 선택된 강의 장소를 저장하는 변수
+
 
     public interface OnClassAddedListener {
         void onClassAdded(String className, String classPlace, int day, int startHour, int startMinute, int endHour, int endMinute);
     }
 
     private OnClassAddedListener listener;
-    private String selectedClassPlace = ""; // 선택된 강의 장소를 저장하는 변수
 
     public void setOnClassAddedListener(OnClassAddedListener listener) {
         this.listener = listener;
