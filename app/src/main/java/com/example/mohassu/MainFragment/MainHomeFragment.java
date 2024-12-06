@@ -3,6 +3,7 @@ package com.example.mohassu.MainFragment;
 import static com.naver.maps.map.CameraUpdate.REASON_GESTURE;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,8 +11,12 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -60,6 +65,8 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     private boolean isCameraMovedByUser = false;
     private boolean isMyMarkerClicked = false; // 마커 클릭 상태 추적 변수
     private boolean isFriendMarkerClicked = false;
+    private boolean isFocusMode = false;
+    private boolean isEditTextClicked = false;
 
     ImageButton notificationButton;
     ImageButton promiseListButton;
@@ -68,7 +75,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     ImageButton myPageButton;
     ImageButton myLocationButton;
     TextView tvBuildingName;
-    boolean focusMode = false;
+
     Marker locationMarker;
 
     private GeofencingClient geofencingClient;
@@ -198,7 +205,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                 isMyMarkerClicked = false; // 사용자가 화면을 이동하면 마커 클릭 상태 해제
                 isFriendMarkerClicked = false;
 
-                if (focusMode) {
+                if (isFocusMode) {
                     resetMarkerFocusMode();
                 }
                 FrameLayout mapContainer = requireActivity().findViewById(R.id.fragment_map);
@@ -230,27 +237,29 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
         // 지도 클릭 이벤트 설정 (말풍선 닫기)
         naverMap.setOnMapClickListener((point, coord) -> {
-            isMyMarkerClicked = false; // 사용자가 화면을 클릭하면 마커 클릭 상태 해제
-            isFriendMarkerClicked = false;
-            if (focusMode) {
-                resetMarkerFocusMode();
-            }
-            FrameLayout mapContainer = requireActivity().findViewById(R.id.fragment_map);
-            View myBalloonView = mapContainer.findViewById(R.id.dialog_edit_message); // ID로 찾기
-            if (myBalloonView != null) {
-                mapContainer.removeView(myBalloonView); // 말풍선 제거
-            }
-            View friendBalloonView = mapContainer.findViewById(R.id.dialog_text_message); // ID로 찾기
-            if (friendBalloonView != null) {
-                mapContainer.removeView(myBalloonView); // 말풍선 제거
-            }
-            View bannerView = mapContainer.findViewById(R.id.fragment_status_banner); // ID로 찾기
-            if (bannerView != null) {
-                mapContainer.removeView(bannerView); // 말풍선 제거
-            }
-            View profileButton = mapContainer.findViewById(R.id.dialog_show_profile); // ID로 찾기
-            if (profileButton != null) {
-                mapContainer.removeView(profileButton); // 말풍선 제거
+            if (!isEditTextClicked) {
+                isMyMarkerClicked = false; // 사용자가 화면을 클릭하면 마커 클릭 상태 해제
+                isFriendMarkerClicked = false;
+                if (isFocusMode) {
+                    resetMarkerFocusMode();
+                }
+                FrameLayout mapContainer = requireActivity().findViewById(R.id.fragment_map);
+                View myBalloonView = mapContainer.findViewById(R.id.dialog_edit_message); // ID로 찾기
+                if (myBalloonView != null) {
+                    mapContainer.removeView(myBalloonView); // 말풍선 제거
+                }
+                View friendBalloonView = mapContainer.findViewById(R.id.dialog_text_message); // ID로 찾기
+                if (friendBalloonView != null) {
+                    mapContainer.removeView(myBalloonView); // 말풍선 제거
+                }
+                View bannerView = mapContainer.findViewById(R.id.fragment_status_banner); // ID로 찾기
+                if (bannerView != null) {
+                    mapContainer.removeView(bannerView); // 말풍선 제거
+                }
+                View profileButton = mapContainer.findViewById(R.id.dialog_show_profile); // ID로 찾기
+                if (profileButton != null) {
+                    mapContainer.removeView(profileButton); // 말풍선 제거
+                }
             }
         });
 
@@ -290,7 +299,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                 if (results[0] <= place.getRadius()) {
                     String buildingName = place.getName();
                     tvBuildingName.setText(buildingName + "에 있어요.");
-                    if (!focusMode) {
+                    if (!isFocusMode) {
                         tvBuildingName.setVisibility(View.VISIBLE);
                     }
                     return; // 반경 내 첫 번째 장소를 찾으면 종료
@@ -302,7 +311,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
     private void showMarkerFocusMode() {
         // 버튼 숨기기
-        focusMode = true;
+        isFocusMode = true;
         notificationButton.setVisibility(View.GONE);
         promiseListButton.setVisibility(View.GONE);
         signupNextButton.setVisibility(View.GONE);
@@ -315,7 +324,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
     private void resetMarkerFocusMode() {
         // 버튼 다시 표시
-        focusMode = false;
+        isFocusMode = false;
         notificationButton.setVisibility(View.VISIBLE);
         promiseListButton.setVisibility(View.VISIBLE);
         signupNextButton.setVisibility(View.VISIBLE);
@@ -392,6 +401,50 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                         .inflate(R.layout.dialog_edit_message, mapContainer, false);
                                 mapContainer.addView(myBalloonView); // 말풍선 추가
 
+                                // EditText 참조 가져오기
+                                EditText markerMessageEditText = myBalloonView.findViewById(R.id.markerMyMessage);
+
+                                db.collection("users")
+                                        .document(currentUser.getUid()) // 사용자 ID
+                                        .get()
+                                        .addOnSuccessListener(statusMsg -> {
+                                            if (statusMsg.exists()) {
+                                                // 상태 메시지가 이미 저장되어 있으면 EditText에 띄우기
+                                                String storedMessage = statusMsg.getString("statusMessage");
+                                                if (storedMessage != null && !storedMessage.isEmpty()) {
+                                                    markerMessageEditText.setText(storedMessage); // 기존 메시지 띄우기
+                                                }
+                                            }
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.w("TAG", "Error getting document", e);
+                                        });
+
+                                markerMessageEditText.setOnEditorActionListener((v, actionId, event) -> {
+                                    isEditTextClicked= true;
+                                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                                        String statusMessage = markerMessageEditText.getText().toString().trim();
+
+                                        if (!statusMessage.isEmpty()) {
+                                            db.collection("users")
+                                                    .document(currentUser.getUid()) // 사용자 ID
+                                                    .update("statusMessage", statusMessage)
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        // 저장 성공 시 처리 (예: 메시지 표시)
+                                                        Toast.makeText(requireContext(), "상태 메시지가 업데이트되었습니다.", Toast.LENGTH_SHORT).show();
+                                                    });
+                                        }
+
+
+                                        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                        if (imm != null) {
+                                            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                                            markerMessageEditText.clearFocus(); // 포커스 해제하여 깜빡임 끄기
+                                        }
+                                        return true;
+                                    }
+                                    return false;
+                                });
                                 return true; // 클릭 이벤트 소비
                             });
                         }
