@@ -101,7 +101,11 @@
         <action
             android:id="@+id/actionSettingNotification"
             app:destination="@+id/MyPageSettingNotificationFragment"/>
+<!--        <action-->
+<!--            android:id="@+id/actionLogout"-->
+<!--            app:destination="@+id/StartFragment"/>-->
     </fragment>
+
 
     <!--마이페이지 : 내 시간표 확인 페이지-->
     <fragment
