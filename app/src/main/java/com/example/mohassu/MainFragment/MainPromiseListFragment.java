@@ -5,36 +5,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mohassu.Adapter.PromiseAdapter;
+import com.example.mohassu.Model.Promise;
 import com.example.mohassu.R;
-import com.example.mohassu.adapters.PromiseAdapter;
-import com.example.mohassu.models.Promise;
-import com.naver.maps.geometry.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainPromiseListFragment extends Fragment {
-    private List<Promise> promiseList = new ArrayList<>();
-    private LatLng latLng;
+
+    private RecyclerView myPromiseRecyclerView;
+    private RecyclerView friendPromiseRecyclerView;
+    private PromiseAdapter myPromiseAdapter;
+    private PromiseAdapter friendPromiseAdapter;
+    private List<Promise> myPromiseList = new ArrayList<>();
+    private List<Promise> friendPromiseList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // 약속이 있는 경우와 없는 경우의 레이아웃 선택
-        if (promiseList.isEmpty()) {
-            return inflater.inflate(R.layout.fragment_main_promise_list_with_no_promise, container, false);
-        } else {
-            return inflater.inflate(R.layout.fragment_main_promise_list, container, false);
-        }
+        return inflater.inflate(R.layout.fragment_main_promise_list, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // NavController 초기화
@@ -43,24 +47,75 @@ public class MainPromiseListFragment extends Fragment {
             navController.navigateUp();
         });
 
-        // 약속 리스트가 있는 경우 RecyclerView 초기화
-        if (!promiseList.isEmpty()) {
-            RecyclerView recyclerView = view.findViewById(R.id.grid_my_promise_list);
-            recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-            //PromiseAdapter adapter = new PromiseAdapter(promiseList);
-            //recyclerView.setAdapter(adapter);
-        }
+        // 약속 RecyclerView 초기화
+        myPromiseRecyclerView = view.findViewById(R.id.recycler_my_promise_list);
+        myPromiseRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        myPromiseAdapter = new PromiseAdapter(requireContext(), myPromiseList);
+        myPromiseRecyclerView.setAdapter(myPromiseAdapter);
+
+        friendPromiseRecyclerView = view.findViewById(R.id.recycler_friend_promise_list);
+        friendPromiseRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        friendPromiseAdapter = new PromiseAdapter(requireContext(), friendPromiseList);
+        friendPromiseRecyclerView.setAdapter(friendPromiseAdapter);
+
+        // Firebase에서 약속 데이터 가져오기
+        fetchPromises();
     }
 
-    // 더미 데이터 생성 (실제 데이터로 대체 가능)
-    private void loadDummyData() {
-        promiseList.add(new Promise("원석평 외 2명과의 약속", "정보과학관", "오늘 12:00", latLng));
-        promiseList.add(new Promise("정유진 외 1명과의 약속", "학교 정문", "내일 15:00", latLng));
+    private void fetchPromises() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // 내 약속 가져오기
+        db.collection("promises")
+                .whereEqualTo("creatorId", currentUserId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        myPromiseList.clear();
+                        for (DocumentSnapshot document : task.getResult()) {
+                            myPromiseList.add(createPromiseFromDocument(document));
+                        }
+                        myPromiseAdapter.notifyDataSetChanged();
+                    } else {
+                        // 에러 처리
+                    }
+                });
+
+        // 친구가 만든 약속 가져오기
+        db.collection("promises")
+                .whereArrayContains("participantIds", currentUserId)
+                .whereNotEqualTo("creatorId", currentUserId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        friendPromiseList.clear();
+                        for (DocumentSnapshot document : task.getResult()) {
+                            friendPromiseList.add(createPromiseFromDocument(document));
+                        }
+                        friendPromiseAdapter.notifyDataSetChanged();
+                    } else {
+                        // 에러 처리
+                    }
+                });
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        loadDummyData(); // 더미 데이터 로드
+    private Promise createPromiseFromDocument(DocumentSnapshot document) {
+        String creatorId = document.getString("creatorId");
+        String creatorPhotoUrl = document.getString("creatorPhotoUrl");
+        List<String> participantIds = (List<String>) document.get("participantIds");
+        String location = document.getString("location");
+        String dateTime = document.getString("dateTime");
+        double latitude = document.getDouble("latitude");
+        double longitude = document.getDouble("longitude");
+
+        return new Promise(
+                new com.naver.maps.geometry.LatLng(latitude, longitude),
+                creatorId,
+                creatorPhotoUrl,
+                participantIds,
+                location,
+                dateTime
+        );
     }
 }
