@@ -58,16 +58,12 @@
             android:textColor="@color/black" />
 
         <!-- 내가 만든약속 리스트 -->
-        <GridLayout
-            android:id="@+id/grid_my_promise_list"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_my_promise_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="2"
             android:padding="8dp"
-            android:layout_marginBottom="10dp">
-            <include layout="@layout/view_promise"/>
-            <!-- view_promise.xml 을 inflate하여 동적으로 추가 -->
-        </GridLayout>
+            android:layout_marginBottom="10dp" />
 
         <View
             android:layout_width="match_parent"
@@ -85,16 +81,12 @@
             android:layout_marginStart="8dp"
             android:textColor="@color/black" />
 
-        <!-- 약속 리스트 -->
-        <GridLayout
-            android:id="@+id/grid_promise_list"
+        <!-- 친구가 만든 약속 리스트 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_friend_promise_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:padding="8dp">
-            <include layout="@layout/view_promise"/>
-            <!-- view_promise.xml 을 inflate하여 동적으로 추가 -->
-        </GridLayout>
+            android:padding="8dp" />
 
     </LinearLayout>
 

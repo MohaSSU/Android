@@ -1,5 +1,6 @@
-package com.example.mohassu;
+package com.example.mohassu.Constants;
 
+import com.example.mohassu.Model.PlaceInfo;
 import com.naver.maps.geometry.LatLng;
 
 import java.util.ArrayList;
@@ -25,11 +26,6 @@ public class Constants {
         PLACES.add(new PlaceInfo("진리관", new LatLng(37.496906, 126.957495), 30));
         PLACES.add(new PlaceInfo("조만식기념관", new LatLng(37.497249, 126.958212), 30));
         PLACES.add(new PlaceInfo("미래관", new LatLng(  37.495610, 126.958487), 30));
-
-
-
-
-
         // 필요시 추가
     }
 }

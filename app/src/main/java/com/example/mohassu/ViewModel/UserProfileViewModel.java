@@ -1,4 +1,4 @@
-package com.example.mohassu;
+package com.example.mohassu.ViewModel;
 
 import android.net.Uri;
 
@@ -43,5 +43,4 @@ public class UserProfileViewModel extends ViewModel {
     public LiveData<Uri> getPhotoUri() {
         return photoUri;
     }
-
 }

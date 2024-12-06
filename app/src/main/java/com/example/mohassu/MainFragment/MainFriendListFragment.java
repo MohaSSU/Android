@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mohassu.DialogFragment.AddFriendDialogFragment;
 import com.example.mohassu.R;
-import com.example.mohassu.adapters.FriendAdapter;
-import com.example.mohassu.models.Friend;
+import com.example.mohassu.Adapter.FriendAdapter;
+import com.example.mohassu.Model.Friend;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;

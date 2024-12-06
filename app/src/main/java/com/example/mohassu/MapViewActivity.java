@@ -1,7 +1,5 @@
 package com.example.mohassu;
 
-import com.example.mohassu.Constants;
-
 import android.content.pm.PackageManager;
 import android.Manifest;
 import android.graphics.Bitmap;
@@ -17,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.mohassu.Constants.Constants;
+import com.example.mohassu.Model.PlaceInfo;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.naver.maps.geometry.LatLng;
