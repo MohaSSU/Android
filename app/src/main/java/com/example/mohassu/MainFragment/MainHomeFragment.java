@@ -4,6 +4,8 @@ import static com.naver.maps.map.CameraUpdate.REASON_GESTURE;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +33,8 @@ import com.example.mohassu.PlaceInfo;
 import com.example.mohassu.R;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -56,7 +60,6 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     private boolean isCameraMovedByUser = false;
     private boolean isMyMarkerClicked = false; // 마커 클릭 상태 추적 변수
     private boolean isFriendMarkerClicked = false;
-    LocationOverlay locationOverlay;
 
     ImageButton notificationButton;
     ImageButton promiseListButton;
@@ -70,7 +73,9 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
     private GeofencingClient geofencingClient;
 
+    FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseUser currentUser = auth.getCurrentUser();
 
     // ActivityResultLauncher for permission requests
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -165,7 +170,6 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         CameraUpdate initialUpdate = CameraUpdate.scrollTo(new LatLng(0, 0));
         naverMap.moveCamera(initialUpdate);
 
-
         // 위치 정보 가져오기
         naverMap.setLocationSource(locationSource);
 
@@ -175,6 +179,17 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         // 오버레이 위치 아이콘 비활성화
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
         locationOverlay.setVisible(false);
+
+
+        // 위치 요청 수락 시 트래킹모드 가동, 거부 시 다시 묻기
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);// 트래킹 모드 설정 후에도 오버레이 비활성화
+            naverMap.addOnLocationChangeListener(location -> {
+                locationOverlay.setVisible(false); // 계속해서 오버레이를 비활성화
+            });
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
 
         // 지도 이동 이벤트 설정
         naverMap.addOnCameraChangeListener((reason, animated) -> {
@@ -206,15 +221,6 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        // 위치 요청 수락 시 트래킹모드 가동, 거부 시 다시 묻기
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);// 트래킹 모드 설정 후에도 오버레이 비활성화
-            naverMap.addOnLocationChangeListener(location -> {
-                locationOverlay.setVisible(false); // 계속해서 오버레이를 비활성화
-            });
-        } else {
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
 
         // 내 위치 Marker 초기화
         loadMyMarker();
@@ -224,10 +230,11 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
         // 지도 클릭 이벤트 설정 (말풍선 닫기)
         naverMap.setOnMapClickListener((point, coord) -> {
+            isMyMarkerClicked = false; // 사용자가 화면을 클릭하면 마커 클릭 상태 해제
+            isFriendMarkerClicked = false;
             if (focusMode) {
                 resetMarkerFocusMode();
             }
-            resetMarkerFocusMode();
             FrameLayout mapContainer = requireActivity().findViewById(R.id.fragment_map);
             View myBalloonView = mapContainer.findViewById(R.id.dialog_edit_message); // ID로 찾기
             if (myBalloonView != null) {
@@ -237,23 +244,33 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
             if (friendBalloonView != null) {
                 mapContainer.removeView(myBalloonView); // 말풍선 제거
             }
-            isMyMarkerClicked = false; // 마커 클릭 상태 해제
-            isFriendMarkerClicked = false;
+            View bannerView = mapContainer.findViewById(R.id.fragment_status_banner); // ID로 찾기
+            if (bannerView != null) {
+                mapContainer.removeView(bannerView); // 말풍선 제거
+            }
+            View profileButton = mapContainer.findViewById(R.id.dialog_show_profile); // ID로 찾기
+            if (profileButton != null) {
+                mapContainer.removeView(profileButton); // 말풍선 제거
+            }
         });
 
 
         // 위치 변화 업데이트
         naverMap.addOnLocationChangeListener(location -> {
-            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            locationMarker.setPosition(currentLocation);
+            if (locationMarker == null) {
+                // locationMarker가 초기화되지 않았다면 초기화가 완료되길 기다립니다.
+                return;
+            }
+            LatLng currentNewLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            locationMarker.setPosition(currentNewLocation);
 
             // 마커 클릭 상태 또는 초기 화면에서 카메라 이동
             if (isMyMarkerClicked) {
-                CameraUpdate update = CameraUpdate.scrollTo(currentLocation)
+                CameraUpdate update = CameraUpdate.scrollTo(currentNewLocation)
                         .animate(CameraAnimation.Easing); // 줌 레벨 17.0
                 naverMap.moveCamera(update);
             } else if (!isCameraMovedByUser && !isFriendMarkerClicked) {
-                CameraUpdate update = CameraUpdate.scrollAndZoomTo(currentLocation, 17.0)
+                CameraUpdate update = CameraUpdate.scrollAndZoomTo(currentNewLocation, 17.0)
                         .animate(CameraAnimation.Easing);
                 naverMap.moveCamera(update);
             }
@@ -310,51 +327,47 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
     private void loadMyMarker() {
 
-        // Firestore에서 사용자 데이터를 가져옴
-        db.collection("myuser")
-                .document("k5M1uoDwCsEfpo09SH98") // 예: 사용자 ID를 문서 ID로 사용
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String name = documentSnapshot.getString("name");
-                        String class_name = documentSnapshot.getString("class_name");
-                        String place = documentSnapshot.getString("place");
-                        String startTime = documentSnapshot.getString("startTime");
-                        String endTime = documentSnapshot.getString("endTime");
-                        String photoPath = documentSnapshot.getString("photoPath");
-                        GeoPoint location = documentSnapshot.getGeoPoint("location");
+        // XML 레이아웃을 Inflate
+        View myMarkerView = LayoutInflater.from(requireContext()).inflate(R.layout.my_marker, null);
+        ImageView myProfile = myMarkerView.findViewById(R.id.my_marker_image);
 
-                        if (photoPath != null) {
-                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                            StorageReference storageRef = storage.getReferenceFromUrl(photoPath);
-                            // 다운로드 가능한 URL 생성
-                            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                String downloadUrl = uri.toString();
-                                ImageView myProfile = getView().findViewById(R.id.profile_img);
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+
+            // Firestore에서 사용자 데이터를 가져옴
+            db.collection("users").document(currentUser.getUid()) // 예: 사용자 ID를 문서 ID로 사용
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String photoUrl = documentSnapshot.getString("photoUrl");
+
+                            if (photoUrl != null) {
                                 // Glide를 사용하여 이미지 로드
                                 Glide.with(this)
-                                        .load(downloadUrl)
-                                        //.placeholder(R.drawable.img_default)
-                                        //.error(R.drawable.error_image)
+                                        .load(photoUrl)
+                                        .placeholder(R.drawable.img_default)
+                                        .error(R.drawable.img_default)
                                         .into(myProfile);
-                            });
 
-                            // 내 위치를 기반으로 마커 추가
-                            LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-                            currentLocation = locationOverlay.getPosition();
-
-                            // Marker 객체 생성
+                            } else {
+                                myProfile.setImageResource(R.drawable.pic_basic_profile); // 기본 이미지
+                            }
+                            // View를 Bitmap으로 변환
+                            //Bitmap myMarkerBitmap = convertViewToBitmap(myMarkerView);
+// Marker 객체 생성
                             locationMarker = new Marker();
-                            locationMarker.setPosition(currentLocation);
+
+                            // 마커 초기화
+                            LatLng defaultPosition = new LatLng(0, 0); // 최초 좌표
+                            locationMarker.setPosition(defaultPosition);
                             locationMarker.setIcon(OverlayImage.fromResource(R.drawable.img_marker_red)); // 마커 이미지 설정
                             locationMarker.setWidth(120); // 마커 크기 조정
                             locationMarker.setHeight(140);
                             locationMarker.setMap(naverMap); // 지도에 마커 추가
 
-                            // 클릭 이벤트 설정
                             locationMarker.setOnClickListener(overlay -> {
 
-                                if (naverMap == null) {
+                                if (naverMap == null) { // 테스트 필요
                                     Toast.makeText(requireContext(), "지도를 불러오는 중입니다. 잠시만 기다려주세요.", Toast.LENGTH_SHORT).show();
                                     return true;
                                 }
@@ -363,6 +376,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                 showMarkerFocusMode();
 
                                 // 현재 위치 가져오기
+                                LocationOverlay locationOverlay = naverMap.getLocationOverlay();
                                 LatLng currentNewLocation = locationOverlay.getPosition(); // 현재 위치 좌표 가져오기
                                 CameraUpdate update = CameraUpdate.scrollAndZoomTo(currentNewLocation, 20.0)
                                         .animate(CameraAnimation.Easing);
@@ -380,105 +394,116 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
                                 return true; // 클릭 이벤트 소비
                             });
-                        } else {
-                            Log.e("Firebase", "내 데이터가 없습니다.");
                         }
-                    }
-                });
+                    });
+        }
     }
 
     // Firestore에서 친구 데이터 가져오기
     private void loadFriendMarkers() {
-        ImageView friendProfile = getView().findViewById(R.id.profile_img);
-        db.collection("friends")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
+
+        // XML 레이아웃을 Inflate
+        View friendMarkerView = LayoutInflater.from(requireContext()).inflate(R.layout.your_marker, null);
+        ImageView friendProfile = friendMarkerView.findViewById(R.id.your_marker_image);
+
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+
+            db.collection("users").document(uid)
+                    .collection("friends")
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        if (querySnapshot.isEmpty()) {
+                            // 친구 데이터가 없을 경우 처리
+                            Toast.makeText(requireContext(), "친구를 추가해보세요!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        for (QueryDocumentSnapshot document : querySnapshot) {
                             String name = document.getString("name");
+                            String nickname = document.getString("nickname");
                             String class_name = document.getString("class_name");
                             String place = document.getString("place");
                             String startTime = document.getString("startTime");
                             String endTime = document.getString("endTime");
-                            String photoPath = document.getString("photoPath");
+                            String photoUrl = document.getString("photoUrl");
                             GeoPoint location = document.getGeoPoint("location");
+                            // 마커 클릭 시 친구 ID 전달
+                            String friendId = document.getId();
 
-                            if (photoPath != null) {
-                                FirebaseStorage storage = FirebaseStorage.getInstance();
-                                StorageReference storageRef = storage.getReferenceFromUrl(photoPath);
-                                // 다운로드 가능한 URL 생성
-                                storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                    String downloadUrl = uri.toString();
-                                    // Glide 또는 Picasso를 사용하여 이미지 로드
-                                    Glide.with(this)
-                                            .load(downloadUrl)
-                                            .placeholder(R.drawable.img_default)
-                                            //.error(R.drawable.error_image)
-                                            .into(friendProfile);
-                                });
-
-                                // 친구 위치를 기반으로 마커 추가
-                                LatLng friendLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-                                Marker friendMarker = new Marker();
-                                friendMarker.setPosition(friendLocation);
-                                friendMarker.setIcon(OverlayImage.fromResource(R.layout.profile_container_container)); // 마커 이미지
-                                friendMarker.setWidth(120);
-                                friendMarker.setHeight(140);
-                                friendMarker.setMap(naverMap);
-
-                                // 마커 클릭 이벤트
-                                friendMarker.setOnClickListener(overlay -> {
-                                    // 클릭 이벤트 설정
-                                    if (naverMap == null || getView() == null) {
-                                        // 지도 초기화가 완료되지 않은 경우
-                                        Toast.makeText(requireContext(), "지도가 아직 초기화되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                                        return true; // 이벤트 소비
-                                    }
-
-                                    //다른 버튼 안 보이게
-                                    showMarkerFocusMode();
-
-                                    //친구 위치로 카메라 업데이트
-                                    CameraUpdate update = CameraUpdate.scrollAndZoomTo(friendLocation, 20.0)
-                                            .animate(CameraAnimation.Easing);
-                                    naverMap.moveCamera(update);
-                                    isFriendMarkerClicked = true;
-                                    isMyMarkerClicked = false;
-
-                                    FrameLayout mapContainer = requireActivity().findViewById(R.id.fragment_map);
-
-                                    // 말풍선 View 인플레이트
-                                    View friendBalloonView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_text_message, mapContainer, false);
-                                    mapContainer.addView(friendBalloonView); // 말풍선 추가
-
-                                    // 배너 View 인플레이트
-                                    View bannerView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_status_banner, mapContainer, false);
-                                    mapContainer.addView(bannerView);
-
-                                    // UI 업데이트
-                                    updateStatusBanner(place, class_name, startTime, endTime);
-
-                                    // 프로필버튼 View 인플레이트
-                                    View profileButton = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_show_profile, mapContainer, false);
-                                    mapContainer.addView(profileButton);
-                                    // 클릭 이벤트 설정
-                                    // 프로필 보기 버튼 클릭 이벤트
-                                    profileButton.findViewById(R.id.showProfileButton).setOnClickListener(v -> {
-                                        // BottomSheetDialogFragment 호출
-                                        EmptyBottomSheetProfile bottomSheet = new EmptyBottomSheetProfile();
-                                        bottomSheet.show(getParentFragmentManager(), "ProfileBottomSheet");
-                                    });
-
-                                    return true; // 클릭 이벤트 소비
-                                });
+                            if (photoUrl != null) {
+                                // Glide를 사용하여 이미지 로드
+                                Glide.with(this)
+                                        .load(photoUrl)
+                                        .placeholder(R.drawable.img_default)
+                                        .error(R.drawable.img_default)
+                                        .into(friendProfile);
                             } else {
-                                Log.e("Firebase", "Error getting documents: ", task.getException());
-
+                                friendProfile.setImageResource(R.drawable.pic_basic_profile); // 기본 이미지
                             }
+
+                            // View를 Bitmap으로 변환
+                            Bitmap friendMarkerBitmap = convertViewToBitmap(friendMarkerView);
+
+                            // 친구 위치를 기반으로 마커 추가
+
+                            LatLng friendLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                            Marker friendMarker = new Marker();
+                            friendMarker.setPosition(friendLocation);
+                            friendMarker.setIcon(OverlayImage.fromBitmap(friendMarkerBitmap)); // 마커 이미지
+                            friendMarker.setWidth(120);
+                            friendMarker.setHeight(140);
+                            friendMarker.setMap(naverMap);
+
+                            // 마커 클릭 이벤트
+                            friendMarker.setOnClickListener(overlay -> { // 아직 테스트
+                                // 클릭 이벤트 설정
+                                if (naverMap == null || getView() == null) {
+                                    // 지도 초기화가 완료되지 않은 경우
+                                    Toast.makeText(requireContext(), "지도가 아직 초기화되지 않았습니다.", Toast.LENGTH_SHORT).show();
+                                    return true; // 이벤트 소비
+                                }
+
+                                //다른 버튼 안 보이게
+                                showMarkerFocusMode();
+
+                                //친구 위치로 카메라 업데이트
+                                CameraUpdate update = CameraUpdate.scrollAndZoomTo(friendLocation, 20.0)
+                                        .animate(CameraAnimation.Easing);
+                                naverMap.moveCamera(update);
+                                isFriendMarkerClicked = true;
+                                isMyMarkerClicked = false;
+
+                                FrameLayout mapContainer = requireActivity().findViewById(R.id.fragment_map);
+
+                                // 말풍선 View 인플레이트
+                                View friendBalloonView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_text_message, mapContainer, false);
+                                mapContainer.addView(friendBalloonView); // 말풍선 추가
+
+                                // 배너 View 인플레이트
+                                View bannerView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_status_banner, mapContainer, false);
+                                mapContainer.addView(bannerView);
+
+                                // UI 업데이트
+                                updateStatusBanner(place, class_name, startTime, endTime);
+
+                                // 프로필버튼 View 인플레이트
+                                View profileButton = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_show_profile, mapContainer, false);
+                                mapContainer.addView(profileButton);
+                                // 클릭 이벤트 설정
+                                // 프로필 보기 버튼 클릭 이벤트
+                                profileButton.findViewById(R.id.showProfileButton).setOnClickListener(v -> {
+                                    // BottomSheetDialogFragment 호출
+                                    EmptyBottomSheetProfile bottomSheet = EmptyBottomSheetProfile.newInstance(friendId);
+                                    bottomSheet.show(getParentFragmentManager(), "ProfileBottomSheet");
+                                });
+
+                                return true; // 클릭 이벤트 소비
+                            });
                         }
-                    }
-                });
+                    });
+        }
     }
 
     // 상태 배너 업데이트 메서드
@@ -498,19 +523,15 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         endTimeInfo.setText(endTime != null ? endTime : "#end_time");
     }
 
-    private void updateMyInfo(String photoPath) {
-        View view = getView();
-        if (view == null) return;
+    private Bitmap convertViewToBitmap(View view) {
+        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
 
-        TextView placeInfo = view.findViewById(R.id.placeInfo);
-        TextView classInfo = view.findViewById(R.id.classInfo);
-        TextView stTimeInfo = view.findViewById(R.id.startTimeInfo);
-        TextView endTimeInfo = view.findViewById(R.id.endTimeInfo);
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
 
-        // Firestore 데이터로 텍스트 업데이트
-        placeInfo.setText(place != null ? place : "#PLACE");
-        classInfo.setText(class_name != null ? class_name : "#CLASS");
-        stTimeInfo.setText(startTime != null ? startTime : "#st_time");
-        endTimeInfo.setText(endTime != null ? endTime : "#end_time");
+        return bitmap;
     }
+
 }

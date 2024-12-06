@@ -54,7 +54,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="10dp"
             android:textSize="35dp"
-            android:text="호근찡"
+            android:text="#nickname"
             android:textStyle="bold"
             android:textColor="@color/white"
             />
@@ -68,7 +68,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="25dp"
-            android:text="이호근"
+            android:text="#name"
             android:textColor="@color/white"
             android:layout_marginBottom="20dp"
             />
