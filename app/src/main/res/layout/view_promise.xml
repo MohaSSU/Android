@@ -9,13 +9,13 @@
     android:layout_margin="8dp"
     android:elevation="4dp">
 
-    <!-- 지도 이미지 -->
-    <ImageView
-        android:id="@+id/img_map"
+    <!-- 지도 view -->
+    <com.naver.maps.map.MapView
+        android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/pic_sample_map" />
+        android:name="com.naver.maps.map.MapFragment" />
 
     <!-- 프로필 이미지 -->
     <ImageView

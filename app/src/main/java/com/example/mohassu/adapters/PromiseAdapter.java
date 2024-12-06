@@ -1,21 +1,21 @@
+package com.example.mohassu.adapters;
+
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mohassu.R;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.example.mohassu.models.Promise;
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.MapView;
+import com.naver.maps.map.NaverMap;
+import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.Marker;
 
 import java.util.List;
 
@@ -43,12 +43,18 @@ public class PromiseAdapter extends RecyclerView.Adapter<PromiseAdapter.PromiseV
         holder.tvLocation.setText(promise.getLocation());
         holder.tvTime.setText(promise.getTime());
 
-        // 지도 설정
+        // 네이버 지도 설정
         holder.mapView.onCreate(null);
-        holder.mapView.getMapAsync(googleMap -> {
+        holder.mapView.getMapAsync(naverMap -> {
             LatLng location = promise.getLatLng();
-            googleMap.addMarker(new MarkerOptions().position(location).title(promise.getLocation()));
-            googleMap.moveCamera(com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(location, 15));
+
+            // 마커 추가
+            Marker marker = new Marker();
+            marker.setPosition(location);
+            marker.setMap(naverMap);
+
+            // 카메라 이동
+            naverMap.moveCamera(com.naver.maps.map.CameraUpdate.scrollTo(location));
         });
     }
 
@@ -70,7 +76,7 @@ public class PromiseAdapter extends RecyclerView.Adapter<PromiseAdapter.PromiseV
         }
 
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady(NaverMap naverMap) {
             // No action required here; handled in onBindViewHolder
         }
     }

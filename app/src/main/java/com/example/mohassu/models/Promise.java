@@ -1,4 +1,6 @@
-import com.google.android.gms.maps.model.LatLng;
+package com.example.mohassu.models;
+
+import com.naver.maps.geometry.LatLng;
 
 public class Promise {
     private String title;
