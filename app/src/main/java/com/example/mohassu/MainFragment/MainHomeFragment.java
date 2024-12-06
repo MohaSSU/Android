@@ -105,6 +105,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Toast.makeText(requireContext(), "지도를 불러오는 중입니다... \n화면을 누르지 마십시오", Toast.LENGTH_LONG).show();
         // Initialize MapFragment
         MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map);
         if (mapFragment == null) {
