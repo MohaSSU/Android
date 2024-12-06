@@ -100,10 +100,12 @@
                     android:id="@+id/btnProfileEdit"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_profile_edit"
+                    android:layout_marginStart="140dp"
                     android:background="?selectableItemBackground"
-                    android:layout_marginStart="140dp" />
+                    android:scaleType="fitXY"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_profile_edit"
+                    />
 
             </TableRow>
 
