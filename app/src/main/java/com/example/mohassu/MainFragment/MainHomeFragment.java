@@ -70,6 +70,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     private boolean isFriendMarkerClicked = false;
     private boolean isFocusMode = false;
     private boolean isEditTextClicked = false;
+    private boolean isPlaceFound = false;
     ImageButton notificationButton;
     ImageButton promiseListButton;
     ImageButton signupNextButton;
@@ -221,7 +222,6 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
         // 내 Marker 초기화
         initializeMyMarker();
 
@@ -270,10 +270,10 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-
     private void initializeMyMarker() {
-        LatLng location = naverMap.getLocationOverlay().getPosition();
-
+        CameraUpdate hide = CameraUpdate.scrollAndZoomTo(new LatLng(0,0), 20.0)
+                .animate(CameraAnimation.Easing);
+        naverMap.moveCamera(hide); // 가끔씩 naverMap 로딩 버그로 인해 위치 업데이트 이후 보이게 설정
 
         // XML 레이아웃을 Inflate
         View myMarkerView = LayoutInflater.from(requireContext()).inflate(R.layout.my_marker, null);
@@ -304,7 +304,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                             //Bitmap myMarkerBitmap = convertViewToBitmap(myMarkerView);
 // Marker 객체 생성
                             locationMarker = new Marker();
-                            locationMarker.setPosition(new LatLng(37.494576, 126.959706));
+                            locationMarker.setPosition(naverMap.getLocationOverlay().getPosition());
                             locationMarker.setIcon(OverlayImage.fromResource(R.drawable.img_marker_red)); // 마커 이미지 설정
                             locationMarker.setWidth(120); // 마커 크기 조정
                             locationMarker.setHeight(140);
@@ -319,6 +319,8 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
                                 //다른 버튼 안 보이게
                                 showMarkerFocusMode();
+
+                                LatLng location = locationMarker.getPosition();
 
                                 // 현재 위치 가져오기
                                 CameraUpdate update = CameraUpdate.scrollAndZoomTo(location, 20.0)
@@ -472,10 +474,18 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                         .update("place", buildingName) // Firestore에 장소명 저장
                         .addOnSuccessListener(aVoid -> Log.d("TAG", "Location updated in Firestore"))
                         .addOnFailureListener(e -> Log.w("TAG", "Failed to update location", e));
-                return; // 반경 내 첫 번째 장소를 찾으면 종료
+                break; // 반경 내 첫 번째 장소를 찾으면 종료
             }
         }
         tvBuildingName.setVisibility(View.GONE); // 반경 내 장소가 없을 경우
+
+        if (!isPlaceFound) {
+            db.collection("users")
+                    .document(currentUser.getUid())
+                    .update("place", "지도 위 장소")
+                    .addOnSuccessListener(aVoid -> Log.d("TAG", "No place found, updated to '건물없음'"))
+                    .addOnFailureListener(e -> Log.w("TAG", "Failed to update location to '건물없음'", e));
+        }
     }
 
     // Firestore에서 친구 데이터 가져오기
@@ -507,6 +517,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                             String endTime = document.getString("endTime");
                             String photoUrl = document.getString("photoUrl");
                             GeoPoint location = document.getGeoPoint("location");
+                            String statusMessage = document.getString("statusMessage");
                             // 마커 클릭 시 친구 ID 전달
                             String friendId = document.getId();
 
@@ -558,6 +569,8 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
                                 // 말풍선 View 인플레이트
                                 View friendBalloonView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_text_message, mapContainer, false);
+                                TextView friendBalloonText = friendBalloonView.findViewById(R.id.markerFriendMessage);
+                                friendBalloonText.setText(statusMessage);
                                 mapContainer.addView(friendBalloonView); // 말풍선 추가
 
                                 // 배너 View 인플레이트
