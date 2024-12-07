@@ -11,7 +11,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -40,6 +39,7 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -57,6 +57,9 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
     private NaverMap naverMap;
@@ -67,7 +70,6 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     private boolean isFriendMarkerClicked = false;
     private boolean isFocusMode = false;
     private boolean isEditTextClicked = false;
-
     ImageButton notificationButton;
     ImageButton promiseListButton;
     ImageButton signupNextButton;
@@ -75,10 +77,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     ImageButton myPageButton;
     ImageButton myLocationButton;
     TextView tvBuildingName;
-
     Marker locationMarker;
-
-    private GeofencingClient geofencingClient;
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -117,7 +116,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         // Initialize LocationSource
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
-        geofencingClient = LocationServices.getGeofencingClient(requireContext());
+        GeofencingClient geofencingClient = LocationServices.getGeofencingClient(requireContext());
 
         // Custom button to center on current location
         myLocationButton = view.findViewById(R.id.btnNowLocation);
@@ -174,7 +173,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
 
-        // 초기 좌표를 보이지 않는 위치로 설정 (예: 바다 위의 좌표)
+        // 현재 위치 불러오기 전 초기 화면을 보이지 않는 위치(바다)로 설정
         CameraUpdate initialUpdate = CameraUpdate.scrollTo(new LatLng(0, 0));
         naverMap.moveCamera(initialUpdate);
 
@@ -184,22 +183,15 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         // +- 줌컨트롤 버튼 비활성화
         naverMap.getUiSettings().setZoomControlEnabled(false);
 
-        // 오버레이 위치 아이콘 비활성화
-        LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-        locationOverlay.setVisible(false);
-
 
         // 위치 요청 수락 시 트래킹모드 가동, 거부 시 다시 묻기
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);// 트래킹 모드 설정 후에도 오버레이 비활성화
-            naverMap.addOnLocationChangeListener(location -> {
-                locationOverlay.setVisible(false); // 계속해서 오버레이를 비활성화
-            });
+            naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);// 트래킹 모드 설정 후 나중에 오버레이 비활성화
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
         }
 
-        // 지도 이동 이벤트 설정
+        // 지도 드래그 이벤트 설정
         naverMap.addOnCameraChangeListener((reason, animated) -> {
             if (reason == REASON_GESTURE) {
                 isCameraMovedByUser = true; // 사용자가 화면을 이동했을 때 플래그 설정
@@ -212,28 +204,28 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                 FrameLayout mapContainer = requireActivity().findViewById(R.id.fragment_map);
                 View myBalloonView = mapContainer.findViewById(R.id.dialog_edit_message); // ID로 찾기
                 if (myBalloonView != null) {
-                    mapContainer.removeView(myBalloonView); // 말풍선 제거
+                    mapContainer.removeView(myBalloonView); // 내 말풍선 제거
                 }
                 View friendBalloonView = mapContainer.findViewById(R.id.dialog_text_message); // ID로 찾기
                 if (friendBalloonView != null) {
-                    mapContainer.removeView(friendBalloonView); // 말풍선 제거
+                    mapContainer.removeView(friendBalloonView); // 친구 말풍선 제거
                 }
                 View bannerView = mapContainer.findViewById(R.id.fragment_status_banner); // ID로 찾기
                 if (bannerView != null) {
-                    mapContainer.removeView(bannerView); // 말풍선 제거
+                    mapContainer.removeView(bannerView); // 친구 상태 배너 제거
                 }
                 View profileButton = mapContainer.findViewById(R.id.dialog_show_profile); // ID로 찾기
                 if (profileButton != null) {
-                    mapContainer.removeView(profileButton); // 말풍선 제거
+                    mapContainer.removeView(profileButton); // 친구 프로필 확인 버튼 제거
                 }
             }
         });
 
 
-        // 내 위치 Marker 초기화
-        loadMyMarker();
+        // 내 Marker 초기화
+        initializeMyMarker();
 
-        // Firestore에서 친구 마커 로드
+        // 친구 Marker 초기화 및 위치 갱신
         loadFriendMarkers();
 
         // 지도 클릭 이벤트 설정 (말풍선 닫기)
@@ -268,74 +260,20 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         // 위치 변화 업데이트
         naverMap.addOnLocationChangeListener(location -> {
             if (locationMarker == null) {
-                // locationMarker가 초기화되지 않았다면 초기화가 완료되길 기다립니다.
+                // locationMarker가 초기화되지 않았다면 초기화 기다리기
                 return;
             }
-            LatLng currentNewLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            locationMarker.setPosition(currentNewLocation);
-
-            // 마커 클릭 상태 또는 초기 화면에서 카메라 이동
-            if (isMyMarkerClicked) {
-                CameraUpdate update = CameraUpdate.scrollTo(currentNewLocation)
-                        .animate(CameraAnimation.Easing); // 줌 레벨 17.0
-                naverMap.moveCamera(update);
-            } else if (!isCameraMovedByUser && !isFriendMarkerClicked) {
-                CameraUpdate update = CameraUpdate.scrollAndZoomTo(currentNewLocation, 17.0)
-                        .animate(CameraAnimation.Easing);
-                naverMap.moveCamera(update);
-            }
-
-
-            View view = getView();
-            tvBuildingName = view.findViewById(R.id.tvBuildingName);
-
-            for (PlaceInfo place : Constants.PLACES) {
-                float[] results = new float[1];
-                Location.distanceBetween(
-                        location.getLatitude(), location.getLongitude(),
-                        place.getLocation().latitude, place.getLocation().longitude,
-                        results
-                );
-
-                if (results[0] <= place.getRadius()) {
-                    String buildingName = place.getName();
-                    tvBuildingName.setText(buildingName + "에 있어요.");
-                    if (!isFocusMode) {
-                        tvBuildingName.setVisibility(View.VISIBLE);
-                    }
-                    return; // 반경 내 첫 번째 장소를 찾으면 종료
-                }
-            }
-            tvBuildingName.setVisibility(View.GONE); // 반경 내 장소가 없을 경우
+            updateUserLocationToFirestore(location);
+            loadUserLocationFromFirestore();
+            naverMap.getLocationOverlay().setVisible(false); // 오버레이 비활성화
         });
-    }
 
-    private void showMarkerFocusMode() {
-        // 버튼 숨기기
-        isFocusMode = true;
-        notificationButton.setVisibility(View.GONE);
-        promiseListButton.setVisibility(View.GONE);
-        signupNextButton.setVisibility(View.GONE);
-        createPromiseButton.setVisibility(View.GONE);
-        myPageButton.setVisibility(View.GONE);
-        myLocationButton.setVisibility(View.GONE);
-        tvBuildingName.setVisibility(View.GONE);
     }
 
 
-    private void resetMarkerFocusMode() {
-        // 버튼 다시 표시
-        isFocusMode = false;
-        notificationButton.setVisibility(View.VISIBLE);
-        promiseListButton.setVisibility(View.VISIBLE);
-        signupNextButton.setVisibility(View.VISIBLE);
-        createPromiseButton.setVisibility(View.VISIBLE);
-        myPageButton.setVisibility(View.VISIBLE);
-        myLocationButton.setVisibility(View.VISIBLE);
-        tvBuildingName.setVisibility(View.VISIBLE);
-    }
+    private void initializeMyMarker() {
+        LatLng location = naverMap.getLocationOverlay().getPosition();
 
-    private void loadMyMarker() {
 
         // XML 레이아웃을 Inflate
         View myMarkerView = LayoutInflater.from(requireContext()).inflate(R.layout.my_marker, null);
@@ -366,10 +304,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                             //Bitmap myMarkerBitmap = convertViewToBitmap(myMarkerView);
 // Marker 객체 생성
                             locationMarker = new Marker();
-
-                            // 마커 초기화
-                            LatLng defaultPosition = new LatLng(0, 0); // 최초 좌표
-                            locationMarker.setPosition(defaultPosition);
+                            locationMarker.setPosition(new LatLng(37.494576, 126.959706));
                             locationMarker.setIcon(OverlayImage.fromResource(R.drawable.img_marker_red)); // 마커 이미지 설정
                             locationMarker.setWidth(120); // 마커 크기 조정
                             locationMarker.setHeight(140);
@@ -386,9 +321,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                 showMarkerFocusMode();
 
                                 // 현재 위치 가져오기
-                                LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-                                LatLng currentNewLocation = locationOverlay.getPosition(); // 현재 위치 좌표 가져오기
-                                CameraUpdate update = CameraUpdate.scrollAndZoomTo(currentNewLocation, 20.0)
+                                CameraUpdate update = CameraUpdate.scrollAndZoomTo(location, 20.0)
                                         .animate(CameraAnimation.Easing);
                                 naverMap.moveCamera(update);
                                 isMyMarkerClicked = true;
@@ -422,7 +355,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                         });
 
                                 markerMessageEditText.setOnEditorActionListener((v, actionId, event) -> {
-                                    isEditTextClicked= true;
+                                    isEditTextClicked = true;
                                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                                         String statusMessage = markerMessageEditText.getText().toString().trim();
 
@@ -451,6 +384,98 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                         }
                     });
         }
+    }
+
+    private void updateUserLocationToFirestore(Location location) {
+        if (currentUser == null) return; // 사용자 인증되지 않은 경우
+
+        String uid = currentUser.getUid(); // 사용자 고유 ID (UID)
+
+        //GeoPoint로 location 저장
+        GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+
+        // Firestore에 저장할 데이터
+        Map<String, Object> locationData = new HashMap<>();
+        locationData.put("location", geoPoint);
+        locationData.put("timestamp", FieldValue.serverTimestamp()); // 서버의 타임스탬프 추가
+
+        db.collection("users")
+                .document(uid)
+                .collection("location")
+                .document("currentLocation")
+                .set(locationData) // 🔥 Firestore에 데이터 저장
+                .addOnSuccessListener(aVoid -> Log.d("TAG", "Location updated in Firestore"))
+                .addOnFailureListener(e -> Log.w("TAG", "Failed to update location", e));
+    }
+
+    private void loadUserLocationFromFirestore() {
+        if (currentUser == null) return; // 사용자 인증되지 않은 경우
+
+        String uid = currentUser.getUid();
+
+        db.collection("users")
+                .document(uid)
+                .collection("location")
+                .document("currentLocation")
+                .addSnapshotListener((snapshot, error) -> {
+                    if (error != null) {
+                        Log.w("TAG", "Listen failed.", error);
+                        return;
+                    }
+
+                    if (snapshot != null && snapshot.exists()) {
+                        GeoPoint newGeopoint = snapshot.getGeoPoint("location");
+
+                        LatLng newLocation = new LatLng(newGeopoint.getLatitude(), newGeopoint.getLongitude());
+
+                        // 사용자 위치 업데이트
+                        locationMarker.setPosition(newLocation);
+
+                        // 마커 클릭 상태 또는 초기 화면에서 카메라 이동
+                        if (isMyMarkerClicked) {
+                            CameraUpdate update = CameraUpdate.scrollTo(newLocation)
+                                    .animate(CameraAnimation.Easing); // 줌 레벨 17.0
+                            naverMap.moveCamera(update);
+                        } else if (!isCameraMovedByUser && !isFriendMarkerClicked) {
+                            CameraUpdate update = CameraUpdate.scrollAndZoomTo(newLocation, 17.0)
+                                    .animate(CameraAnimation.Easing);
+                            naverMap.moveCamera(update);
+                        }
+
+
+                        View view = getView();
+                        tvBuildingName = view.findViewById(R.id.tvBuildingName);
+
+                        loadFromGeofencing(newLocation);
+                    }
+                });
+    }
+
+
+    private void loadFromGeofencing(LatLng location) {
+        for (PlaceInfo place : Constants.PLACES) {
+            float[] results = new float[1];
+            Location.distanceBetween(
+                    location.latitude, location.longitude,
+                    place.getLocation().latitude, place.getLocation().longitude,
+                    results
+            );
+
+            if (results[0] <= place.getRadius()) {
+                String buildingName = place.getName();
+                tvBuildingName.setText(buildingName + "에 있어요.");
+                if (!isFocusMode) {
+                    tvBuildingName.setVisibility(View.VISIBLE);
+                }
+                db.collection("users")
+                        .document(currentUser.getUid())
+                        .update("place", buildingName) // Firestore에 장소명 저장
+                        .addOnSuccessListener(aVoid -> Log.d("TAG", "Location updated in Firestore"))
+                        .addOnFailureListener(e -> Log.w("TAG", "Failed to update location", e));
+                return; // 반경 내 첫 번째 장소를 찾으면 종료
+            }
+        }
+        tvBuildingName.setVisibility(View.GONE); // 반경 내 장소가 없을 경우
     }
 
     // Firestore에서 친구 데이터 가져오기
@@ -572,9 +597,34 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
         // Firestore 데이터로 텍스트 업데이트
         placeInfo.setText(place != null ? place : "#PLACE");
-        classInfo.setText(class_name != null ? class_name : "#CLASS");
-        stTimeInfo.setText(startTime != null ? startTime : "#st_time");
-        endTimeInfo.setText(endTime != null ? endTime : "#end_time");
+        //classInfo.setText(class_name != null ? class_name : "#CLASS");
+        //stTimeInfo.setText(startTime != null ? startTime : "#st_time");
+        //endTimeInfo.setText(endTime != null ? endTime : "#end_time");
+    }
+
+    private void showMarkerFocusMode() {
+        // 버튼 숨기기
+        isFocusMode = true;
+        notificationButton.setVisibility(View.GONE);
+        promiseListButton.setVisibility(View.GONE);
+        signupNextButton.setVisibility(View.GONE);
+        createPromiseButton.setVisibility(View.GONE);
+        myPageButton.setVisibility(View.GONE);
+        myLocationButton.setVisibility(View.GONE);
+        tvBuildingName.setVisibility(View.GONE);
+    }
+
+
+    private void resetMarkerFocusMode() {
+        // 버튼 다시 표시
+        isFocusMode = false;
+        notificationButton.setVisibility(View.VISIBLE);
+        promiseListButton.setVisibility(View.VISIBLE);
+        signupNextButton.setVisibility(View.VISIBLE);
+        createPromiseButton.setVisibility(View.VISIBLE);
+        myPageButton.setVisibility(View.VISIBLE);
+        myLocationButton.setVisibility(View.VISIBLE);
+        tvBuildingName.setVisibility(View.VISIBLE);
     }
 
     private Bitmap convertViewToBitmap(View view) {
@@ -587,5 +637,4 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
         return bitmap;
     }
-
 }
