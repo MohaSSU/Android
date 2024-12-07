@@ -55,32 +55,37 @@ public class MyPageMyTimeTableFragment extends Fragment {
     }
 
     private void loadTimetable() {
-//        SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-//        String json = prefs.getString(TIMETABLE_KEY, null);
+        SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String json = prefs.getString(TIMETABLE_KEY, null);
+        timetable.load(json);
+        Toast.makeText(requireContext(), "저장된 시간표를 불러왔습니다.", Toast.LENGTH_SHORT).show();
+
+
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 현재 로그인한 사용자 ID 가져오기
 
-        db.collection("users")
-                .document(userId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        // timeTableData 필드 가져오기
-                        String timeTableData = documentSnapshot.getString("timetableData");
-                        if (timeTableData != null) {
-                            timetable.load(timeTableData);
-                            Toast.makeText(requireContext(), "저장된 시간표를 불러왔습니다.", Toast.LENGTH_SHORT).show();
-                            Log.d("Firestore", "TimeTableData: " + timeTableData);
-                            // JSON 데이터 처리 로직 추가 가능
-                        } else {
-                            Log.d("Firestore", "timeTableData 필드가 없습니다.");
-                        }
-                    } else {
-                        Log.d("Firestore", "해당 문서가 존재하지 않습니다.");
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "timeTableData 가져오기 실패: " + e.getMessage());
-                });
+//        db.collection("users")
+//                .document(userId)
+//                .get()
+//                .addOnSuccessListener(documentSnapshot -> {
+//                    if (documentSnapshot.exists()) {
+//                        // timeTableData 필드 가져오기
+//                        String timeTableData = documentSnapshot.getString("timetableData");
+//                        if (timeTableData != null) {
+//                            timetable.load(timeTableData);
+//                            Toast.makeText(requireContext(), "저장된 시간표를 불러왔습니다.", Toast.LENGTH_SHORT).show();
+//                            Log.d("Firestore", "TimeTableData: " + timeTableData);
+//                            // JSON 데이터 처리 로직 추가 가능
+//                        } else {
+//                            Log.d("Firestore", "timeTableData 필드가 없습니다.");
+//                        }
+//                    } else {
+//                        Log.d("Firestore", "해당 문서가 존재하지 않습니다.");
+//                    }
+//                })
+//                .addOnFailureListener(e -> {
+//                    Log.e("Firestore", "timeTableData 가져오기 실패: " + e.getMessage());
+//                });
     }
 }
