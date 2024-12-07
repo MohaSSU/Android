@@ -59,7 +59,7 @@ public class MainFriendListFragment extends Fragment {
         friendRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         // 어댑터에 클릭 리스너 추가
-        friendAdapter = new FriendAdapter(requireContext(), friendList, this::showFriendProfile);
+        friendAdapter = new FriendAdapter(requireContext(), friendList, this::showCheckProfileBottomSheet);
         friendRecyclerView.setAdapter(friendAdapter);
 
         // Firestore에서 친구 데이터 가져오기
@@ -95,9 +95,10 @@ public class MainFriendListFragment extends Fragment {
                         String name = documentSnapshot.getString("name");
                         String email = documentSnapshot.getString("email");
                         String nickname = documentSnapshot.getString("nickname");
+                        String statusMessage = documentSnapshot.getString("statusMessage");
                         String photoUrl = documentSnapshot.getString("photoUrl");
 
-                        friendList.add(new Friend(friendUid, name, nickname, email, photoUrl));
+                        friendList.add(new Friend(friendUid, name, nickname, email, statusMessage, photoUrl));
                         friendAdapter.notifyDataSetChanged();
                     } else {
                         System.out.println("친구 프로필을 찾을 수 없습니다.");
@@ -108,8 +109,8 @@ public class MainFriendListFragment extends Fragment {
                 });
     }
 
-    private void showFriendProfile(Friend friend) {
-        CheckProfileBottomSheetFragment bottomSheetFragment = CheckProfileBottomSheetFragment.newInstance(friend);
-        bottomSheetFragment.show(getParentFragmentManager(), "CheckProfileBottomSheetFragment");
+    public void showCheckProfileBottomSheet(Friend friend) {
+        CheckProfileBottomSheetFragment bottomSheet = CheckProfileBottomSheetFragment.newInstance(friend);
+        bottomSheet.show(getParentFragmentManager(), "CheckProfileBottomSheet");
     }
 }

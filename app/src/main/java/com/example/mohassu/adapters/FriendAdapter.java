@@ -39,7 +39,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
         Friend friend = friendList.get(position);
         holder.nameTextView.setText(friend.getName());
-        holder.emailTextView.setText(friend.getEmail());
+        holder.statusTextView.setText(friend.getStatusMessage());
 
         // 이미지 로드 (Glide 사용)
         Glide.with(context)
@@ -62,13 +62,13 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     }
 
     public static class FriendViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView, emailTextView;
+        TextView nameTextView, statusTextView;
         ImageView photoImageView;
 
         public FriendViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.state_text);
-            emailTextView = itemView.findViewById(R.id.state_place);
+            statusTextView = itemView.findViewById(R.id.state_place);
             photoImageView = itemView.findViewById(R.id.profile_image2);
         }
     }

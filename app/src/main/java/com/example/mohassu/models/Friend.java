@@ -8,20 +8,16 @@ public class Friend implements Serializable {
     private String photoUrl;
     private String uid;
     private String nickname;
+    private String statusMessage;
 
-    // 생성자
-    public Friend(String name, String email, String photoUrl) {
-        this.name = name;
-        this.email = email;
-        this.photoUrl = photoUrl;
-    }
 
-    public Friend(String uid, String name, String nickname, String email, String photoUrl) {
+    public Friend(String uid, String name, String nickname, String email, String statusMessage, String photoUrl) {
         this.uid = uid;
         this.name = name;
         this.nickname = nickname;
         this.email = email;
         this.photoUrl = photoUrl;
+        this.statusMessage = statusMessage;
     }
 
     // Getter & Setter
@@ -63,5 +59,13 @@ public class Friend implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
     }
 }
