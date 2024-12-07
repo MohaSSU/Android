@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mohassu.CheckProfileBottomSheetFragment;
 import com.example.mohassu.DialogFragment.AddFriendDialogFragment;
 import com.example.mohassu.R;
 import com.example.mohassu.adapters.FriendAdapter;
@@ -56,7 +57,9 @@ public class MainFriendListFragment extends Fragment {
         // RecyclerView 초기화
         friendRecyclerView = view.findViewById(R.id.friendRecyclerView);
         friendRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        friendAdapter = new FriendAdapter(requireContext(), friendList);
+
+        // 어댑터에 클릭 리스너 추가
+        friendAdapter = new FriendAdapter(requireContext(), friendList, this::showFriendProfile);
         friendRecyclerView.setAdapter(friendAdapter);
 
         // Firestore에서 친구 데이터 가져오기
@@ -73,16 +76,40 @@ public class MainFriendListFragment extends Fragment {
                     if (task.isSuccessful()) {
                         friendList.clear();
                         for (DocumentSnapshot document : task.getResult()) {
-                            String name = document.getString("name");
-                            String email = document.getString("email");
-                            String photoUrl = document.getString("photoUrl");
-                            friendList.add(new Friend(name, email, photoUrl));
+                            String friendUid = document.getId();
+                            fetchFriendDetails(friendUid);
                         }
-                        // RecyclerView 업데이트
-                        friendAdapter.notifyDataSetChanged();
                     } else {
-                        // 에러 처리
+                        System.out.println("친구 목록을 불러오는 중 오류 발생");
                     }
                 });
+    }
+
+    private void fetchFriendDetails(String friendUid) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users").document(friendUid)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String name = documentSnapshot.getString("name");
+                        String email = documentSnapshot.getString("email");
+                        String nickname = documentSnapshot.getString("nickname");
+                        String photoUrl = documentSnapshot.getString("photoUrl");
+
+                        friendList.add(new Friend(friendUid, name, nickname, email, photoUrl));
+                        friendAdapter.notifyDataSetChanged();
+                    } else {
+                        System.out.println("친구 프로필을 찾을 수 없습니다.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    System.out.println("프로필 불러오기 실패: " + e.getMessage());
+                });
+    }
+
+    private void showFriendProfile(Friend friend) {
+        CheckProfileBottomSheetFragment bottomSheetFragment = CheckProfileBottomSheetFragment.newInstance(friend);
+        bottomSheetFragment.show(getParentFragmentManager(), "CheckProfileBottomSheetFragment");
     }
 }

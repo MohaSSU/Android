@@ -19,10 +19,13 @@ import java.util.List;
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendViewHolder> {
     private List<Friend> friendList;
     private Context context;
+    private OnFriendClickListener onFriendClickListener;
 
-    public FriendAdapter(Context context, List<Friend> friendList) {
+    // 생성자에 OnFriendClickListener 추가
+    public FriendAdapter(Context context, List<Friend> friendList, OnFriendClickListener listener) {
         this.context = context;
         this.friendList = friendList;
+        this.onFriendClickListener = listener;
     }
 
     @NonNull
@@ -44,6 +47,13 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
                 .placeholder(R.drawable.img_logo) // 로딩 중 대체 이미지
                 .error(R.drawable.img_logo) // 로딩 실패 시 대체 이미지
                 .into(holder.photoImageView);
+
+        // 클릭 리스너 연결
+        holder.itemView.setOnClickListener(v -> {
+            if (onFriendClickListener != null) {
+                onFriendClickListener.onFriendClick(friend); // Friend 객체 전달
+            }
+        });
     }
 
     @Override
@@ -61,5 +71,10 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
             emailTextView = itemView.findViewById(R.id.state_place);
             photoImageView = itemView.findViewById(R.id.profile_image2);
         }
+    }
+
+    // 클릭 리스너 인터페이스
+    public interface OnFriendClickListener {
+        void onFriendClick(Friend friend); // Friend 객체 전달
     }
 }
