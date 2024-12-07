@@ -94,6 +94,8 @@ public class MyPageMyTimeTableEditFragment extends Fragment {
         timeTableSaveButton.setOnClickListener(v -> {
             saveTimetable();
             saveTimetableToFirestore();
+            navController.navigate(R.id.actionSaveMyClass);
+
         });
     }
 
@@ -118,13 +120,13 @@ public class MyPageMyTimeTableEditFragment extends Fragment {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String json = timetable.createSaveData();
 
-        // 1️⃣ Firestore의 timeTableData 필드 업데이트
+        // 1️Firestore의 timeTableData 필드 업데이트
         db.collection("users").document(userId)
                 .update("timetableData", json)
                 .addOnSuccessListener(aVoid -> Log.d("Firestore", "timeTableData 필드 업데이트 성공"))
                 .addOnFailureListener(e -> Log.e("Firestore", "timeTableData 업데이트 실패: " + e.getMessage()));
 
-        // 2️⃣ Firestore의 timeTable 컬렉션 데이터 삭제 후 새로 추가
+        // 2️Firestore의 timeTable 컬렉션 데이터 삭제 후 새로 추가
         db.collection("users")
                 .document(userId)
                 .collection("timetable")

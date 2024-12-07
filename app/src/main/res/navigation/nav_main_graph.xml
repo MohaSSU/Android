@@ -129,6 +129,11 @@
             app:destination="@+id/MyPageTimeTableFragment"
             app:popUpTo="@id/MyPageTimeTableFragment"
             app:popUpToInclusive="true"/>
+
+<!--        <action-->
+<!--            android:id="@+id/actionSaveClass"-->
+<!--            app:destination="@+id/MyPageTimeTableFragment"/>-->
+
     </fragment>
 
     <!--마이페이지 : 내 프로필 수정 페이지 1-->
