@@ -98,6 +98,12 @@ public class MyPageHomeFragment extends Fragment {
             navController.navigateUp();
         });
 
+        TextView logoutText = view.findViewById(R.id.logoutText);
+        logoutText.setOnClickListener(v -> {
+            auth.signOut(); // Firebase 인증 로그아웃
+//            navController.navigate(R.id.actionLogout); // 로그인 화면으로 이동
+        });
+
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
         ImageButton profileEditButton = view.findViewById(R.id.btnProfileEdit);
         profileEditButton.setFocusable(false);
