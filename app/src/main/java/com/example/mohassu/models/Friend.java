@@ -9,16 +9,18 @@ public class Friend implements Serializable {
     private String uid;
     private String nickname;
     private String statusMessage;
+    private ScheduleClass currentScheduleClass; // 현재 수업 정보 추가
 
-
-    public Friend(String uid, String name, String nickname, String email, String statusMessage, String photoUrl) {
+    public Friend(String uid, String name, String nickname, String email, String statusMessage, String photoUrl, ScheduleClass currentScheduleClass) {
         this.uid = uid;
         this.name = name;
         this.nickname = nickname;
         this.email = email;
-        this.photoUrl = photoUrl;
         this.statusMessage = statusMessage;
+        this.photoUrl = photoUrl;
+        this.currentScheduleClass = currentScheduleClass;
     }
+
 
     // Getter & Setter
     public String getName() {
@@ -67,5 +69,13 @@ public class Friend implements Serializable {
 
     public void setStatusMessage(String statusMessage) {
         this.statusMessage = statusMessage;
+    }
+
+    public ScheduleClass getCurrentClass() {
+        return currentScheduleClass;
+    }
+
+    public void setCurrentClass(ScheduleClass currentScheduleClass) {
+        this.currentScheduleClass = currentScheduleClass;
     }
 }

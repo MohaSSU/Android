@@ -38,11 +38,21 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     @Override
     public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
         Friend friend = friendList.get(position);
-        holder.nameTextView.setText(friend.getName());
+        holder.nicknameTextView.setText(friend.getNickname());
+
         if(friend.getStatusMessage() != null && !friend.getStatusMessage().isEmpty())
             holder.statusTextView.setText(friend.getStatusMessage());
         else{
             holder.statusTextView.setText("상태 메시지가 없어요!");
+        }
+
+        if(friend.getCurrentClass() != null){
+            holder.placeTextView.setText(friend.getCurrentClass().getClassPlace() + "에서 " +friend.getCurrentClass().getClassTitle() + "수업 중!!!");
+            holder.timeTextView.setText(friend.getCurrentClass().getStartTime().getHour() + "시 " + friend.getCurrentClass().getStartTime().getMinute() +"분 부터 " + friend.getCurrentClass().getEndTime().getHour() + "시 "+friend.getCurrentClass().getEndTime().getMinute() + "분 까지");
+        }
+        else{
+            holder.placeTextView.setText("지금은 수업 중이 아닌디요??");
+            holder.timeTextView.setText("친구 한테 연락해봐요!");
         }
 
         // 이미지 로드 (Glide 사용)
@@ -66,13 +76,15 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     }
 
     public static class FriendViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView, statusTextView;
+        TextView nicknameTextView, statusTextView, placeTextView, timeTextView;
         ImageView photoImageView;
 
         public FriendViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.state_text);
-            statusTextView = itemView.findViewById(R.id.state_place);
+            nicknameTextView = itemView.findViewById(R.id.nickname_text);
+            statusTextView = itemView.findViewById(R.id.state_text);
+            placeTextView = itemView.findViewById(R.id.state_place);
+            timeTextView = itemView.findViewById(R.id.state_time);
             photoImageView = itemView.findViewById(R.id.profile_image2);
         }
     }
