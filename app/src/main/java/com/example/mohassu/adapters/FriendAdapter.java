@@ -39,7 +39,11 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
         Friend friend = friendList.get(position);
         holder.nameTextView.setText(friend.getName());
-        holder.statusTextView.setText(friend.getStatusMessage());
+        if(friend.getStatusMessage() != null && !friend.getStatusMessage().isEmpty())
+            holder.statusTextView.setText(friend.getStatusMessage());
+        else{
+            holder.statusTextView.setText("상태 메시지가 없어요!");
+        }
 
         // 이미지 로드 (Glide 사용)
         Glide.with(context)
