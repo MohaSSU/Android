@@ -125,9 +125,15 @@ public class MainFriendListFragment extends Fragment {
                         // 현재 요일 (0 = 일요일, 1 = 월요일, ...)
                         int today = calendar.get(Calendar.DAY_OF_WEEK) - 1;
 
+//                        int today = 0;
                         // 현재 시간
                         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
                         int currentMinute = calendar.get(Calendar.MINUTE);
+
+                        System.out.println("Current Time: " + currentHour + "시 " + currentMinute + "분");
+//
+//                        int currentHour = 9;
+//                        int currentMinute = 45;
 
                         // 현재 진행 중인 수업 탐색
                         ScheduleClass currentClass = null;
@@ -151,10 +157,13 @@ public class MainFriendListFragment extends Fragment {
                                         day,
                                         new Time(startHour, startMinute),
                                         new Time(endHour, endMinute)
+
                                 );
                                 Log.d("fetchCurrentClass", "현재 진행 중인 수업: " + currentClass.getClassTitle());
                                 break;
                             }
+
+                            else Log.d("fetchCurrentClass", "현재 진행 중인 수업이 없습니다.");
                         }
 
                         // 결과 콜백
