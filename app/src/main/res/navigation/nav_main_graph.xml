@@ -44,15 +44,26 @@
         tools:layout="@layout/fragment_main_promise_list">
     </fragment>
 
+
     <!--친구 리스트 페이지-->
     <fragment
         android:id="@+id/MainFriendListFragment"
         android:name="com.example.mohassu.MainFragment.MainFriendListFragment"
         android:label="MainFriendListFragment"
         tools:layout="@layout/fragment_main_friend_list">
+        <action
+            android:id="@+id/action_checkProfileToCheckTimeTable"
+            app:destination="@id/CheckTimeTableFragment" />
+
     </fragment>
 
-    <!--약속 생성 페이지-->
+
+    <fragment
+        android:id="@+id/CheckTimeTableFragment"
+        android:name="com.example.mohassu.CheckProfileAndTimeTableFragment.CheckTimeTableFragment"
+        android:label="CheckTimeTableFragment"
+        tools:layout="@layout/fragment_check_time_table" />
+
     <fragment
         android:id="@+id/CreatePromise1SelectLocationFragment"
         android:name="com.example.mohassu.CreatePromiseFragment.CreatePromise1SelectLocationFragment"
@@ -62,6 +73,7 @@
             android:id="@+id/actionNextToCreatePromise2"
             app:destination="@+id/CreatePromise2DetailFragment"/>
     </fragment>
+
     <fragment
         android:id="@+id/CreatePromise2DetailFragment"
         android:name="com.example.mohassu.CreatePromiseFragment.CreatePromise2DetailFragment"
@@ -76,6 +88,7 @@
             android:id="@+id/actionNextToCreatePromise3"
             app:destination="@+id/CreatePromise3ChooseFriendsFragment"/>
     </fragment>
+
     <fragment
         android:id="@+id/CreatePromise3ChooseFriendsFragment"
         android:name="com.example.mohassu.CreatePromiseFragment.CreatePromise3ChooseFriendsFragment"
@@ -101,7 +114,11 @@
         <action
             android:id="@+id/actionSettingNotification"
             app:destination="@+id/MyPageSettingNotificationFragment"/>
+<!--        <action-->
+<!--            android:id="@+id/actionLogout"-->
+<!--            app:destination="@+id/StartFragment"/>-->
     </fragment>
+
 
     <!--마이페이지 : 내 시간표 확인 페이지-->
     <fragment
@@ -125,6 +142,11 @@
             app:destination="@+id/MyPageTimeTableFragment"
             app:popUpTo="@id/MyPageTimeTableFragment"
             app:popUpToInclusive="true"/>
+
+<!--        <action-->
+<!--            android:id="@+id/actionSaveClass"-->
+<!--            app:destination="@+id/MyPageTimeTableFragment"/>-->
+
     </fragment>
 
     <!--마이페이지 : 내 프로필 수정 페이지 1-->

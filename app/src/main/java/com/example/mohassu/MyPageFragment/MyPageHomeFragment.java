@@ -1,11 +1,14 @@
 package com.example.mohassu.MyPageFragment;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -72,7 +75,6 @@ public class MyPageHomeFragment extends Fragment {
                                     profileImageView.setImageResource(R.drawable.img_logo); // 기본 이미지
                                 }
 
-
                                 greetingTextView.setText(nickName +"님 반갑습니다!");
                                 userIdView.setText(email);
                                 userNickNameView.setText(nickName);
@@ -96,6 +98,12 @@ public class MyPageHomeFragment extends Fragment {
             navController.navigateUp();
         });
 
+        TextView logoutText = view.findViewById(R.id.logoutText);
+        logoutText.setOnClickListener(v -> {
+            auth.signOut(); // Firebase 인증 로그아웃
+//            navController.navigate(R.id.actionLogout); // 로그인 화면으로 이동
+        });
+
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
         ImageButton profileEditButton = view.findViewById(R.id.btnProfileEdit);
         profileEditButton.setFocusable(false);
@@ -117,4 +125,5 @@ public class MyPageHomeFragment extends Fragment {
             navController.navigate(R.id.actionSettingNotification);
         });
     }
+
 }
