@@ -2,12 +2,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-  
-    <com.naver.maps.map.MapView
-        android:id="@+id/map"
+
+    <FrameLayout
+        android:id="@+id/fragment_map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.naver.maps.map.MapFragment" />
+        android:layout_height="match_parent" />
 
 
     <!-- 상단 반투명 영역 -->
@@ -52,5 +51,28 @@
             android:src="@drawable/ic_forward" />
 
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/center_marker_icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="28dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_promise_marker" />
+
+    <ImageButton
+        android:id="@+id/btnNowLocation"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="end|bottom"
+        android:padding="5dp"
+        android:background="@drawable/background_rounded_button"
+        android:src="@drawable/ic_current_location"
+        android:elevation="8dp"
+        android:scaleType="centerInside"
+        android:layout_marginBottom="140dp"
+        android:layout_marginEnd="17dp"/>
+
+
 
 </FrameLayout>
