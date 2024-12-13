@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PromiseViewModel extends ViewModel {
+
     private final MutableLiveData<List<Promise>> promiseList = new MutableLiveData<>(new ArrayList<>());
 
     public LiveData<List<Promise>> getPromiseList() {
