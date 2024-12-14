@@ -31,6 +31,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginFragment extends Fragment {
 
+    private static final String TAG = "mohassu:login";
+
     private EditText editTextEmail, editTextPassword;
     private Button buttonLogin;
     private FirebaseAuth mAuth;
@@ -107,10 +109,12 @@ public class LoginFragment extends Fragment {
     }
     private void saveCredentialsToPreferences(String email, String password) {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("uid",currentUserId);
         editor.putString("email", email);
         editor.putString("password", password);
         editor.apply(); // 비동기로 저장
-        Log.d("SharedPreferences", "이메일과 비밀번호가 저장되었습니다.");
+        Log.d(TAG, "이메일과 비밀번호가 저장되었습니다.");
     }
 }

@@ -12,6 +12,6 @@
         android:layout_marginTop="6dp"
         android:background="@drawable/background_circle"
         android:scaleType="centerCrop"
-        android:src="@drawable/pic_basic_profile"
+        android:src="@drawable/img_basic_profile"
         android:clipToOutline="true" /> <!-- 원형 배경 -->
 </RelativeLayout>

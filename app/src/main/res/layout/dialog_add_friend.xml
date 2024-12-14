@@ -28,6 +28,7 @@
         android:inputType="textEmailAddress"
         android:textColorHint="#999999"
         android:backgroundTint="#CCCCCC"
+        android:textColor="@color/black"
         android:layout_marginBottom="24dp"
         android:textSize="16sp" />
 

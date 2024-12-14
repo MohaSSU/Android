@@ -32,6 +32,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
 import com.example.mohassu.Constants.Constants;
 import com.example.mohassu.Model.PlaceInfo;
 import com.example.mohassu.R;
@@ -135,7 +136,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         }
 
         // NavController 초기화
-        NavController navController = Navigation.findNavController(view);
+        NavController navController = Navigation.findNavController(requireView());
 
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
         // 알림 페이지 이동
@@ -298,7 +299,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                         .into(myProfile);
 
                             } else {
-                                myProfile.setImageResource(R.drawable.pic_basic_profile); // 기본 이미지
+                                myProfile.setImageResource(R.drawable.img_basic_profile); // 기본 이미지
                             }
                             // View를 Bitmap으로 변환
                             //Bitmap myMarkerBitmap = convertViewToBitmap(myMarkerView);
@@ -446,9 +447,9 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
 
                         View view = getView();
-                        tvBuildingName = view.findViewById(R.id.tvBuildingName);
+                        //tvBuildingName = view.findViewById(R.id.tvBuildingName);
 
-                        loadFromGeofencing(newLocation);
+                        //loadFromGeofencing(newLocation);
                     }
                 });
     }
@@ -465,9 +466,9 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
             if (results[0] <= place.getRadius()) {
                 String buildingName = place.getName();
-                tvBuildingName.setText(buildingName + "에 있어요.");
+                //tvBuildingName.setText(buildingName + "에 있어요.");
                 if (!isFocusMode) {
-                    tvBuildingName.setVisibility(View.VISIBLE);
+                    //tvBuildingName.setVisibility(View.VISIBLE);
                 }
                 db.collection("users")
                         .document(currentUser.getUid())
@@ -477,7 +478,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                 break; // 반경 내 첫 번째 장소를 찾으면 종료
             }
         }
-        tvBuildingName.setVisibility(View.GONE); // 반경 내 장소가 없을 경우
+        //tvBuildingName.setVisibility(View.GONE); // 반경 내 장소가 없을 경우
 
         if (!isPlaceFound) {
             db.collection("users")
@@ -529,7 +530,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                         .error(R.drawable.img_default)
                                         .into(friendProfile);
                             } else {
-                                friendProfile.setImageResource(R.drawable.pic_basic_profile); // 기본 이미지
+                                friendProfile.setImageResource(R.drawable.img_basic_profile); // 기본 이미지
                             }
 
                             // View를 Bitmap으로 변환
@@ -624,7 +625,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         createPromiseButton.setVisibility(View.GONE);
         myPageButton.setVisibility(View.GONE);
         myLocationButton.setVisibility(View.GONE);
-        tvBuildingName.setVisibility(View.GONE);
+        //tvBuildingName.setVisibility(View.GONE);
     }
 
 
@@ -637,7 +638,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         createPromiseButton.setVisibility(View.VISIBLE);
         myPageButton.setVisibility(View.VISIBLE);
         myLocationButton.setVisibility(View.VISIBLE);
-        tvBuildingName.setVisibility(View.VISIBLE);
+        //tvBuildingName.setVisibility(View.VISIBLE);
     }
 
     private Bitmap convertViewToBitmap(View view) {
