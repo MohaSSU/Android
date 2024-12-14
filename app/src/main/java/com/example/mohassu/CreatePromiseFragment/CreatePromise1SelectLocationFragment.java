@@ -41,7 +41,9 @@ public class CreatePromise1SelectLocationFragment extends Fragment implements On
 
     private NaverMap naverMap;
     private Marker marker;
+    NavController navController;
     private ImageView centerMarkerIcon;
+    String documentId;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
 
@@ -59,7 +61,7 @@ public class CreatePromise1SelectLocationFragment extends Fragment implements On
         super.onViewCreated(view, savedInstanceState);
 
         // NavController 초기화
-        NavController navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(view);
 
         // 뒤로가기 버튼에 클릭 리스너 추가
         view.findViewById(R.id.btnBack).setOnClickListener(v -> {
@@ -70,8 +72,7 @@ public class CreatePromise1SelectLocationFragment extends Fragment implements On
         ImageButton nextButton = view.findViewById(R.id.btnNext);
         nextButton.setFocusable(false);
         nextButton.setOnClickListener(v -> {
-            saveLocationToFirebase();
-            navController.navigate(R.id.actionNextToCreatePromise2);
+            sendLocationToNextFragment();
         });
 
         centerMarkerIcon = view.findViewById(R.id.center_marker_icon);
@@ -178,12 +179,20 @@ public class CreatePromise1SelectLocationFragment extends Fragment implements On
         }
     }
 
-    private void saveLocationToFirebase() {
+    private void sendLocationToNextFragment() {
         if (naverMap != null) {
             // 현재 카메라 중심 좌표 가져오기
             LatLng centerPosition = naverMap.getCameraPosition().target;
             GeoPoint geoPoint = new GeoPoint(centerPosition.latitude, centerPosition.longitude);
 
+
+            Bundle bundle = new Bundle();
+            bundle.putDouble("latitude", geoPoint.getLatitude());
+            bundle.putDouble("longitude", geoPoint.getLongitude());
+
+            navController.navigate(R.id.actionNextToCreatePromise2, bundle);
+
+            /*
             Map<String, Object> locationData = new HashMap<>();
             locationData.put("location", geoPoint);
             locationData.put("timestamp", FieldValue.serverTimestamp());
@@ -192,12 +201,20 @@ public class CreatePromise1SelectLocationFragment extends Fragment implements On
             db.collection("promises")
                     .add(locationData)
                     .addOnSuccessListener(documentReference -> {
+                        documentId = documentReference.getId();
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("documentId", documentId);
+                        navController.navigate(R.id.actionNextToCreatePromise2, bundle);
+
                         Toast.makeText(requireContext(), "좌표 저장 성공!", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(requireContext(), "좌표 저장 실패", Toast.LENGTH_SHORT).show();
                         Log.e("Firebase", "Error adding document", e);
                     });
+
+             */
         }
     }
 }

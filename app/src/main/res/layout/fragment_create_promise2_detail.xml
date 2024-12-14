@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/white">
 
-    <com.naver.maps.map.MapView
-        android:id="@+id/map"
+    <FrameLayout
+        android:id="@+id/fragment_map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.naver.maps.map.MapFragment" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:padding="16dp"
         android:background="@drawable/background_upper_rounded_corner"
         android:layout_gravity="bottom">
@@ -59,10 +62,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="약속 장소를 설명해주세요!"
-            android:background="@drawable/background_edit_text"
+            android:background="@android:color/transparent"
             android:textSize="12sp"
             android:padding="2dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="1dp" />
 
         <View
             android:layout_width="match_parent"
@@ -91,14 +94,35 @@
                     android:textSize="14sp"
                     android:layout_marginBottom="8dp"/>
 
-                <EditText
-                    android:id="@+id/tv_promise_type"
+                <!-- 약속 종류 선택 버튼 -->
+                <LinearLayout
+                    android:id="@+id/btnSelectPromiseType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="밥약속"
-                    android:background="@drawable/background_edit_text"
-                    android:textColor="@android:color/black"
-                    android:textSize="12sp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:paddingEnd="20dp"
+                    android:background="@drawable/background_button_make"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/ivIcon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/ic_promise_rice" />
+
+                    <TextView
+                        android:id="@+id/tvText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:text="밥약속"
+                        android:textSize="20sp"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <!-- 약속 시간 -->
@@ -119,24 +143,67 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <EditText
-                        android:id="@+id/tv_promise_day"
-                        android:layout_width="wrap_content"
+
+                    <LinearLayout
+                        android:id="@+id/btnSelectPromiseDate"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="yy/mm/dd"
-                        android:padding="2dp"
-                        android:background="@drawable/background_edit_text"
-                        android:textColor="@color/gray"
-                        android:textSize="12sp" />
-                    <EditText
-                        android:id="@+id/tv_promise_time"
-                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:paddingEnd="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/background_button_make"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <!-- 아이콘 -->
+                        <ImageView
+                            android:id="@+id/ivTimeIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_date"
+                            android:contentDescription="시간 아이콘" />
+
+                        <!-- 텍스트 -->
+                        <TextView
+                            android:id="@+id/tvSelectedDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:gravity="center"
+                            android:hint="     날짜 선택          "
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btnSelectPromiseTime"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="09:00 ~ 10:00"
-                        android:padding="2dp"
-                        android:background="@drawable/background_edit_text"
-                        android:textColor="@color/gray"
-                        android:textSize="12sp" />
+                        android:background="@drawable/background_button_make"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="3dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:contentDescription="시간 아이콘"
+                            android:src="@drawable/ic_time" />
+
+                        <TextView
+                            android:id="@+id/tvSelectedTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:gravity="center"
+                            android:hint="      시간 선택          "
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -187,4 +254,4 @@
 
         </LinearLayout>
     </LinearLayout>
-</FrameLayout>
+</LinearLayout>
