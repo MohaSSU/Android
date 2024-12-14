@@ -84,20 +84,17 @@
             app:destination="@+id/MainHomeFragment"
             app:popUpTo="@id/CreatePromise1SelectLocationFragment"
             app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/actionNextToCreatePromise3"
-            app:destination="@+id/CreatePromise3ChooseFriendsFragment"/>
     </fragment>
 
-    <fragment
-        android:id="@+id/CreatePromise3ChooseFriendsFragment"
-        android:name="com.example.mohassu.CreatePromiseFragment.CreatePromise3ChooseFriendsFragment"
-        android:label="CreatePromise3ChooseFriendsFragment"
-        tools:layout="@layout/fragment_create_promise3_choose_friends">
-        <action
-            android:id="@+id/actionSaveFriendsToPromise"
-            app:destination="@+id/CreatePromise2DetailFragment"/>
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/CreatePromise3ChooseFriendsFragment"-->
+<!--        android:name="com.example.mohassu.CreatePromiseFragment.CreatePromise3ChooseFriendsFragment"-->
+<!--        android:label="CreatePromise3ChooseFriendsFragment"-->
+<!--        tools:layout="@layout/fragment_create_promise3_choose_friends">-->
+<!--        <action-->
+<!--            android:id="@+id/actionSaveFriendsToPromise"-->
+<!--            app:destination="@+id/CreatePromise2DetailFragment"/>-->
+<!--    </fragment>-->
 
     <!--마이 페이지-->
     <fragment

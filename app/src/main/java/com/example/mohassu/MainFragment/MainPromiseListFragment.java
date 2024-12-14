@@ -1,9 +1,5 @@
-// com.example.mohassu.MainFragment.MainPromiseListFragment.java
-
 package com.example.mohassu.MainFragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -447,14 +443,14 @@ public class MainPromiseListFragment extends Fragment implements PromiseAdapter.
         // 내 약속 RecyclerView 설정 (host가 본인인 약속)
         myPromiseRecyclerView = rootView.findViewById(R.id.recycler_my_promise_list);
         myPromiseRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        myPromiseAdapter = new PromiseAdapter(requireContext(), myPromiseList, this, currentUserId);
+        myPromiseAdapter = new PromiseAdapter(requireContext(), myPromiseList, this, this::onItemClick,currentUserId);
         myPromiseRecyclerView.setAdapter(myPromiseAdapter);
         Log.d(TAG, "My Promise RecyclerView set.");
 
         // 친구 약속 RecyclerView 설정 (host가 본인이 아닌 약속)
         friendPromiseRecyclerView = rootView.findViewById(R.id.recycler_friend_promise_list);
         friendPromiseRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        friendPromiseAdapter = new PromiseAdapter(requireContext(), friendPromiseList, this, currentUserId);
+        friendPromiseAdapter = new PromiseAdapter(requireContext(), friendPromiseList, this, this::onItemClick, currentUserId);
         friendPromiseRecyclerView.setAdapter(friendPromiseAdapter);
         Log.d(TAG, "Friend Promise RecyclerView set.");
     }

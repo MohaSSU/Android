@@ -29,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -221,6 +222,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                     mapContainer.removeView(profileButton); // 친구 프로필 확인 버튼 제거
                 }
             }
+
         });
 
         // 내 Marker 초기화

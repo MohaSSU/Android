@@ -33,18 +33,6 @@
         app:layout_constraintBottom_toBottomOf="@id/btnBack"
         />
 
-    <ImageButton
-        android:id="@+id/add_friend_button"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/ic_add_friend"
-        android:scaleType="centerInside"
-        android:background="?selectableItemBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btnBack"
-        app:layout_constraintBottom_toBottomOf="@id/btnBack"
-        android:layout_marginEnd="15dp" />
-
     <View
         android:id="@+id/divider"
         android:layout_width="0dp"
@@ -98,81 +86,16 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="30dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="편집"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/sort_spinner"
-        app:layout_constraintBottom_toBottomOf="@id/sort_spinner"
-        style="@style/BlueMaterialButtonStyle" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="6dp"
-        app:layout_constraintTop_toBottomOf="@id/sort_spinner"
-        app:layout_constraintEnd_toStartOf="@id/temp_list">
-
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="55dp"
-            android:background="@drawable/ic_checked_token" />
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="110dp"
-            android:background="@drawable/ic_token" />
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="110dp"
-            android:background="@drawable/ic_token" />
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="110dp"
-            android:background="@drawable/ic_token" />
-
-    </LinearLayout>
-
-
-
-    <LinearLayout
-        android:id="@+id/temp_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="30dp"
-        android:padding="10dp"
+    <!-- RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/selectFriendRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/sort_spinner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- 친구 항목 1 -->
-        <include
-            layout="@layout/view_friend"
-            android:id="@+id/friendItem1" />
-
-        <!-- 친구 항목 2 -->
-        <include
-            layout="@layout/view_friend"
-            android:id="@+id/friendItem2" />
-
-        <!-- 친구 항목 3 -->
-        <include
-            layout="@layout/view_friend"
-            android:id="@+id/friendItem3" />
-
-        <!-- 친구 항목 4 -->
-        <include
-            layout="@layout/view_friend"
-            android:id="@+id/friendItem4" />
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/btnAdd"
