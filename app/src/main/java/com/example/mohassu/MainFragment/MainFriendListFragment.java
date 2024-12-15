@@ -13,7 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mohassu.CheckProfileBottomSheetFragment;
+import com.example.mohassu.CheckProfileAndTimeTableFragment.CheckProfileBottomSheetFragment;
 import com.example.mohassu.DialogFragment.AddFriendDialogFragment;
 import com.example.mohassu.R;
 import com.example.mohassu.Adapter.FriendAdapter;
