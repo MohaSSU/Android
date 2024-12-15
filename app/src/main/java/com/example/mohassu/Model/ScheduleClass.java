@@ -1,4 +1,4 @@
-package com.example.mohassu.models;
+package com.example.mohassu.Model;
 
 import java.io.Serializable;
 

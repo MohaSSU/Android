@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mohassu.CheckProfileBottomSheetFragment;
 import com.example.mohassu.DialogFragment.AddFriendDialogFragment;
 import com.example.mohassu.R;
-import com.example.mohassu.adapters.FriendAdapter;
-import com.example.mohassu.models.Friend;
-import com.example.mohassu.models.ScheduleClass;
-import com.example.mohassu.models.Time;
+import com.example.mohassu.Adapter.FriendAdapter;
+import com.example.mohassu.Model.Friend;
+import com.example.mohassu.Model.ScheduleClass;
+import com.example.mohassu.Model.Time;
 import android.util.Log;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -63,16 +63,16 @@ public class MainFriendListFragment extends Fragment {
         friendRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         // RecyclerView 초기화
-        selectFriendRecyclerView = view.findViewById(R.id.selectFriendRecyclerView);
-        selectFriendRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+//        selectFriendRecyclerView = view.findViewById(R.id.selectFriendRecyclerView);
+//        selectFriendRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         // 어댑터에 클릭 리스너 추가
         friendAdapter = new FriendAdapter(requireContext(), friendList, this::showCheckProfileBottomSheet);
         friendRecyclerView.setAdapter(friendAdapter);
 
         // 어댑터에 클릭 리스너 추가
-        friendAdapter = new FriendAdapter(requireContext(), friendList, this::showCheckProfileBottomSheet);
-        selectFriendRecyclerView.setAdapter(friendAdapter);
+//        friendAdapter = new FriendAdapter(requireContext(), friendList, this::showCheckProfileBottomSheet);
+//        selectFriendRecyclerView.setAdapter(friendAdapter);
 
         // Firestore에서 친구 데이터 가져오기
         fetchFriends();

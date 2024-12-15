@@ -1,4 +1,4 @@
-package com.example.mohassu.adapters;
+package com.example.mohassu.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

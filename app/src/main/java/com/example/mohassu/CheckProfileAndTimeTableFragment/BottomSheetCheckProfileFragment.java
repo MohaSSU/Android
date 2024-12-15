@@ -33,7 +33,7 @@ public class BottomSheetCheckProfileFragment extends BottomSheetDialogFragment {
         if (bundle != null) {
             String nickNameData = bundle.getString("nickName", "Default Nickname");
             String nameData = bundle.getString("name", "Default Name");
-            int profileImageResId = bundle.getInt("profileImage", R.drawable.pic_basic_profile); // Default image
+            int profileImageResId = bundle.getInt("profileImage", R.drawable.img_basic_profile); // Default image
 
             nickName.setText(nickNameData);
             name.setText(nameData);

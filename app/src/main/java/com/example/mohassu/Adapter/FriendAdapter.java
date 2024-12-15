@@ -1,4 +1,4 @@
-package com.example.mohassu.adapters;
+package com.example.mohassu.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mohassu.R;
-import com.example.mohassu.models.Friend;
+import com.example.mohassu.Model.Friend;
 
 import java.util.List;
 
@@ -58,8 +58,9 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
         // 이미지 로드 (Glide 사용)
         Glide.with(context)
                 .load(friend.getPhotoUrl())
-                .placeholder(R.drawable.img_logo) // 로딩 중 대체 이미지
-                .error(R.drawable.img_logo) // 로딩 실패 시 대체 이미지
+                .circleCrop() // 원형으로 자르기
+                .placeholder(R.drawable.img_basic_profile) // 로딩 중 대체 이미지
+                .error(R.drawable.img_basic_profile) // 로딩 실패 시 대체 이미지
                 .into(holder.photoImageView);
 
         // 클릭 리스너 연결

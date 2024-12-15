@@ -78,33 +78,34 @@
             android:padding="20dp">
 
             <TableRow>
-            <ImageView
-                android:id="@+id/profileImage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/img_my_profile"
-                android:layout_gravity="top" />
-
-            <TextView
-                android:id="@+id/usernickName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="준혁핑"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp" />
-
+                <ImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_my_profile"
+                    android:layout_gravity="top" />
+                <TextView
+                    android:id="@+id/usernickName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="닉네임"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp" />
                 <ImageButton
                     android:id="@+id/btnProfileEdit"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_profile_edit"
+                    android:layout_marginStart="140dp"
                     android:background="?selectableItemBackground"
-                    android:layout_marginStart="140dp" />
-
+                    android:scaleType="fitXY"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_profile_edit"
+                    />
             </TableRow>
 
             <TableRow>
@@ -122,7 +123,7 @@
                 android:id="@+id/userId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="abc123"
+                android:text="abc123@gmail.com"
                 android:textSize="14sp"
                 android:textColor="@android:color/black"
                 android:layout_marginTop="10dp"
@@ -143,7 +144,7 @@
                 android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="배준혁"
+                android:text="이름"
                 android:textSize="14sp"
                 android:textColor="@android:color/black"
                 android:layout_marginTop="10dp"

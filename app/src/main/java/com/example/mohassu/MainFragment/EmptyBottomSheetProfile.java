@@ -83,7 +83,7 @@ public class EmptyBottomSheetProfile extends BottomSheetDialogFragment {
                                         .error(R.drawable.img_default)
                                         .into(profileImage);
                             } else {
-                                profileImage.setImageResource(R.drawable.pic_basic_profile);
+                                profileImage.setImageResource(R.drawable.img_basic_profile);
                             }
                         } else {
                             Toast.makeText(getContext(), "친구 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();

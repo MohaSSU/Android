@@ -25,8 +25,8 @@ import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.example.mohassu.R;
-import com.example.mohassu.adapters.MenuWithIconAdapter;
-import com.example.mohassu.models.Friend;
+
+import com.example.mohassu.Adapter.MenuWithIconAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;

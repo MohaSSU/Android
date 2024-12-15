@@ -27,8 +27,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.mohassu.CheckProfileAndTimeTableFragment.BottomSheetCheckProfileFragment;
-import com.example.mohassu.Constants;
-import com.example.mohassu.PlaceInfo;
+import com.example.mohassu.Constants.Constants;
+import com.example.mohassu.Model.PlaceInfo;
 import com.example.mohassu.R;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
