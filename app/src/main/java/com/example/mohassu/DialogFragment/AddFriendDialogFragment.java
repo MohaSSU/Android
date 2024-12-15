@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.mohassu.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -54,51 +55,68 @@ public class AddFriendDialogFragment extends DialogFragment {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        String currentUserId = auth.getCurrentUser().getUid(); // 현재 로그인한 사용자 UID
+        String currentUserId = auth.getCurrentUser().getUid(); // 현재 사용자 UID
 
-        // 이메일로 사용자 검색
-        //추가한 코드: 다른 데이터(좌표, 이름 등)
         db.collection("users")
-                .whereEqualTo("email", email)
+                .whereEqualTo("email", email) // 이메일로 사용자 검색
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        // 검색된 사용자 정보
-                        String friendUserId = task.getResult().getDocuments().get(0).getId();
-                        String name = task.getResult().getDocuments().get(0).getString("name");
-                        String nickname = task.getResult().getDocuments().get(0).getString("nickname");
-                        String photoUrl = task.getResult().getDocuments().get(0).getString("photoUrl");
-                        String place = task.getResult().getDocuments().get(0).getString("place");
-                        String statusMessage = task.getResult().getDocuments().get(0).getString("statusMessage");
+                .addOnSuccessListener(task -> {
+                    if (!task.isEmpty()) {
+                        DocumentSnapshot document = task.getDocuments().get(0);
+                        String friendUserId = document.getId(); // 친구의 UID 가져오기
 
-                        db.collection("users").document(friendUserId)
-                                .collection("location")
-                                .document("currentLocation")
+                        if (currentUserId.equals(friendUserId)) {
+                            Toast.makeText(requireContext(), "자기 자신을 친구로 추가할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        // 내 Firestore에 친구 추가 (currentUser -> friendUserId)
+                        db.collection("users").document(currentUserId)
+                                .collection("friends").document(friendUserId)
                                 .get()
-                                .addOnSuccessListener(locationDoc -> {
-                                    if (locationDoc.exists()) {
-
-                                        // 친구 추가 로직
+                                .addOnSuccessListener(friendDoc -> {
+                                    if (friendDoc.exists()) {
+                                        Toast.makeText(requireContext(), "이미 친구로 추가된 사용자입니다.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        // 내 Firestore에 친구 추가
                                         Map<String, Object> friendData = new HashMap<>();
-                                        friendData.put("friendUserId", friendUserId);
-                                        friendData.put("email", email);
-                                        friendData.put("name", name);
+                                        friendData.put("userId", friendUserId);
 
                                         db.collection("users").document(currentUserId)
                                                 .collection("friends").document(friendUserId)
                                                 .set(friendData)
                                                 .addOnSuccessListener(aVoid -> {
-                                                    Toast.makeText(requireContext(), "친구 추가 완료!", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(requireContext(), "내 친구 목록에 추가 완료!", Toast.LENGTH_SHORT).show();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(requireContext(), "내 친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                });
+
+                                        // 친구의 Firestore에 나의 UID 추가 (friendUserId -> currentUserId)
+                                        Map<String, Object> myData = new HashMap<>();
+                                        myData.put("userId", currentUserId);
+
+                                        db.collection("users").document(friendUserId)
+                                                .collection("friends").document(currentUserId)
+                                                .set(myData)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Toast.makeText(requireContext(), "친구의 친구 목록에 추가 완료!", Toast.LENGTH_SHORT).show();
                                                     dismiss(); // 다이얼로그 닫기
                                                 })
                                                 .addOnFailureListener(e -> {
-                                                    Toast.makeText(requireContext(), "친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(requireContext(), "친구의 친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 });
-                                    } else {
-                                        Toast.makeText(requireContext(), "사용자를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
                                     }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(requireContext(), "친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
+                    } else {
+                        Toast.makeText(requireContext(), "해당 이메일을 가진 사용자가 없습니다.", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 }
