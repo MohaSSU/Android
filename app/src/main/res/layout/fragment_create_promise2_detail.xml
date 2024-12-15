@@ -208,6 +208,7 @@
             </LinearLayout>
         </LinearLayout>
 
+
         <TextView
             android:id="@+id/tv_attendee_title"
             android:layout_width="wrap_content"
@@ -217,23 +218,52 @@
             android:textSize="12sp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:orientation="horizontal" >
 
-            <!-- 프로필 1 -->
-            <include layout="@layout/view_promise_profile"/>
-
-            <!-- 추가 버튼 -->
-            <include
-                android:id="@+id/btnAddFriends"
-                layout="@layout/view_promise_add_profile"
+            <HorizontalScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/friendListContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:visibility="gone" />
+
+            </HorizontalScrollView>
+
+
+            <LinearLayout
+                android:id="@+id/btnAddFriends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackground" />
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_add"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <TextView
+                    android:id="@+id/add_friend_in_promise_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="추가"
+                    android:textColor="@color/gray"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
