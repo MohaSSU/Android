@@ -131,8 +131,10 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                 if (currentPosition != null) {
                     // Move camera to the current position
                     naverMap.moveCamera(CameraUpdate.scrollTo(currentPosition));
+                    Log.d("","");// 추가
                 } else { // 예외처리 생략 가능
                     Toast.makeText(requireContext(), "현재 위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+
                 }
             });
         }
@@ -426,8 +428,8 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                 locationMarker = new Marker();
                 locationMarker.setPosition(naverMap.getLocationOverlay().getPosition());
                 locationMarker.setIcon(OverlayImage.fromBitmap(myMarkerBitmap)); // 마커 이미지 설정
-                locationMarker.setWidth(dpToPx(120)); // 마커 크기 조정
-                locationMarker.setHeight(dpToPx(140));
+                locationMarker.setWidth(dpToPx(60)); // 마커 크기 조정
+                locationMarker.setHeight(dpToPx(70));
                 locationMarker.setMap(naverMap); // 지도에 마커 추가
 
                 locationMarker.setOnClickListener(overlay -> {

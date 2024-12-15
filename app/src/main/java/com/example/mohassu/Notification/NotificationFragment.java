@@ -1,6 +1,7 @@
 package com.example.mohassu.Notification;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +38,10 @@ public class NotificationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+
+        // 뒤로가기 버튼
+
         // RecyclerView 초기화
         recyclerView = view.findViewById(R.id.notification_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -46,5 +53,7 @@ public class NotificationFragment extends Fragment {
 
         // Adapter를 FirebaseMessagingService에 설정
         NavigationStartLoginAndSignupActivity.MyFirebaseMessagingService.setNotificationAdapter(adapter);
+
+
     }
 }
