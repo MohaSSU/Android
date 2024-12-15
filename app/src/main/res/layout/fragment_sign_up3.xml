@@ -75,11 +75,11 @@
         <!-- 기본 프로필 이미지 -->
         <ImageView
             android:id="@+id/basic_profile"
-            android:layout_width="165dp"
-            android:layout_height="165dp"
+            android:layout_width="168dp"
+            android:layout_height="168dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
-            android:layout_marginBottom="47dp"
+            android:layout_marginBottom="46dp"
             android:src="@drawable/img_basic_profile" />
 
         <!-- 프로필 추가 + 버튼 -->

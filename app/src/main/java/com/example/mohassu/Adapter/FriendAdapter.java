@@ -58,6 +58,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
         // 이미지 로드 (Glide 사용)
         Glide.with(context)
                 .load(friend.getPhotoUrl())
+                .circleCrop() // 원형으로 자르기
                 .placeholder(R.drawable.img_basic_profile) // 로딩 중 대체 이미지
                 .error(R.drawable.img_basic_profile) // 로딩 실패 시 대체 이미지
                 .into(holder.photoImageView);

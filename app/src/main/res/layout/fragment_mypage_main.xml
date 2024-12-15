@@ -78,24 +78,24 @@
             android:padding="20dp">
 
             <TableRow>
-            <ImageView
-                android:id="@+id/profileImage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/img_my_profile"
-                android:layout_gravity="top" />
-
-            <TextView
-                android:id="@+id/usernickName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="닉네임"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp" />
-
+                <ImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_my_profile"
+                    android:layout_gravity="top" />
+                <TextView
+                    android:id="@+id/usernickName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="닉네임"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp" />
                 <ImageButton
                     android:id="@+id/btnProfileEdit"
                     android:layout_width="40dp"
@@ -106,7 +106,6 @@
                     android:padding="5dp"
                     android:src="@drawable/ic_profile_edit"
                     />
-
             </TableRow>
 
             <TableRow>

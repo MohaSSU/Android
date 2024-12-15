@@ -4,9 +4,11 @@ import static com.naver.maps.map.CameraUpdate.REASON_GESTURE;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +19,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,11 +30,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.mohassu.Constants.Constants;
 import com.example.mohassu.Model.PlaceInfo;
 import com.example.mohassu.R;
@@ -45,8 +47,6 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
@@ -54,7 +54,6 @@ import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
-import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
@@ -270,7 +269,6 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
             loadUserLocationFromFirestore();
             naverMap.getLocationOverlay().setVisible(false); // 오버레이 비활성화
         });
-
     }
 
     private void initializeMyMarker() {
@@ -279,38 +277,36 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         naverMap.moveCamera(hide); // 가끔씩 naverMap 로딩 버그로 인해 위치 업데이트 이후 보이게 설정
 
         // XML 레이아웃을 Inflate
-        View myMarkerView = LayoutInflater.from(requireContext()).inflate(R.layout.my_marker, null);
+        View myMarkerView = LayoutInflater.from(requireContext()).inflate(R.layout.view_marker_my, null);
         ImageView myProfile = myMarkerView.findViewById(R.id.my_marker_image);
 
-        if (currentUser != null) {
-            String uid = currentUser.getUid();
+        // SharedPreferences 인스턴스 가져오기
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
 
-            // Firestore에서 사용자 데이터를 가져옴
-            db.collection("users").document(currentUser.getUid()) // 예: 사용자 ID를 문서 ID로 사용
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            String photoUrl = documentSnapshot.getString("photoUrl");
+        // 저장된 데이터 불러오기
+        String photoUrl = sharedPreferences.getString("photoUrl", ""); // 기본값은 빈 문자열
 
-                            if (photoUrl != null) {
-                                // Glide를 사용하여 이미지 로드
-                                Glide.with(this)
-                                        .load(photoUrl)
-                                        .placeholder(R.drawable.img_default)
-                                        .error(R.drawable.img_default)
-                                        .into(myProfile);
+        if (photoUrl != null) {
+            // Glide를 사용하여 이미지 로드
+            Glide.with(this)
+                    .load(photoUrl) // 프로필 이미지 URI
+                    .circleCrop()
+                    .placeholder(R.drawable.img_basic_profile)
+                    .error(R.drawable.img_basic_profile)
+                    .into(new CustomTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            myProfile.setImageDrawable(resource);
 
-                            } else {
-                                myProfile.setImageResource(R.drawable.img_basic_profile); // 기본 이미지
-                            }
-                            // View를 Bitmap으로 변환
-                            //Bitmap myMarkerBitmap = convertViewToBitmap(myMarkerView);
-// Marker 객체 생성
-                            locationMarker = new Marker();
+                            // 이미지가 로드된 후 Bitmap 변환
+                            Bitmap myMarkerBitmap = convertViewToBitmap(myMarkerView);
+
+                            // Marker 객체 생성
+                            Marker locationMarker = new Marker();
                             locationMarker.setPosition(naverMap.getLocationOverlay().getPosition());
-                            locationMarker.setIcon(OverlayImage.fromResource(R.drawable.img_marker_red)); // 마커 이미지 설정
-                            locationMarker.setWidth(120); // 마커 크기 조정
-                            locationMarker.setHeight(140);
+                            locationMarker.setIcon(OverlayImage.fromBitmap(myMarkerBitmap)); // 마커 이미지 설정
+                            locationMarker.setWidth(dpToPx(120)); // 마커 크기 조정 (dp를 px로 변환)
+                            locationMarker.setHeight(dpToPx(140));
                             locationMarker.setMap(naverMap); // 지도에 마커 추가
 
                             locationMarker.setOnClickListener(overlay -> {
@@ -331,7 +327,6 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                 naverMap.moveCamera(update);
                                 isMyMarkerClicked = true;
                                 isFriendMarkerClicked = false;
-
 
                                 FrameLayout mapContainer = requireActivity().findViewById(R.id.fragment_map);
 
@@ -387,8 +382,52 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                 return true; // 클릭 이벤트 소비
                             });
                         }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                            // 필요한 경우 처리
+                        }
+
+                        @Override
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                            super.onLoadFailed(errorDrawable);
+                            myProfile.setImageDrawable(errorDrawable);
+
+                            // Bitmap 변환 및 마커 생성 (에러 이미지 사용)
+                            Bitmap myMarkerBitmap = convertViewToBitmap(myMarkerView);
+
+                            Marker locationMarker = new Marker();
+                            locationMarker.setPosition(naverMap.getLocationOverlay().getPosition());
+                            locationMarker.setIcon(OverlayImage.fromBitmap(myMarkerBitmap)); // 마커 이미지 설정
+                            locationMarker.setWidth(dpToPx(120)); // 마커 크기 조정
+                            locationMarker.setHeight(dpToPx(140));
+                            locationMarker.setMap(naverMap); // 지도에 마커 추가
+                            Log.d("mohassu:marker","내 프로필 사진 불러오지 못함");
+                        }
                     });
         }
+//        } else {
+//            myProfile.setImageResource(R.drawable.img_basic_profile); // 기본 이미지
+//            Log.d("mohassu:marker","내 프로필 사진 불러오지 못함");
+//        }
+//        // View를 Bitmap으로 변환
+//        Bitmap myMarkerBitmap = convertViewToBitmap(myMarkerView);
+
+//        // Marker 객체 생성
+//        locationMarker = new Marker();
+//        locationMarker.setPosition(naverMap.getLocationOverlay().getPosition());
+//        locationMarker.setIcon(OverlayImage.fromBitmap(myMarkerBitmap)); // 마커 이미지 설정
+//        locationMarker.setWidth(120); // 마커 크기 조정
+//        locationMarker.setHeight(140);
+//        locationMarker.setMap(naverMap); // 지도에 마커 추가
+
+
+    }
+
+    // dp를 px로 변환하는 메서드 추가
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round((float) dp * density);
     }
 
     private void updateUserLocationToFirestore(Location location) {
@@ -495,7 +534,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     private void loadFriendMarkers() {
 
         // XML 레이아웃을 Inflate
-        View friendMarkerView = LayoutInflater.from(requireContext()).inflate(R.layout.your_marker, null);
+        View friendMarkerView = LayoutInflater.from(requireContext()).inflate(R.layout.view_marker_friend, null);
         ImageView friendProfile = friendMarkerView.findViewById(R.id.your_marker_image);
 
         if (currentUser != null) {
@@ -528,11 +567,13 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                 // Glide를 사용하여 이미지 로드
                                 Glide.with(this)
                                         .load(photoUrl)
-                                        .placeholder(R.drawable.img_default)
-                                        .error(R.drawable.img_default)
+                                        .circleCrop()
+                                        .placeholder(R.drawable.img_basic_profile)
+                                        .error(R.drawable.img_basic_profile)
                                         .into(friendProfile);
                             } else {
                                 friendProfile.setImageResource(R.drawable.img_basic_profile); // 기본 이미지
+                                Log.d("mohassu:marker","친구 프로필 사진 불러오지 못함");
                             }
 
                             // View를 Bitmap으로 변환
@@ -643,11 +684,16 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         //tvBuildingName.setVisibility(View.VISIBLE);
     }
 
+    // convertViewToBitmap 메서드 (기존과 동일)
     private Bitmap convertViewToBitmap(View view) {
-        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        // dp 단위를 픽셀 단위로 변환하여 설정
+        int width = dpToPx(120); // RelativeLayout의 너비
+        int height = dpToPx(140); // RelativeLayout의 높이
+        view.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY));
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
 
-        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         view.draw(canvas);
 

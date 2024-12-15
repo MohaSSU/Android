@@ -80,6 +80,7 @@ public class PromiseAdapter extends RecyclerView.Adapter<PromiseAdapter.PromiseV
         // 프로필 이미지 설정
         Glide.with(context)
                 .load(promise.getHostProfileImageUrl())
+                .circleCrop() // 원형으로 자르기
                 .placeholder(R.drawable.img_basic_profile)
                 .error(R.drawable.img_basic_profile)
                 .into(holder.imgProfile);

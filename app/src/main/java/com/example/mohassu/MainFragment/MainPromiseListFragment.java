@@ -74,6 +74,7 @@ public class MainPromiseListFragment extends Fragment implements PromiseAdapter.
         // 기본 레이아웃 인플레이션
         rootView = inflater.inflate(R.layout.fragment_main_promise_list, container, false);
         myPromiseRecyclerView = rootView.findViewById(R.id.recycler_my_promise_list);
+        friendPromiseRecyclerView = rootView.findViewById(R.id.recycler_friend_promise_list);
 
         // RecyclerView 설정
         myPromiseRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -106,7 +107,6 @@ public class MainPromiseListFragment extends Fragment implements PromiseAdapter.
                 currentUserId
         );
         friendPromiseRecyclerView.setAdapter(friendPromiseAdapter);
-
 
         return rootView;
     }
