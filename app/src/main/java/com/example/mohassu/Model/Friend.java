@@ -1,4 +1,4 @@
-package com.example.mohassu.models;
+package com.example.mohassu.Model;
 
 import java.io.Serializable;
 
@@ -10,6 +10,7 @@ public class Friend implements Serializable {
     private String nickname;
     private String statusMessage;
     private ScheduleClass currentScheduleClass; // 현재 수업 정보 추가
+    private boolean isChecked = false; // 선택 여부 추가
 
     public Friend(String uid, String name, String nickname, String email, String statusMessage, String photoUrl, ScheduleClass currentScheduleClass) {
         this.uid = uid;
@@ -19,6 +20,7 @@ public class Friend implements Serializable {
         this.statusMessage = statusMessage;
         this.photoUrl = photoUrl;
         this.currentScheduleClass = currentScheduleClass;
+        this.isChecked = false; // 기본값으로 false 설정
     }
 
 
@@ -78,4 +80,13 @@ public class Friend implements Serializable {
     public void setCurrentClass(ScheduleClass currentScheduleClass) {
         this.currentScheduleClass = currentScheduleClass;
     }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
 }

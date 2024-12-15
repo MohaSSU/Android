@@ -14,7 +14,7 @@
         android:id="@+id/img_in_promise"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/pic_basic_profile"
+        android:src="@drawable/img_basic_profile"
         android:scaleType="centerCrop" />
 
     <TextView

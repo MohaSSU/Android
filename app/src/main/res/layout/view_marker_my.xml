@@ -1,17 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="80dp"
     android:layout_height="100dp"
-    android:background="@drawable/img_marker_blue"> <!-- 바깥 마커 배경 -->
+    android:background="@drawable/img_marker_red"> <!-- 바깥 마커 배경 -->
 
     <!-- 흰색 원 -->
     <ImageView
-        android:id="@+id/your_marker_image"
+        android:id="@+id/my_marker_image"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="6dp"
         android:background="@drawable/background_circle"
         android:scaleType="centerCrop"
-        android:src="@drawable/pic_basic_profile"
+        android:src="@drawable/img_basic_profile"
         android:clipToOutline="true" /> <!-- 원형 배경 -->
 </RelativeLayout>

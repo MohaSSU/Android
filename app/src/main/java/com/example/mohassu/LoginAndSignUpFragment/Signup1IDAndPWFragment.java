@@ -152,7 +152,7 @@ public class Signup1IDAndPWFragment extends Fragment {
                         auth.getCurrentUser().sendEmailVerification()
                                 .addOnCompleteListener(emailTask -> {
                                     if (emailTask.isSuccessful()) {
-                                        Toast.makeText(requireContext(), "회원가입 성공! 인증 이메일을 확인해주세요.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(requireContext(), "해당 이메일로 발송된\n인증 메일을 확인해주세요!", Toast.LENGTH_SHORT).show();
 
 //                                        // 인증 확인 버튼 활성화
 //                                        Button btnVerifyEmail = requireView().findViewById(R.id.btnVerifyEmail);

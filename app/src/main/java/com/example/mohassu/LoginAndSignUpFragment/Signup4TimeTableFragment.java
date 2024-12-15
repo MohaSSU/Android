@@ -154,7 +154,7 @@ public class Signup4TimeTableFragment extends Fragment {
                     put("timetableData", json);
                 }})
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(requireContext(), "Firestore에 시간표가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                    Log.d("mohassu:signup","Firestore에 시간표가 저장되었습니다.");
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "시간표 저장 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();

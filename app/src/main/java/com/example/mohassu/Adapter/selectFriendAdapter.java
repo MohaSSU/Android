@@ -1,4 +1,4 @@
-package com.example.mohassu.adapters;
+package com.example.mohassu.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,17 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mohassu.R;
-import com.example.mohassu.models.Friend;
+import com.example.mohassu.Model.Friend;
 
 import java.util.List;
 
-public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendViewHolder> {
+public class selectFriendAdapter extends RecyclerView.Adapter<selectFriendAdapter.FriendViewHolder> {
     private List<Friend> friendList;
     private Context context;
     private OnFriendClickListener onFriendClickListener;
 
     // 생성자에 OnFriendClickListener 추가
-    public FriendAdapter(Context context, List<Friend> friendList, OnFriendClickListener listener) {
+    public selectFriendAdapter(Context context, List<Friend> friendList, OnFriendClickListener listener) {
         this.context = context;
         this.friendList = friendList;
         this.onFriendClickListener = listener;
@@ -31,7 +31,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     @NonNull
     @Override
     public FriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.view_friend, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.view_select_friend, parent, false);
         return new FriendViewHolder(view);
     }
 
