@@ -1,4 +1,6 @@
 package com.example.mohassu.CheckAndEditPromiseFragment;
 
-public class PromiseEditFragment {
+import androidx.fragment.app.Fragment;
+
+public class PromiseEditFragment extends Fragment {
 }

@@ -16,13 +16,13 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mohassu.CheckProfileBottomSheetFragment;
+import com.example.mohassu.CheckProfileAndTimeTableFragment.CheckProfileBottomSheetFragment;
 import com.example.mohassu.MainFragment.MainFriendListFragment;
 import com.example.mohassu.R;
-import com.example.mohassu.adapters.selectFriendAdapter;
-import com.example.mohassu.models.Friend;
-import com.example.mohassu.models.ScheduleClass;
-import com.example.mohassu.models.Time;
+import com.example.mohassu.Adapter.selectFriendAdapter;
+import com.example.mohassu.Model.Friend;
+import com.example.mohassu.Model.ScheduleClass;
+import com.example.mohassu.Model.Time;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;

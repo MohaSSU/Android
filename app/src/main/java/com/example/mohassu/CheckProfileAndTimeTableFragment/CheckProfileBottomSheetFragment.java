@@ -1,4 +1,4 @@
-package com.example.mohassu;
+package com.example.mohassu.CheckProfileAndTimeTableFragment;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +15,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
-import com.example.mohassu.models.Friend;
+import com.example.mohassu.Model.Friend;
+import com.example.mohassu.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class CheckProfileBottomSheetFragment extends BottomSheetDialogFragment {

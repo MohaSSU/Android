@@ -26,8 +26,8 @@ import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.example.mohassu.R;
-import com.example.mohassu.adapters.MenuWithIconAdapter;
-import com.example.mohassu.models.Friend;
+
+import com.example.mohassu.Adapter.MenuWithIconAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -380,8 +380,8 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
             // Glide를 사용해 이미지 로드
             Glide.with(requireContext())
                     .load(photoUrls.get(i))
-                    .placeholder(R.drawable.pic_basic_profile)
-                    .error(R.drawable.pic_basic_profile)
+                    .placeholder(R.drawable.img_basic_profile)
+                    .error(R.drawable.img_basic_profile)
                     .into(profileImage);
 
             // friendListContainer에 추가

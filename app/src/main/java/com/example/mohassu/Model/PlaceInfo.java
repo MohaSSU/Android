@@ -1,4 +1,4 @@
-package com.example.mohassu;
+package com.example.mohassu.Model;
 
 import com.naver.maps.geometry.LatLng;
 

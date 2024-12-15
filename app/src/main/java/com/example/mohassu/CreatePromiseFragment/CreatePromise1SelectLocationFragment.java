@@ -1,8 +1,6 @@
 package com.example.mohassu.CreatePromiseFragment;
 
-import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,30 +10,23 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
-import com.example.mohassu.MainFragment.SharedMapViewModel;
 import com.example.mohassu.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
-import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class CreatePromise1SelectLocationFragment extends Fragment implements OnMapReadyCallback {
 
@@ -121,7 +112,7 @@ public class CreatePromise1SelectLocationFragment extends Fragment implements On
     private void loadUserInformationFromFirestore() {
 
         // XML 레이아웃을 Inflate
-        View myMarkerView = LayoutInflater.from(requireContext()).inflate(R.layout.my_marker, null);
+        View myMarkerView = LayoutInflater.from(requireContext()).inflate(R.layout.view_marker_my, null);
         ImageView myProfile = myMarkerView.findViewById(R.id.my_marker_image);
 
         if (currentUser != null) {
@@ -142,7 +133,7 @@ public class CreatePromise1SelectLocationFragment extends Fragment implements On
                                         .into(myProfile);
 
                             } else {
-                                myProfile.setImageResource(R.drawable.pic_basic_profile); // 기본 이미지
+                                myProfile.setImageResource(R.drawable.img_basic_profile); // 기본 이미지
                             }
 
                             // View를 Bitmap으로 변환

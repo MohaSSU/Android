@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.mohassu.R;
-import com.example.mohassu.models.Friend;
+import com.example.mohassu.Model.Friend;
 import com.github.tlaabs.timetableview.TimetableView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
