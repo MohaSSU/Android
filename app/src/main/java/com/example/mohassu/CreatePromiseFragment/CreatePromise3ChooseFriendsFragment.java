@@ -1,5 +1,7 @@
 package com.example.mohassu.CreatePromiseFragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +35,8 @@ public class CreatePromise3ChooseFriendsFragment extends Fragment {
     private RecyclerView selectFriendRecyclerView;
     private selectFriendAdapter selectFriendAdapter;
     private List<Friend> friendList = new ArrayList<>();
+    ArrayList<String> selectedNicknames = new ArrayList<>();
+    ArrayList<String> selectedPhotoUrls = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,9 +52,7 @@ public class CreatePromise3ChooseFriendsFragment extends Fragment {
 
         // 뒤로가기 버튼에 클릭 리스너 추가
         view.findViewById(R.id.btnBack).setOnClickListener(v -> {
-            getParentFragmentManager().beginTransaction()
-                    .remove(CreatePromise3ChooseFriendsFragment.this)
-                    .commit();
+            navController.navigateUp();
         });
 
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
@@ -58,18 +60,32 @@ public class CreatePromise3ChooseFriendsFragment extends Fragment {
         nextButton.setFocusable(false);
         nextButton.setOnClickListener(v -> {
             // 체크된 친구들의 닉네임을 가져옴
-            ArrayList<String> selectedFriendsNicknames = new ArrayList<>();
             for (Friend friend : friendList) {
                 if (friend.isChecked()) {
-                    selectedFriendsNicknames.add(friend.getNickname()); // 닉네임만 추가
+                    selectedNicknames.add(friend.getNickname()); // 닉네임 추가
+                    selectedPhotoUrls.add(friend.getPhotoUrl()); // 이미지 URL 추가
                 }
             }
-            Bundle result = new Bundle();
-            result.putStringArrayList("selectedFriends", selectedFriendsNicknames);
-            getParentFragmentManager().setFragmentResult("requestKey", result);
-            getParentFragmentManager().beginTransaction()
-                    .remove(CreatePromise3ChooseFriendsFragment.this)
-                    .commit();
+            if (!selectedNicknames.isEmpty()) {
+                Log.d("CreatePromise3", "전송하는 닉네임 수: " + selectedNicknames.size());
+                for (int i = 0; i < selectedNicknames.size(); i++) {
+                    Log.d("CreatePromise3", "Nickname: " + selectedNicknames.get(i));
+                    Log.d("CreatePromise3", "Photo URL: " + selectedPhotoUrls.get(i));
+                }
+
+                Bundle result = new Bundle();
+                result.putStringArrayList("selectedNicknames", selectedNicknames);
+                result.putStringArrayList("selectedPhotoUrls", selectedPhotoUrls);
+                // **데이터 전송 시 로그 출력**
+                Log.d("CreatePromise3", "setFragmentResult 호출 직전 - 데이터 전송 시작");
+                getParentFragmentManager().setFragmentResult("requestKey", result);
+                // **데이터 전송 후 로그 출력**
+                Log.d("CreatePromise3", "setFragmentResult 호출 완료 - 데이터 전송 완료");
+
+                navController.navigate(R.id.actionSaveFriendsToPromise);
+            } else {
+                Log.w("CreatePromise3", "선택된 친구가 없습니다.");
+            }
 
             /*
             if (!selectedFriends.isEmpty()) {
@@ -261,4 +277,5 @@ public class CreatePromise3ChooseFriendsFragment extends Fragment {
             }
         }
     }
+
 }

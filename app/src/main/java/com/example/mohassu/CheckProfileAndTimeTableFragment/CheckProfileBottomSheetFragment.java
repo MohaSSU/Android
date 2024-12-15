@@ -75,6 +75,7 @@ public class CheckProfileBottomSheetFragment extends BottomSheetDialogFragment {
         ImageView profileImage = view.findViewById(R.id.img_profile);
         TextView nicknameTextView = view.findViewById(R.id.text_nickname);
         TextView nameTextView = view.findViewById(R.id.text_name);
+
         Button viewTimeTableButton = view.findViewById(R.id.view_time_table_button);
 
         closeButton.setOnClickListener(v -> dismiss());
@@ -175,5 +176,6 @@ public class CheckProfileBottomSheetFragment extends BottomSheetDialogFragment {
                 });
             }
         }
+
     }
 }
