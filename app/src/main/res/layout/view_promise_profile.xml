@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 프로필  -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_marginStart="16dp"
+    tools:ignore="MissingConstraints">
+
+    <ImageView
+        android:id="@+id/img_in_promise"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/pic_basic_profile"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/name_in_promise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이름"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"/>
+</LinearLayout>

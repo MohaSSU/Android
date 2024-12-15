@@ -1,0 +1,6 @@
+<resources>
+    <string-array name="sort_options">
+        <item>활동 순</item>
+        <item>이름 순</item>
+    </string-array>
+</resources>

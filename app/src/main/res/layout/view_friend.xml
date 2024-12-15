@@ -1,6 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="30dp"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/background_view_friend"
+    >
+
+    <!-- 프로필 이미지 -->
+    <ImageView
+        android:id="@+id/profile_image2"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/img_example_profile"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/nickname_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "홍길동"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image2"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="4dp"/>
+
+    <!-- 메시지 텍스트 -->
+    <TextView
+        android:id="@+id/state_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:text="나 오늘 신나~ 노들섬 가실 분"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/profile_image2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 타임스탬프 -->
+    <TextView
+        android:id="@+id/state_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="#PlACE에서 #CLASS 수업 중"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/state_text"
+        app:layout_constraintTop_toBottomOf="@id/state_text" />
+
+    <TextView
+        android:id="@+id/state_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="#START_TIME부터 #END_TIME까지"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/state_place"
+        app:layout_constraintTop_toBottomOf="@id/state_place" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

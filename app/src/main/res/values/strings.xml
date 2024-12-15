@@ -9,4 +9,44 @@
         <item>토요일</item>
         <item>일요일</item>
     </string-array>
+    <string-array name="header_title">
+        <item></item>
+        <item>월</item>
+        <item>화</item>
+        <item>수</item>
+        <item>목</item>
+        <item>금</item>
+        <item>토</item>
+        <item>일</item>
+    </string-array>
+    <!-- 강의 장소 배열 -->
+    <string-array name="locations">
+        <item>베어드홀</item>
+        <item>숭덕경상관</item>
+        <item>문화관</item>
+        <item>안익태 기념관</item>
+        <item>형남공학관</item>
+        <item>교육관</item>
+        <item>백마관</item>
+        <item>한경직기념관</item>
+        <item>신양관</item>
+        <item>벤처중소기업센터</item>
+        <item>진리관</item>
+        <item>조만식기념관</item>
+        <item>한국기독교박물관</item>
+        <item>중앙도서관</item>
+        <item>연구관</item>
+        <item>창신관</item>
+        <item>생활관</item>
+        <item>학생생활관</item>
+        <item>전산관</item>
+        <item>미래관</item>
+        <item>정보과학관</item>
+        <item>웨스트민스터홀</item>
+        <item>학생회관</item>
+        <item>창의관</item>
+        <item>대운동장</item>
+    </string-array>
+    <string name="check_time_table_title">%1$s 님의 시간표</string>
+    <string name="action_settings">Settings</string>
 </resources>

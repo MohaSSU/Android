@@ -1,0 +1,117 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="16dp">
+
+    <!-- 상단 Back 버튼과 제목 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_back"
+            android:contentDescription="뒤로가기 버튼"
+            android:textStyle="bold"
+            android:background="?selectableItemBackground"
+            android:foregroundTint="@color/black" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="모하SSU 로그인"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
+    </FrameLayout>
+
+    <!-- 구분선: Toolbar 아래에 배치 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#BDBDBD"
+        android:layout_marginBottom="150dp" />
+
+    <!-- 아이디 텍스트와 EditText -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
+
+        <!-- 아이디 텍스트 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendardregular"
+            android:text="아이디 (이메일)"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textSize="16sp"
+            android:hint="아이디를 입력해주세요"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:backgroundTint="@color/black"
+            android:inputType="textEmailAddress"
+            android:imeOptions="actionNext"/>
+
+        <!-- 비밀번호 텍스트 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:fontFamily="@font/pretendardregular"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textSize="16sp"
+            android:hint="비밀번호를 입력해주세요"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:backgroundTint="@color/black"
+            android:inputType="textPassword"
+            android:imeOptions="actionDone"/>
+    </LinearLayout>
+
+
+    <!-- 로그인 버튼 -->
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_marginTop="200dp"
+        style="@style/BlueMaterialButtonStyle"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center"
+        android:text="로그인"
+        android:textSize="30sp" />
+
+</LinearLayout>

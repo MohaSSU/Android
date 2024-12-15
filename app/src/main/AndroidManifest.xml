@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!-- 위치 추적 기능 관련 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -13,14 +16,43 @@
         android:theme="@style/Theme.MohaSSU"
         tools:targetApi="31">
         <activity
-            android:name=".Activity"
-            android:exported="true">
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".NavigationStartLoginAndSignupActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".NavigationMainActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".MapActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".MapViewActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".TestViewProfileButtonActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".TestClassAddDialogActivity"
+            android:exported="true">
+        </activity>
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="fs9rplnpjv" />
+        <receiver android:name=".GeofenceBroadcastReceiver"/>
     </application>
 
 </manifest>

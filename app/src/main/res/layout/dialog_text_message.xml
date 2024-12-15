@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_text_message"
+    android:layout_width="300dp"
+    android:layout_height="70dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/pic_status_chat"
+    android:gravity="center_horizontal"
+    android:layout_gravity="center"
+    android:layout_marginBottom="80dp">
+
+    <TextView
+        android:id="@+id/markerFriendMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="#default"
+        android:background="#00000000"
+        />
+
+</LinearLayout>
