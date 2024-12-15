@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.mohassu.Adapter.FriendAdapter;
+import com.example.mohassu.CheckProfileAndTimeTableFragment.CheckProfileBottomSheetFragment;
 import com.example.mohassu.DialogFragment.AddFriendDialogFragment;
 import com.example.mohassu.Model.Friend;
 import com.example.mohassu.Model.ScheduleClass;
