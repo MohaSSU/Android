@@ -216,16 +216,16 @@ public class PromiseAdapter extends RecyclerView.Adapter<PromiseAdapter.PromiseV
     private String getMarkerIconUrl(String promiseType) {
         String url;
         switch (promiseType) {
-            case "MEAL":
+            case "밥약속":
                 url = "icon:https://firebasestorage.googleapis.com/v0/b/mohassu-98a30.firebasestorage.app/o/marker_icons%2Fic_promise_meal_marker.png?alt=media&token=1487e418-3e68-43f8-ac66-44ece7afb3d5";
                 break;
-            case "DRINK":
+            case "술약속":
                 url = "icon:https://firebasestorage.googleapis.com/v0/b/mohassu-98a30.firebasestorage.app/o/marker_icons%2Fic_promise_drink_marker.png?alt=media&token=1b55929a-9db4-489c-8eca-67f554820bf6";
                 break;
-            case "STUDY":
+            case "공부약속":
                 url = "icon:https://firebasestorage.googleapis.com/v0/b/mohassu-98a30.firebasestorage.app/o/marker_icons%2Fic_promise_study_marker.png?alt=media&token=2a595f5e-84ba-4c14-8ab5-36c23c2f1d77";
                 break;
-            case "ETC":
+            case "기타":
                 url = "icon:https://firebasestorage.googleapis.com/v0/b/mohassu-98a30.firebasestorage.app/o/marker_icons%2Fic_promise_etc_marker.png?alt=media&token=4f0fa4a3-906c-40ed-8357-823c5c788b1c";
                 break;
             default:

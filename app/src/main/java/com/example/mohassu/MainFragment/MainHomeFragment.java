@@ -37,7 +37,8 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.example.mohassu.CheckProfileAndTimeTableFragment.CheckProfileBottomSheetFragment;
+import com.example.mohassu.CheckAndEditPromiseFragment.PromiseEditDialogFragment;
+import com.example.mohassu.CheckProfileAndTimeTableFragment.EmptyBottomSheetProfile;
 import com.example.mohassu.Constants.Constants;
 import com.example.mohassu.Model.PlaceInfo;
 import com.example.mohassu.R;
@@ -233,6 +234,9 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
         // 친구 Marker 초기화 및 위치 갱신
         loadFriendMarkers();
+
+        // 약속 Marker 갱신
+        loadPromisesFromFirestore();
 
         // 지도 클릭 이벤트 설정 (말풍선 닫기)
         naverMap.setOnMapClickListener((point, coord) -> {
@@ -872,4 +876,57 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
         return bitmap;
     }
+
+
+    private void loadPromisesFromFirestore() {
+        db.collection("promises")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        GeoPoint geoPoint = document.getGeoPoint("location");
+                        if (geoPoint != null) {
+                            double latitude = geoPoint.getLatitude();
+                            double longitude = geoPoint.getLongitude();
+                            String promiseId = document.getId();
+                            addMarkerOnMap(promiseId, latitude, longitude);
+                        } else {
+                            Log.w("HomeFragment", "GeoPoint가 null입니다. Document ID: " + document.getId());
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("HomeFragment", "Firestore에서 약속 정보를 가져오는 데 실패했습니다.", e));
+    }
+
+    private void addMarkerOnMap(String promiseId, double latitude, double longitude) {
+        Marker marker = new Marker();
+        marker.setPosition(new LatLng(latitude, longitude));
+        marker.setIcon(OverlayImage.fromResource(R.drawable.ic_promise_marker)); // 마커 이미지 설정
+        marker.setWidth(120); // 마커 크기 조정
+        marker.setHeight(140);
+
+        // 마커에 tag로 promiseId 저장
+        marker.setTag(promiseId);
+
+        // 마커 클릭 리스너 추가
+        marker.setOnClickListener(overlay -> {
+            String promiseIdClicked = (String) marker.getTag();
+            if (promiseIdClicked != null)
+                Log.d("Promise2", promiseIdClicked);
+            else
+                Log.d("Promise2", "fuc");
+            Bundle args = new Bundle();
+            args.putString("promiseId", promiseIdClicked);
+
+            PromiseEditDialogFragment bottomSheetFragment = new PromiseEditDialogFragment();
+            bottomSheetFragment.setArguments(args);
+            bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
+
+            return true; // 클릭 이벤트 소비
+        });
+
+        marker.setMap(naverMap);
+
+
+    }
+
 }

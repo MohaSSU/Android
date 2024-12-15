@@ -1,4 +1,4 @@
-package com.example.mohassu.CreatePromiseFragment;
+package com.example.mohassu.CheckAndEditPromiseFragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,6 +16,8 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mohassu.CheckProfileAndTimeTableFragment.CheckProfileBottomSheetFragment;
+import com.example.mohassu.MainFragment.MainFriendListFragment;
 import com.example.mohassu.R;
 import com.example.mohassu.Adapter.selectFriendAdapter;
 import com.example.mohassu.Model.Friend;
@@ -23,14 +25,17 @@ import com.example.mohassu.Model.ScheduleClass;
 import com.example.mohassu.Model.Time;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class CreatePromise3ChooseFriendsFragment extends Fragment {
+public class PromiseEditChooseFriendsFragment extends Fragment {
 
     private RecyclerView selectFriendRecyclerView;
     private selectFriendAdapter selectFriendAdapter;
@@ -168,11 +173,10 @@ public class CreatePromise3ChooseFriendsFragment extends Fragment {
                         String nickname = documentSnapshot.getString("nickname");
                         String statusMessage = documentSnapshot.getString("statusMessage");
                         String photoUrl = documentSnapshot.getString("photoUrl");
-                        String timeTableJSON = documentSnapshot.getString("timetableData");
 
                         fetchCurrentClass(friendUid, currentClass -> {
                             // Friend 객체 생성 및 추가
-                            friendList.add(new Friend(friendUid, name, nickname, email, statusMessage, timeTableJSON, photoUrl, currentClass));
+                            friendList.add(new Friend(friendUid, name, nickname, email, statusMessage, photoUrl, currentClass));
                             selectFriendAdapter.notifyDataSetChanged();
                             Log.d("fetchFriendDetails", "Friend added: " + name);
                         });

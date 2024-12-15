@@ -1,5 +1,7 @@
-package com.example.mohassu.CreatePromiseFragment;
+package com.example.mohassu.CheckAndEditPromiseFragment;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,11 +27,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
+import com.example.mohassu.CreatePromiseFragment.CreatePromise3ChooseFriendsFragment;
+import com.example.mohassu.CreatePromiseFragment.PromiseViewModel;
 import com.example.mohassu.R;
-
 import com.example.mohassu.Adapter.MenuWithIconAdapter;
+import com.example.mohassu.Model.Friend;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -42,75 +46,38 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 
-import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-public class CreatePromise2DetailFragment extends Fragment implements OnMapReadyCallback {
+public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
 
+    private String promiseId;
     private View rootView;
-    private NaverMap naverMap;
-    private Marker marker;
     private PromiseViewModel promiseViewModel;
     int year, month, day, hour, minute;
 
     // 전역변수 선언
     private GeoPoint geoPoint;
 
-
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        promiseViewModel = new ViewModelProvider(requireActivity()).get(PromiseViewModel.class);
-
-        // 새로운 약속 생성 시 ViewModel 초기화
-        if (getArguments() == null || !getArguments().containsKey("promiseId")) {
-            resetViewModel();
-        }
-
-        // *** 리스너 등록 ***
-        Log.d("CreatePromise2Detail", "리스너 등록 시작");
-        // *** Fragment가 생성될 때부터 리스너 대기 ***
-        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                Log.d("CreatePromise2Detail", "리스너 작동 - requestKey: " + requestKey);
-                promiseViewModel.selectedNicknames = result.getStringArrayList("selectedNicknames");
-                promiseViewModel.selectedPhotoUrls = result.getStringArrayList("selectedPhotoUrls");
-
-                // UI 업데이트 추가
-                updateFriendListUI(promiseViewModel.selectedNicknames, promiseViewModel.selectedPhotoUrls);
-
-                if (promiseViewModel.selectedNicknames != null && promiseViewModel.selectedPhotoUrls != null) {
-                    Log.d("CreatePromise2Detail", "받은 친구 수: " + promiseViewModel.selectedNicknames.size());
-                    for (int i = 0; i < promiseViewModel.selectedNicknames.size(); i++) {
-                        Log.d("CreatePromise2Detail", "Nickname: " + promiseViewModel.selectedNicknames.get(i));
-                        Log.d("CreatePromise2Detail", "Photo URL: " + promiseViewModel.selectedPhotoUrls.get(i));
-                    }
-                } else {
-                    Log.w("CreatePromise2Detail", "받은 데이터가 없습니다.");
-                }
-
-                Log.d("CreatePromise2Detail", "리스너 등록 완료");
-
-            }
-        });
         // ViewModel 초기화
         promiseViewModel = new ViewModelProvider(requireActivity()).get(PromiseViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_create_promise2_detail, container, false);
+        return inflater.inflate(R.layout.dialog_promise_edit, container, false);
     }
 
     @Override
@@ -118,19 +85,32 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
         super.onViewCreated(view, savedInstanceState);
         this.rootView = view;
 
-        // NavController 초기화
-        NavController navController = Navigation.findNavController(view);
+        // **promiseId 초기화 (Arguments로부터 가져옴)**
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            promiseId = arguments.getString("promiseId", null);
+            if (promiseId == null) {
+                Log.e("PromiseEditDialog", "promiseId is null. Firestore update will fail.");
+            }
+            else Log.e("PromiseEditDialog", promiseId);
+        } else {
+            Log.e("PromiseEditDialog", "Arguments are null. Firestore update will fail.");
+        }
+
+        loadFromFirestore();
+
+        loadParticipantsFromFirestore();
 
         // 뒤로가기 버튼에 클릭 리스너 추가
-        view.findViewById(R.id.btnBack).setOnClickListener(v -> {
-            navController.navigateUp();
-        });
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> dismiss());
 
         LinearLayout addFriendsButton = view.findViewById(R.id.btnAddFriends);
         if (addFriendsButton != null) {
             addFriendsButton.setOnClickListener(v -> {
                 saveDataToViewModel(); // ViewModel에 데이터 저장 추가
-                navController.navigate(R.id.actionNextToCreatePromise3);
+                dismiss();
+                NavController navController = Navigation.findNavController(view);
+                navController.navigate(R.id.actionAddFriends);
             });
         } else {
             Log.e("CreatePromise2Detail", "btnAddFriends is null");
@@ -138,30 +118,18 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
 
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
         Button saveButton = view.findViewById(R.id.btnSave);
+        saveButton.setFocusable(false);
         saveButton.setOnClickListener(v -> {
             saveToFirestore();
-            navController.navigate(R.id.actionSavePromise);
+            dismiss();
         });
 
-        // 새로 지도를 불러오는 코드 (기존과 동일)
-        MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map);
-        if (mapFragment == null) {
-            mapFragment = MapFragment.newInstance();
-            getChildFragmentManager().beginTransaction()
-                    .add(R.id.fragment_map, mapFragment)
-                    .commit();
-        }
-        mapFragment.getMapAsync(this);
 
         LinearLayout btnSelectPromiseType = view.findViewById(R.id.btnSelectPromiseType);
         ImageView ivIcon = btnSelectPromiseType.findViewById(R.id.ivIcon);
         TextView tvText = btnSelectPromiseType.findViewById(R.id.tvText);
         LinearLayout dateButton = view.findViewById(R.id.btnSelectPromiseDate);
         LinearLayout timeButton = view.findViewById(R.id.btnSelectPromiseTime);
-
-        // 기본값 설정
-        ivIcon.setImageResource(R.drawable.ic_promise_rice);
-        tvText.setText("밥약속");
 
         // 클릭 리스너 설정
         btnSelectPromiseType.setOnClickListener(v -> showPromiseTypeDialog(ivIcon, tvText));
@@ -171,60 +139,7 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
 
         //timePicker
         timeButton.setOnClickListener(v -> showTimePickerDialog());
-    }
 
-
-    @Override
-    public void onMapReady(@NonNull NaverMap naverMap) {
-        this.naverMap = naverMap;
-
-        // +- 줌컨트롤 버튼 비활성화
-        naverMap.getUiSettings().setZoomControlEnabled(false);
-
-        // 축척 바 제거 (0___2m 같은 정보)
-        naverMap.getUiSettings().setScaleBarEnabled(false);
-
-        marker = new Marker();
-        marker.setIcon(OverlayImage.fromResource(R.drawable.ic_promise_marker)); // 마커 이미지 설정
-        marker.setWidth(120); // 마커 크기 조정
-        marker.setHeight(140);
-
-        loadUserInformationFromBundle();
-
-        // 데이터 복원
-        updateUIFromViewModel();
-    }
-
-    private void loadUserInformationFromBundle() {
-
-        if (promiseViewModel.latitude != 0 && promiseViewModel.longitude != 0) {
-            Log.d("CreatePromise2Detail", "ViewModel에 저장된 위도: " + promiseViewModel.latitude + ", 경도: " + promiseViewModel.longitude);
-        } else {
-            Bundle args = getArguments();
-            if (args != null) {
-                double latitude = args.getDouble("latitude", 0);
-                double longitude = args.getDouble("longitude", 0);
-                Log.d("CreatePromise2Detail", "받은 위도: " + latitude + ", 경도: " + longitude);
-
-                // ViewModel에 위도와 경도 저장
-                promiseViewModel.latitude = latitude;
-                promiseViewModel.longitude = longitude;
-
-                geoPoint = new GeoPoint(latitude, longitude);
-                // 사용자 위치 업데이트
-                LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                marker.setPosition(location);
-
-                // 카메라 위치 선정
-                CameraUpdate update = CameraUpdate.scrollAndZoomTo(location, 20.0)
-                        .animate(CameraAnimation.Easing);
-                naverMap.moveCamera(update);
-            } else {
-                Log.e("CreatePromise2Detail", "Bundle에 데이터가 없습니다.");
-            }
-
-            marker.setMap(naverMap); // 지도에 마커 추가
-        }
     }
 
     private void showPromiseTypeDialog(ImageView ivIcon, TextView tvText) {
@@ -350,77 +265,89 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
                 });
     }
 
+    private void loadFromFirestore() {
+
+        db.collection("promises").document(promiseId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Firestore에서 가져온 데이터
+                        promiseViewModel.promiseDescription = documentSnapshot.getString("description");
+                        promiseViewModel.date = documentSnapshot.getString("splitted_date");
+                        promiseViewModel.time = documentSnapshot.getString("splitted_time");
+
+                        Log.d("Firestore", "약속 데이터를 성공적으로 불러왔습니다: " + promiseId);
+                    } else {
+                        Log.w("Firestore", "해당 약속 문서를 찾을 수 없습니다: " + promiseId);
+                    }
+                    // 데이터 복원
+                    updateUIFromViewModel();
+                })
+                        .addOnFailureListener(e -> {
+                            Log.e("Firestore", "약속 데이터를 불러오는 중 오류가 발생했습니다.", e);
+                            Toast.makeText(requireContext(), "약속 데이터를 불러오는 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
+                        });
+                    }
+
+    private void loadParticipantsFromFirestore() {
+        db.collection("promises").document(promiseId).collection("participants")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    ArrayList<String> nicknames = new ArrayList<>();
+                    ArrayList<String> photoUrls = new ArrayList<>();
+
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        String nickname = document.getString("nickname");
+                        String photoUrl = document.getString("photoUrl");
+
+                        if (nickname != null) {
+                            nicknames.add(nickname);
+                            photoUrls.add(photoUrl);
+                            Log.d("Firestore", "참여자 추가됨 - 닉네임: " + nickname + ", 사진 URL: " + photoUrl);
+                        } else {
+                            Log.w("Firestore", "닉네임 또는 사진 URL이 누락되었습니다. Document: " + document.getId());
+                        }
+                    }
+
+                    // 가져온 데이터를 UI에 업데이트
+                    updateFriendListUI(nicknames, photoUrls);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "참여자 데이터를 불러오는 중 오류가 발생했습니다.", e);
+                    Toast.makeText(requireContext(), "참여자 데이터를 불러오는 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private void addParticipantsToFirestore(String promiseId) {
         if (!promiseViewModel.selectedNicknames.isEmpty() && !promiseViewModel.selectedPhotoUrls.isEmpty()) {
-
-            // 사용자 ID를 저장할 리스트 생성 (for 루프 밖으로 이동)
-            List<DocumentReference> participantReferences = new ArrayList<>();
-
-            // 모든 Firestore 비동기 작업을 추적하기 위한 Task 리스트
-            List<com.google.android.gms.tasks.Task<?>> tasks = new ArrayList<>();
+            if (promiseViewModel.selectedNicknames.size() != promiseViewModel.selectedPhotoUrls.size()) {
+                Log.e("Firestore", "닉네임과 사진 URL의 수가 일치하지 않습니다.");
+                return;
+            }
 
             for (int i = 0; i < promiseViewModel.selectedNicknames.size(); i++) {
                 String friendNickname = promiseViewModel.selectedNicknames.get(i);
                 String friendPhotoUrl = promiseViewModel.selectedPhotoUrls.get(i);
 
-                // Firestore에서 닉네임에 맞는 사용자 ID 조회
-                com.google.android.gms.tasks.Task<?> task = db.collection("users")
-                        .whereEqualTo("nickname", friendNickname) // 닉네임으로 해당 사용자 조회
-                        .get()
-                        .addOnSuccessListener(querySnapshot -> {
-                            if (!querySnapshot.isEmpty()) {
-                                // 첫 번째 일치하는 사용자 문서 가져오기
-                                String userId = querySnapshot.getDocuments().get(0).getId();
+                // Firestore에 추가할 데이터 생성
+                Map<String, Object> participantData = new HashMap<>();
+                participantData.put("nickname", friendNickname);
+                participantData.put("photoUrl", friendPhotoUrl);
 
-                                // Firestore에 추가할 데이터 생성
-                                Map<String, Object> participantData = new HashMap<>();
-                                participantData.put("nickname", friendNickname);
-                                participantData.put("photoUrl", friendPhotoUrl);
-
-                                // Firestore의 users/{userId}/participants에 데이터 추가
-                                db.collection("users")
-                                        .document(userId)
-                                        .collection("participants")
-                                        .add(participantData)
-                                        .addOnSuccessListener(participantRef ->
-                                                Log.d("Firestore", "참여자 추가됨: " + friendNickname)
-                                        )
-                                        .addOnFailureListener(e ->
-                                                Log.e("Firestore", "참여자 추가 실패: " + friendNickname, e)
-                                        );
-
-                                DocumentReference reference = db.collection("users").document(userId);
-                                participantReferences.add(reference);
-
-                            } else {
-                                Log.e("Firestore", "닉네임에 해당하는 사용자를 찾을 수 없습니다: " + friendNickname);
-                            }
-                        })
+                // Firestore에 participants 컬렉션에 추가
+                db.collection("promises")
+                        .document(promiseId)
+                        .collection("participants")
+                        .add(participantData)
+                        .addOnSuccessListener(participantRef ->
+                                Log.d("Firestore", "참여자 추가됨: " + friendNickname)
+                        )
                         .addOnFailureListener(e ->
-                                Log.e("Firestore", "사용자 조회 실패: " + friendNickname, e)
+                                Log.e("Firestore", "참여자 추가 실패: " + friendNickname, e)
                         );
-
-                // Firestore의 비동기 작업을 추적하기 위해 Task를 추가
-                tasks.add(task);
             }
-
-            // 모든 Firestore 작업이 완료된 후에 participants 필드에 DocumentReference 추가
-            com.google.android.gms.tasks.Tasks.whenAll(tasks)
-                    .addOnSuccessListener(aVoid -> {
-                        // Firestore의 promises/{promiseId} 문서에 participants 필드를 추가
-                        db.collection("promises")
-                                .document(promiseId)
-                                .update("participants", participantReferences) // 약속 문서의 participants 필드에 DocumentReference 추가
-                                .addOnSuccessListener(aVoid2 ->
-                                        Log.d("Firestore", "participants 필드가 Firestore에 참조 배열로 추가되었습니다.")
-                                )
-                                .addOnFailureListener(e ->
-                                        Log.e("Firestore", "participants 필드 추가 실패", e)
-                                );
-                    })
-                    .addOnFailureListener(e ->
-                            Log.e("Firestore", "작업 전체 실패", e)
-                    );
+        } else {
+            Log.w("Firestore", "선택된 친구가 없습니다.");
         }
     }
 
@@ -435,6 +362,7 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
 
         // 선택한 친구 목록을 기반으로 프로필 동적 추가
         for (int i = 0; i < nicknames.size(); i++) {
+            //Log.e("Promise2", );
             View profileView = inflater.inflate(R.layout.view_promise_profile, friendListContainer, false);
 
             // 프로필 이미지와 이름 설정
@@ -442,7 +370,6 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
             TextView profileName = profileView.findViewById(R.id.name_in_promise);
 
             profileName.setText(nicknames.get(i));
-
             // Glide를 사용해 이미지 로드
             Glide.with(requireContext())
                     .load(photoUrls.get(i))
@@ -468,22 +395,8 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
         promiseViewModel.selectedPhotoUrls = new ArrayList<>();
     }
 
-    private void updateUIFromViewModel() {
-        if (promiseViewModel.latitude != 0.0 && promiseViewModel.longitude != 0.0) {
-            geoPoint = new GeoPoint(promiseViewModel.latitude, promiseViewModel.longitude);
-            LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-            if (naverMap != null) {
-                marker.setPosition(location);
-                marker.setMap(naverMap);
 
-                CameraUpdate update = CameraUpdate.scrollAndZoomTo(location, 20.0).animate(CameraAnimation.Easing);
-                naverMap.moveCamera(update);
-            } else {
-                Log.w("CreatePromise2Detail", "NaverMap is not ready yet.");
-            }
-        } else {
-            Log.w("CreatePromise2Detail", "Latitude or Longitude is not set in ViewModel.");
-        }
+    private void updateUIFromViewModel() {
 
         EditText descriptionEditText = rootView.findViewById(R.id.promise_description);
         TextView tvDate = rootView.findViewById(R.id.tvSelectedDate);
@@ -497,7 +410,6 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
         } else {
             Log.w("CreatePromise2Detail", "promiseDescription is not set in ViewModel.");
         }
-
 
         if (promiseViewModel.date != null && !promiseViewModel.date.isEmpty()) {
             tvDate.setText(promiseViewModel.date);
@@ -529,16 +441,19 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
         EditText descriptionEditText = rootView.findViewById(R.id.promise_description);
         TextView tvDate = rootView.findViewById(R.id.tvSelectedDate);
         TextView tvTime = rootView.findViewById(R.id.tvSelectedTime);
+        TextView tvText = rootView.findViewById(R.id.tvText);
+        ImageView ivIcon = rootView.findViewById(R.id.ivIcon);
 
         promiseViewModel.promiseDescription = descriptionEditText.getText().toString();
         promiseViewModel.date = tvDate.getText().toString();
         promiseViewModel.time = tvTime.getText().toString();
+        promiseViewModel.promiseType = tvText.getText().toString();
 
-        if (geoPoint != null) {
-            promiseViewModel.latitude = geoPoint.getLatitude();
-            promiseViewModel.longitude = geoPoint.getLongitude();
+        Object iconTag = ivIcon.getTag();
+        if (iconTag != null && iconTag instanceof Integer) {
+            promiseViewModel.promiseIconRes = (Integer) iconTag;
         } else {
-            Log.w("CreatePromise2Detail", "GeoPoint is null, cannot save latitude and longitude to ViewModel.");
+            Log.w("CreatePromise2Detail", "Failed to get icon resource ID from ImageView tag.");
         }
     }
 

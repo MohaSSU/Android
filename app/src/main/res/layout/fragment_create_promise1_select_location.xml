@@ -60,19 +60,5 @@
         android:layout_gravity="center"
         android:src="@drawable/ic_promise_marker" />
 
-    <ImageButton
-        android:id="@+id/btnNowLocation"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="end|bottom"
-        android:padding="5dp"
-        android:background="@drawable/background_rounded_button"
-        android:src="@drawable/ic_current_location"
-        android:elevation="8dp"
-        android:scaleType="centerInside"
-        android:layout_marginBottom="140dp"
-        android:layout_marginEnd="17dp"/>
-
-
 
 </FrameLayout>

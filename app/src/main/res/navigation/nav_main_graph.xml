@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_checkProfileToCheckTimeTable"
             app:destination="@id/CheckTimeTableFragment"/>
+  <action>
+            android:id="@+id/actionAddFriends"
+            app:destination="@+id/PromiseEditChooseFriendsFragment"/>
     </fragment>
 
     <!--알림 페이지-->
@@ -181,6 +184,14 @@
         android:name="com.example.mohassu.MyPageFragment.MyPageSettingNotificationFragment"
         android:label="MyPageSettingNotificationFragment"
         tools:layout="@layout/fragment_mypage_setting_notification">
+    </fragment>
+
+    <!--메인 마커 친구 지정-->
+    <fragment
+        android:id="@+id/PromiseEditChooseFriendsFragment"
+        android:name="com.example.mohassu.CheckAndEditPromiseFragment.PromiseEditChooseFriendsFragment"
+        android:label="PromiseEditChooseFriendsFragment"
+        tools:layout="@layout/fragment_create_promise3_choose_friends">
     </fragment>
 
 </navigation>
