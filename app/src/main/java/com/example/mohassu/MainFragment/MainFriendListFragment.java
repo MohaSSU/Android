@@ -1,9 +1,13 @@
 package com.example.mohassu.MainFragment;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +24,6 @@ import com.example.mohassu.adapters.FriendAdapter;
 import com.example.mohassu.models.Friend;
 import com.example.mohassu.models.ScheduleClass;
 import com.example.mohassu.models.Time;
-import android.util.Log;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,6 +38,7 @@ public class MainFriendListFragment extends Fragment {
     private RecyclerView friendRecyclerView;
     private FriendAdapter friendAdapter;
     private List<Friend> friendList = new ArrayList<>();
+    private EditText etSearchFriend;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,28 +49,38 @@ public class MainFriendListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // NavController 초기화
         NavController navController = Navigation.findNavController(view);
 
-        // 뒤로가기 버튼에 클릭 리스너 추가
+        // 뒤로가기 버튼
         view.findViewById(R.id.btnBack).setOnClickListener(v -> navController.navigateUp());
 
-        // 친구 추가 버튼 클릭 리스너
+        // 친구 추가 버튼
         view.findViewById(R.id.add_friend_button).setOnClickListener(v -> {
             AddFriendDialogFragment dialog = new AddFriendDialogFragment();
             dialog.show(getParentFragmentManager(), "AddFriendDialog");
         });
 
-        // RecyclerView 초기화
+        etSearchFriend = view.findViewById(R.id.etSearchFriend);
         friendRecyclerView = view.findViewById(R.id.friendRecyclerView);
         friendRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        // 어댑터에 클릭 리스너 추가
         friendAdapter = new FriendAdapter(requireContext(), friendList, this::showCheckProfileBottomSheet);
         friendRecyclerView.setAdapter(friendAdapter);
 
-        // Firestore에서 친구 데이터 가져오기
         fetchFriends();
+
+        etSearchFriend.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                friendAdapter.filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
     private void fetchFriends() {
@@ -83,10 +97,11 @@ public class MainFriendListFragment extends Fragment {
                             fetchFriendDetails(friendUid);
                         }
                     } else {
-                        Log.e("fetchFriend","친구 몫록을 불러오는 중 오류 발생");
+                        Log.e("fetchFriend", "친구 목록을 불러오는 중 오류 발생");
                     }
                 });
     }
+
     private void fetchFriendDetails(String friendUid) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -101,13 +116,9 @@ public class MainFriendListFragment extends Fragment {
                         String photoUrl = documentSnapshot.getString("photoUrl");
 
                         fetchCurrentClass(friendUid, currentClass -> {
-                            // Friend 객체 생성 및 추가
                             friendList.add(new Friend(friendUid, name, nickname, email, statusMessage, photoUrl, currentClass));
-                            friendAdapter.notifyDataSetChanged();
-                            Log.d("fetchFriendDetails", "Friend added: " + name);
+                            friendAdapter.setData(friendList);
                         });
-                    } else {
-                        Log.e("fetchFriendDetails", "친구 프로필을 찾을 수 없습니다.");
                     }
                 })
                 .addOnFailureListener(e -> Log.e("fetchFriendDetails", "프로필 불러오기 실패: " + e.getMessage()));
@@ -121,21 +132,10 @@ public class MainFriendListFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Calendar calendar = Calendar.getInstance();
-
-                        // 현재 요일 (0 = 일요일, 1 = 월요일, ...)
                         int today = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-
-//                        int today = 0;
-                        // 현재 시간
                         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
                         int currentMinute = calendar.get(Calendar.MINUTE);
 
-                        System.out.println("Current Time: " + currentHour + "시 " + currentMinute + "분");
-//
-//                        int currentHour = 9;
-//                        int currentMinute = 45;
-
-                        // 현재 진행 중인 수업 탐색
                         ScheduleClass currentClass = null;
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
@@ -145,11 +145,9 @@ public class MainFriendListFragment extends Fragment {
                             int endHour = document.getLong("endTime.hour").intValue();
                             int endMinute = document.getLong("endTime.minute").intValue();
 
-                            // 현재 시간 확인
                             if (today == day &&
                                     (currentHour > startHour || (currentHour == startHour && currentMinute >= startMinute)) &&
                                     (currentHour < endHour || (currentHour == endHour && currentMinute <= endMinute))) {
-                                // Class 객체 생성
                                 currentClass = new ScheduleClass(
                                         document.getString("classTitle"),
                                         document.getString("classPlace"),
@@ -157,27 +155,15 @@ public class MainFriendListFragment extends Fragment {
                                         day,
                                         new Time(startHour, startMinute),
                                         new Time(endHour, endMinute)
-
                                 );
-                                Log.d("fetchCurrentClass", "현재 진행 중인 수업: " + currentClass.getClassTitle());
                                 break;
                             }
-
-                            else Log.d("fetchCurrentClass", "현재 진행 중인 수업이 없습니다.");
                         }
-
-                        // 결과 콜백
                         callback.onClassFetched(currentClass);
-                    } else {
-                        Log.e("fetchCurrentClass", "시간표 데이터를 불러오지 못했습니다: " + task.getException().getMessage());
-                        callback.onClassFetched(null);
                     }
                 });
     }
 
-    /**
-     * 현재 수업 정보를 가져오기 위한 콜백 인터페이스
-     */
     interface CurrentClassCallback {
         void onClassFetched(ScheduleClass currentClass);
     }
