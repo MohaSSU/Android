@@ -103,15 +103,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="30dp" />
 
-    <!-- Edit Button -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="편집"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/sort_spinner"
-        app:layout_constraintBottom_toBottomOf="@id/sort_spinner"
-        style="@style/BlueMaterialButtonStyle" />
+
 
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
