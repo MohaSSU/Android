@@ -1,4 +1,4 @@
-package com.example.mohassu.CreatePromiseFragment;
+package com.example.mohassu.CheckAndEditPromiseFragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreatePromise3ChooseFriendsFragment extends Fragment {
+public class PromiseEditChooseFriendsFragment extends Fragment {
 
     private RecyclerView selectFriendRecyclerView;
     private selectFriendAdapter selectFriendAdapter;
@@ -87,7 +87,7 @@ public class CreatePromise3ChooseFriendsFragment extends Fragment {
                 // **데이터 전송 후 로그 출력**
                 Log.d("CreatePromise3", "setFragmentResult 호출 완료 - 데이터 전송 완료");
 
-                navController.navigate(R.id.actionSaveFriendsToPromise);
+                navController.navigateUp();
             } else {
                 Log.w("CreatePromise3", "선택된 친구가 없습니다.");
             }

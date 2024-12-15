@@ -33,6 +33,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
+import com.example.mohassu.CheckAndEditPromiseFragment.PromiseEditDialogFragment;
 import com.example.mohassu.Constants;
 import com.example.mohassu.PlaceInfo;
 import com.example.mohassu.R;
@@ -80,6 +81,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     ImageButton myLocationButton;
     TextView tvBuildingName;
     Marker locationMarker;
+    private View rootView;
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -105,6 +107,8 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        this.rootView = view;
 
         Toast.makeText(requireContext(), "지도를 불러오는 중입니다... \n화면을 누르지 마십시오", Toast.LENGTH_LONG).show();
         // Initialize MapFragment
@@ -229,6 +233,9 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
         // 친구 Marker 초기화 및 위치 갱신
         loadFriendMarkers();
+
+        // 약속 Marker 갱신
+        loadPromisesFromFirestore();
 
         // 지도 클릭 이벤트 설정 (말풍선 닫기)
         naverMap.setOnMapClickListener((point, coord) -> {
@@ -376,7 +383,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
                                         InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                                         if (imm != null) {
-                                            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                                            imm.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
                                             markerMessageEditText.clearFocus(); // 포커스 해제하여 깜빡임 끄기
                                         }
                                         return true;
@@ -446,9 +453,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                             naverMap.moveCamera(update);
                         }
 
-
-                        View view = getView();
-                        tvBuildingName = view.findViewById(R.id.tvBuildingName);
+                        tvBuildingName = rootView.findViewById(R.id.tvBuildingName);
 
                         loadFromGeofencing(newLocation);
                     }
@@ -551,7 +556,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                             // 마커 클릭 이벤트
                             friendMarker.setOnClickListener(overlay -> { // 아직 테스트
                                 // 클릭 이벤트 설정
-                                if (naverMap == null || getView() == null) {
+                                if (naverMap == null || rootView == null) {
                                     // 지도 초기화가 완료되지 않은 경우
                                     Toast.makeText(requireContext(), "지도가 아직 초기화되지 않았습니다.", Toast.LENGTH_SHORT).show();
                                     return true; // 이벤트 소비
@@ -602,13 +607,12 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
     // 상태 배너 업데이트 메서드
     private void updateStatusBanner(String place, String class_name, String startTime, String endTime) {
-        View view = getView();
-        if (view == null) return;
+        if (rootView == null) return;
 
-        TextView placeInfo = view.findViewById(R.id.placeInfo);
-        TextView classInfo = view.findViewById(R.id.classInfo);
-        TextView stTimeInfo = view.findViewById(R.id.startTimeInfo);
-        TextView endTimeInfo = view.findViewById(R.id.endTimeInfo);
+        TextView placeInfo = rootView.findViewById(R.id.placeInfo);
+        TextView classInfo = rootView.findViewById(R.id.classInfo);
+        TextView stTimeInfo = rootView.findViewById(R.id.startTimeInfo);
+        TextView endTimeInfo = rootView.findViewById(R.id.endTimeInfo);
 
         // Firestore 데이터로 텍스트 업데이트
         placeInfo.setText(place != null ? place : "#PLACE");
@@ -652,4 +656,73 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
         return bitmap;
     }
+
+    private void loadPromisesFromFirestore() {
+        db.collection("promises")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        GeoPoint geoPoint = document.getGeoPoint("location");
+                        if (geoPoint != null) {
+                            double latitude = geoPoint.getLatitude();
+                            double longitude = geoPoint.getLongitude();
+                            String promiseId = document.getId();
+                            addMarkerOnMap(promiseId, latitude, longitude);
+                        } else {
+                            Log.w("HomeFragment", "GeoPoint가 null입니다. Document ID: " + document.getId());
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("HomeFragment", "Firestore에서 약속 정보를 가져오는 데 실패했습니다.", e));
+    }
+
+    private void addMarkerOnMap(String promiseId, double latitude, double longitude) {
+        Marker marker = new Marker();
+        marker.setPosition(new LatLng(latitude, longitude));
+        marker.setIcon(OverlayImage.fromResource(R.drawable.ic_promise_marker)); // 마커 이미지 설정
+        marker.setWidth(120); // 마커 크기 조정
+        marker.setHeight(140);
+
+        // 마커에 tag로 promiseId 저장
+        marker.setTag(promiseId);
+
+        // 마커 클릭 리스너 추가
+        marker.setOnClickListener(overlay -> {
+            String promiseIdClicked = (String) marker.getTag();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            db.collection("promises").document(promiseIdClicked)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String title = documentSnapshot.getString("promiseType");
+                            String description = documentSnapshot.getString("description");
+                            String date = documentSnapshot.getString("date");
+                            String time = documentSnapshot.getString("time");
+
+                            PromiseEditDialogFragment bottomSheetFragment = new PromiseEditDialogFragment();
+                            Bundle args = new Bundle();
+                            args.putString("promiseId", promiseIdClicked);
+                            args.putString("title", title);
+                            args.putString("description", description);
+                            args.putString("date", date);
+                            args.putString("time", time);
+                            bottomSheetFragment.setArguments(args);
+                            bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
+                        } else {
+                            Log.w("Firestore", "약속 문서를 찾을 수 없습니다.");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Firestore", "약속 데이터를 불러오는 중 오류 발생", e);
+                    });
+
+            return true; // 클릭 이벤트 소비
+        });
+
+        marker.setMap(naverMap);
+
+
+    }
+
 }

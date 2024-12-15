@@ -6,11 +6,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:layout_marginStart="16dp"
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackgroundBorderless"
-    android:padding="8dp">
+    android:paddingVertical="8dp">
 
     <ImageView
         android:layout_width="40dp"

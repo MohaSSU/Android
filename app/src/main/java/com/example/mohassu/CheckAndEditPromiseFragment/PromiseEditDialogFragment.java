@@ -1,4 +1,4 @@
-package com.example.mohassu.CreatePromiseFragment;
+package com.example.mohassu.CheckAndEditPromiseFragment;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,9 +25,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
+import com.example.mohassu.CreatePromiseFragment.CreatePromise3ChooseFriendsFragment;
+import com.example.mohassu.CreatePromiseFragment.PromiseViewModel;
 import com.example.mohassu.R;
 import com.example.mohassu.adapters.MenuWithIconAdapter;
 import com.example.mohassu.models.Friend;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,20 +49,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreatePromise2DetailFragment extends Fragment implements OnMapReadyCallback {
+public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
 
+    private String promiseId;
     private View rootView;
-    private NaverMap naverMap;
-    private Marker marker;
     private PromiseViewModel promiseViewModel;
-
-    // 전역변수 선언
-    private GeoPoint geoPoint;
-
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +95,7 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_create_promise2_detail, container, false);
+        return inflater.inflate(R.layout.dialog_promise_edit, container, false);
     }
 
     @Override
@@ -106,19 +103,17 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
         super.onViewCreated(view, savedInstanceState);
         this.rootView = view;
 
-        // NavController 초기화
-        NavController navController = Navigation.findNavController(view);
-
         // 뒤로가기 버튼에 클릭 리스너 추가
-        view.findViewById(R.id.btnBack).setOnClickListener(v -> {
-            navController.navigateUp();
-        });
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> dismiss());
 
         LinearLayout addFriendsButton = view.findViewById(R.id.btnAddFriends);
         if (addFriendsButton != null) {
             addFriendsButton.setOnClickListener(v -> {
                 saveDataToViewModel(); // ViewModel에 데이터 저장 추가
-                navController.navigate(R.id.actionNextToCreatePromise3);
+                dismiss();
+                NavController navController = Navigation.findNavController(view);
+                navController.navigate(R.id.actionAddFriends);
+
             });
         } else {
             Log.e("CreatePromise2Detail", "btnAddFriends is null");
@@ -127,20 +122,7 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
         Button saveButton = view.findViewById(R.id.btnSave);
         saveButton.setFocusable(false);
-        saveButton.setOnClickListener(v -> {
-            saveToFirestore();
-            navController.navigate(R.id.actionSavePromise);
-        });
-
-        // 새로 지도를 불러오는 코드 (기존과 동일)
-        MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map);
-        if (mapFragment == null) {
-            mapFragment = MapFragment.newInstance();
-            getChildFragmentManager().beginTransaction()
-                    .add(R.id.fragment_map, mapFragment)
-                    .commit();
-        }
-        mapFragment.getMapAsync(this);
+        saveButton.setOnClickListener(v -> saveToFirestore());
 
         LinearLayout btnSelectPromiseType = view.findViewById(R.id.btnSelectPromiseType);
         ImageView ivIcon = btnSelectPromiseType.findViewById(R.id.ivIcon);
@@ -160,61 +142,12 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
 
         //timePicker
         timeButton.setOnClickListener(v -> showTimePickerDialog());
-    }
-
-
-    @Override
-    public void onMapReady(@NonNull NaverMap naverMap) {
-        this.naverMap = naverMap;
-
-        // +- 줌컨트롤 버튼 비활성화
-        naverMap.getUiSettings().setZoomControlEnabled(false);
-
-        // 축척 바 제거 (0___2m 같은 정보)
-        naverMap.getUiSettings().setScaleBarEnabled(false);
-
-        marker = new Marker();
-        marker.setIcon(OverlayImage.fromResource(R.drawable.ic_promise_marker)); // 마커 이미지 설정
-        marker.setWidth(120); // 마커 크기 조정
-        marker.setHeight(140);
-
-        loadUserInformationFromFirestore();
 
         // 데이터 복원
         updateUIFromViewModel();
     }
 
-    private void loadUserInformationFromFirestore() {
 
-        if (promiseViewModel.latitude != 0 && promiseViewModel.longitude != 0) {
-            Log.d("CreatePromise2Detail", "ViewModel에 저장된 위도: " + promiseViewModel.latitude + ", 경도: " + promiseViewModel.longitude);
-        } else {
-            Bundle args = getArguments();
-            if (args != null) {
-                double latitude = args.getDouble("latitude", 0);
-                double longitude = args.getDouble("longitude", 0);
-                Log.d("CreatePromise2Detail", "받은 위도: " + latitude + ", 경도: " + longitude);
-
-                // ViewModel에 위도와 경도 저장
-                promiseViewModel.latitude = latitude;
-                promiseViewModel.longitude = longitude;
-
-                geoPoint = new GeoPoint(latitude, longitude);
-                // 사용자 위치 업데이트
-                LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                marker.setPosition(location);
-
-                // 카메라 위치 선정
-                CameraUpdate update = CameraUpdate.scrollAndZoomTo(location, 20.0)
-                        .animate(CameraAnimation.Easing);
-                naverMap.moveCamera(update);
-            } else {
-                Log.e("CreatePromise2Detail", "Bundle에 데이터가 없습니다.");
-            }
-
-            marker.setMap(naverMap); // 지도에 마커 추가
-        }
-    }
 
     private void showPromiseTypeDialog(ImageView ivIcon, TextView tvText) {
         // 약속 종류 데이터
@@ -305,19 +238,18 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
 
         // 파이어베이스에 저장할 데이터 생성
         Map<String, Object> promiseData = new HashMap<>();
-        promiseData.put("location", geoPoint);
         promiseData.put("description", description);
         promiseData.put("promiseType", promiseType);
         promiseData.put("date", date);
         promiseData.put("time", time);
-        promiseData.put("createdAt", FieldValue.serverTimestamp());
+        promiseData.put("editedAt", FieldValue.serverTimestamp());
 
-        db.collection("promises")
-                .add(promiseData)
-                .addOnSuccessListener(documentReference -> {
-                    String promiseId = documentReference.getId();
+        db.collection("promises").document(promiseId)
+                .update(promiseData)
+                .addOnSuccessListener(aVoid -> {
                     Log.d("Firestore", "약속이 성공적으로 추가되었습니다: " + promiseId);
                     addParticipantsToFirestore(promiseId);
+                    dismiss();
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Firestore", "약속 추가에 실패했습니다.", e);
@@ -391,21 +323,6 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
     }
 
     private void updateUIFromViewModel() {
-        if (promiseViewModel.latitude != 0.0 && promiseViewModel.longitude != 0.0) {
-            geoPoint = new GeoPoint(promiseViewModel.latitude, promiseViewModel.longitude);
-            LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-            if (naverMap != null) {
-                marker.setPosition(location);
-                marker.setMap(naverMap);
-
-                CameraUpdate update = CameraUpdate.scrollAndZoomTo(location, 20.0).animate(CameraAnimation.Easing);
-                naverMap.moveCamera(update);
-            } else {
-                Log.w("CreatePromise2Detail", "NaverMap is not ready yet.");
-            }
-        } else {
-            Log.w("CreatePromise2Detail", "Latitude or Longitude is not set in ViewModel.");
-        }
 
         EditText descriptionEditText = rootView.findViewById(R.id.promise_description);
         TextView tvDate = rootView.findViewById(R.id.tvSelectedDate);
@@ -419,7 +336,6 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
         } else {
             Log.w("CreatePromise2Detail", "promiseDescription is not set in ViewModel.");
         }
-
 
         if (promiseViewModel.date != null && !promiseViewModel.date.isEmpty()) {
             tvDate.setText(promiseViewModel.date);
@@ -464,13 +380,6 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
             promiseViewModel.promiseIconRes = (Integer) iconTag;
         } else {
             Log.w("CreatePromise2Detail", "Failed to get icon resource ID from ImageView tag.");
-        }
-
-        if (geoPoint != null) {
-            promiseViewModel.latitude = geoPoint.getLatitude();
-            promiseViewModel.longitude = geoPoint.getLongitude();
-        } else {
-            Log.w("CreatePromise2Detail", "GeoPoint is null, cannot save latitude and longitude to ViewModel.");
         }
     }
 
