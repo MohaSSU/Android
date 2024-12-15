@@ -38,7 +38,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.mohassu.CheckAndEditPromiseFragment.PromiseEditDialogFragment;
-import com.example.mohassu.CheckProfileAndTimeTableFragment.EmptyBottomSheetProfile;
+import com.example.mohassu.CheckProfileAndTimeTableFragment.CheckProfileBottomSheetFragment;
 import com.example.mohassu.Constants.Constants;
 import com.example.mohassu.Model.PlaceInfo;
 import com.example.mohassu.R;
@@ -576,9 +576,9 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
 
                         View view = getView();
-                        //tvBuildingName = view.findViewById(R.id.tvBuildingName);
+                        tvBuildingName = view.findViewById(R.id.tvBuildingName);
 
-                        //loadFromGeofencing(newLocation);
+                        loadFromGeofencing(newLocation);
                     }
                 });
     }
@@ -595,7 +595,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
             if (results[0] <= place.getRadius()) {
                 String buildingName = place.getName();
-                //tvBuildingName.setText(buildingName + "에 있어요.");
+                tvBuildingName.setText(buildingName + "에 있어요.");
                 if (!isFocusMode) {
                     //tvBuildingName.setVisibility(View.VISIBLE);
                 }
@@ -607,7 +607,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                 break; // 반경 내 첫 번째 장소를 찾으면 종료
             }
         }
-        //tvBuildingName.setVisibility(View.GONE); // 반경 내 장소가 없을 경우
+        tvBuildingName.setVisibility(View.GONE); // 반경 내 장소가 없을 경우
 
         if (!isPlaceFound) {
             db.collection("users")
@@ -779,11 +779,11 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                                                 .inflate(R.layout.dialog_text_message, mapContainer, false);
                                                         TextView friendBalloonText = friendBalloonView.findViewById(R.id.markerFriendMessage);
                                                         friendBalloonText.setText(statusMessage != null ? statusMessage : "상태 메시지 없음");
-                                                        mapContainer.addView(friendBalloonView); // 말풍선 추가
+                                                        mapContainer.addView(friendBalloonView);// 말풍선 추가
 
                                                         // 배너 View 인플레이트
-                                                        View bannerView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_status_banner, mapContainer, false);
-                                                        mapContainer.addView(bannerView);
+//                                                        View bannerView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_status_banner, mapContainer, false);
+//                                                        mapContainer.addView(bannerView);
 
                                                         // UI 업데이트 (구현 필요)
                                                         updateStatusBanner(place, class_name, startTime, endTime);
@@ -845,7 +845,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         createPromiseButton.setVisibility(View.GONE);
         myPageButton.setVisibility(View.GONE);
         myLocationButton.setVisibility(View.GONE);
-        //tvBuildingName.setVisibility(View.GONE);
+        tvBuildingName.setVisibility(View.GONE);
     }
 
 
@@ -858,7 +858,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         createPromiseButton.setVisibility(View.VISIBLE);
         myPageButton.setVisibility(View.VISIBLE);
         myLocationButton.setVisibility(View.VISIBLE);
-        //tvBuildingName.setVisibility(View.VISIBLE);
+        tvBuildingName.setVisibility(View.VISIBLE);
     }
 
     // convertViewToBitmap 메서드 (기존과 동일)

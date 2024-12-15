@@ -164,9 +164,7 @@ public class Signup1IDAndPWFragment extends Fragment {
                                                             navController.navigate(R.id.actionNextToSignup2); // 적절한 Action ID로 변경
                                                             if (user.isEmailVerified()) {
                                                                 Toast.makeText(requireContext(), "이메일 인증 완료!", Toast.LENGTH_SHORT).show();
-                                                                // 다음 Fragment로 이동
-//                                                                NavController navController = Navigation.findNavController(requireView());
-//                                                                navController.navigate(R.id.actionNextToSignup2); // 적절한 Action ID로 변경
+//
                                                             } else {
                                                                 Toast.makeText(requireContext(), "이메일 인증을 완료해주세요!", Toast.LENGTH_SHORT).show();
                                                             }

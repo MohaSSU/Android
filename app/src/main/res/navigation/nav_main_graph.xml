@@ -29,7 +29,7 @@
         <action
             android:id="@+id/action_checkProfileToCheckTimeTable"
             app:destination="@id/CheckTimeTableFragment"/>
-  <action>
+        <action
             android:id="@+id/actionAddFriends"
             app:destination="@+id/PromiseEditChooseFriendsFragment"/>
     </fragment>
