@@ -52,7 +52,7 @@
             android:id="@+id/tv_promise_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="약속 장소 및 설명"
+            android:text="약속 설명"
             android:textColor="@android:color/darker_gray"
             android:textSize="14sp"
             android:layout_marginTop="8dp"

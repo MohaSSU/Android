@@ -907,33 +907,16 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         // 마커 클릭 리스너 추가
         marker.setOnClickListener(overlay -> {
             String promiseIdClicked = (String) marker.getTag();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            if (promiseIdClicked != null)
+                Log.d("Promise2", promiseIdClicked);
+            else
+                Log.d("Promise2", "fuc");
+            Bundle args = new Bundle();
+            args.putString("promiseId", promiseIdClicked);
 
-            db.collection("promises").document(promiseIdClicked)
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            String title = documentSnapshot.getString("promiseType");
-                            String description = documentSnapshot.getString("description");
-                            String date = documentSnapshot.getString("date");
-                            String time = documentSnapshot.getString("time");
-
-                            PromiseEditDialogFragment bottomSheetFragment = new PromiseEditDialogFragment();
-                            Bundle args = new Bundle();
-                            args.putString("promiseId", promiseIdClicked);
-                            args.putString("title", title);
-                            args.putString("description", description);
-                            args.putString("date", date);
-                            args.putString("time", time);
-                            bottomSheetFragment.setArguments(args);
-                            bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
-                        } else {
-                            Log.w("Firestore", "약속 문서를 찾을 수 없습니다.");
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("Firestore", "약속 데이터를 불러오는 중 오류 발생", e);
-                    });
+            PromiseEditDialogFragment bottomSheetFragment = new PromiseEditDialogFragment();
+            bottomSheetFragment.setArguments(args);
+            bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
 
             return true; // 클릭 이벤트 소비
         });

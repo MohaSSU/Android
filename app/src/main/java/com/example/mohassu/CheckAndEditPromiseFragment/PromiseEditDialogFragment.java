@@ -1,5 +1,7 @@
 package com.example.mohassu.CheckAndEditPromiseFragment;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -45,15 +47,23 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
 
     private String promiseId;
     private View rootView;
     private PromiseViewModel promiseViewModel;
+    int year, month, day, hour, minute;
+
+    // 전역변수 선언
+    private GeoPoint geoPoint;
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -61,34 +71,6 @@ public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // *** 리스너 등록 ***
-        Log.d("CreatePromise2Detail", "리스너 등록 시작");
-        // *** Fragment가 생성될 때부터 리스너 대기 ***
-        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                Log.d("CreatePromise2Detail", "리스너 작동 - requestKey: " + requestKey);
-                promiseViewModel.selectedNicknames = result.getStringArrayList("selectedNicknames");
-                promiseViewModel.selectedPhotoUrls = result.getStringArrayList("selectedPhotoUrls");
-
-                // UI 업데이트 추가
-                updateFriendListUI(promiseViewModel.selectedNicknames, promiseViewModel.selectedPhotoUrls);
-
-                if (promiseViewModel.selectedNicknames != null && promiseViewModel.selectedPhotoUrls != null) {
-                    Log.d("CreatePromise2Detail", "받은 친구 수: " + promiseViewModel.selectedNicknames.size());
-                    for (int i = 0; i < promiseViewModel.selectedNicknames.size(); i++) {
-                        Log.d("CreatePromise2Detail", "Nickname: " + promiseViewModel.selectedNicknames.get(i));
-                        Log.d("CreatePromise2Detail", "Photo URL: " + promiseViewModel.selectedPhotoUrls.get(i));
-                    }
-                } else {
-                    Log.w("CreatePromise2Detail", "받은 데이터가 없습니다.");
-                }
-
-                Log.d("CreatePromise2Detail", "리스너 등록 완료");
-
-            }
-        });
         // ViewModel 초기화
         promiseViewModel = new ViewModelProvider(requireActivity()).get(PromiseViewModel.class);
     }
@@ -103,6 +85,22 @@ public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         this.rootView = view;
 
+        // **promiseId 초기화 (Arguments로부터 가져옴)**
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            promiseId = arguments.getString("promiseId", null);
+            if (promiseId == null) {
+                Log.e("PromiseEditDialog", "promiseId is null. Firestore update will fail.");
+            }
+            else Log.e("PromiseEditDialog", promiseId);
+        } else {
+            Log.e("PromiseEditDialog", "Arguments are null. Firestore update will fail.");
+        }
+
+        loadFromFirestore();
+
+        loadParticipantsFromFirestore();
+
         // 뒤로가기 버튼에 클릭 리스너 추가
         view.findViewById(R.id.btnBack).setOnClickListener(v -> dismiss());
 
@@ -113,7 +111,6 @@ public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
                 dismiss();
                 NavController navController = Navigation.findNavController(view);
                 navController.navigate(R.id.actionAddFriends);
-
             });
         } else {
             Log.e("CreatePromise2Detail", "btnAddFriends is null");
@@ -122,17 +119,17 @@ public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
         Button saveButton = view.findViewById(R.id.btnSave);
         saveButton.setFocusable(false);
-        saveButton.setOnClickListener(v -> saveToFirestore());
+        saveButton.setOnClickListener(v -> {
+            saveToFirestore();
+            dismiss();
+        });
+
 
         LinearLayout btnSelectPromiseType = view.findViewById(R.id.btnSelectPromiseType);
         ImageView ivIcon = btnSelectPromiseType.findViewById(R.id.ivIcon);
         TextView tvText = btnSelectPromiseType.findViewById(R.id.tvText);
         LinearLayout dateButton = view.findViewById(R.id.btnSelectPromiseDate);
         LinearLayout timeButton = view.findViewById(R.id.btnSelectPromiseTime);
-
-        // 기본값 설정
-        ivIcon.setImageResource(R.drawable.ic_promise_rice);
-        tvText.setText("밥약속");
 
         // 클릭 리스너 설정
         btnSelectPromiseType.setOnClickListener(v -> showPromiseTypeDialog(ivIcon, tvText));
@@ -143,11 +140,7 @@ public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
         //timePicker
         timeButton.setOnClickListener(v -> showTimePickerDialog());
 
-        // 데이터 복원
-        updateUIFromViewModel();
     }
-
-
 
     private void showPromiseTypeDialog(ImageView ivIcon, TextView tvText) {
         // 약속 종류 데이터
@@ -193,9 +186,9 @@ public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
         builder.setView(dialogView);
         builder.setPositiveButton("확인", (dialog, which) -> {
             // 날짜와 시간 가져오기
-            int year = datePicker.getYear();
-            int month = datePicker.getMonth();
-            int day = datePicker.getDayOfMonth();
+            year = datePicker.getYear();
+            month = datePicker.getMonth();
+            day = datePicker.getDayOfMonth();
 
             // 선택한 날짜와 시간을 표시하거나 저장
             String selectedDate = String.format("%04d-%02d-%02d", year, month + 1, day);
@@ -217,8 +210,8 @@ public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
         builder.setView(dialogView);
         builder.setPositiveButton("확인", (dialog, which) -> {
             // 날짜와 시간 가져오기
-            int hour = startTimePicker.getHour();
-            int minute = startTimePicker.getMinute();
+            hour = startTimePicker.getHour();
+            minute = startTimePicker.getMinute();
 
             // 선택한 날짜와 시간을 표시하거나 저장
             String selectedTime = String.format("%02d:%02d", hour, minute);
@@ -232,28 +225,96 @@ public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
     private void saveToFirestore() {
         // 2에서 입력한 데이터 가져오기
         String description = ((TextView) rootView.findViewById(R.id.promise_description)).getText().toString();
-        String promiseType = ((TextView) rootView.findViewById(R.id.tvText)).getText().toString();
+        String promiseTypes = ((TextView) rootView.findViewById(R.id.tvText)).getText().toString();
+
         String date = ((TextView) rootView.findViewById(R.id.tvSelectedDate)).getText().toString();
         String time = ((TextView) rootView.findViewById(R.id.tvSelectedTime)).getText().toString();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference myId = db.collection("users").document(userId);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+// 특정 날짜와 시간 설정 (예: 2024년 12월 25일 14시 30분 45초)
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day, hour, minute, 0); // 월은 0부터 시작 (12월 = Calendar.DECEMBER)
+        Date specificDate = calendar.getTime();
 
         // 파이어베이스에 저장할 데이터 생성
         Map<String, Object> promiseData = new HashMap<>();
+        promiseData.put("location", geoPoint);
+        promiseData.put("host", myId);
         promiseData.put("description", description);
-        promiseData.put("promiseType", promiseType);
-        promiseData.put("date", date);
-        promiseData.put("time", time);
-        promiseData.put("editedAt", FieldValue.serverTimestamp());
+        promiseData.put("promiseType", promiseTypes);
+        promiseData.put("time", specificDate);
+        promiseData.put("splitted_date", date);
+        promiseData.put("splitted_time", time);
+        //promiseData.put("createdAt", FieldValue.serverTimestamp());
 
-        db.collection("promises").document(promiseId)
-                .update(promiseData)
-                .addOnSuccessListener(aVoid -> {
+        db.collection("promises")
+                .add(promiseData)
+                .addOnSuccessListener(documentReference -> {
+                    String promiseId = documentReference.getId();
                     Log.d("Firestore", "약속이 성공적으로 추가되었습니다: " + promiseId);
                     addParticipantsToFirestore(promiseId);
-                    dismiss();
+
+
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Firestore", "약속 추가에 실패했습니다.", e);
                     Toast.makeText(requireContext(), "약속 추가에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void loadFromFirestore() {
+
+        db.collection("promises").document(promiseId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Firestore에서 가져온 데이터
+                        promiseViewModel.promiseDescription = documentSnapshot.getString("description");
+                        promiseViewModel.date = documentSnapshot.getString("splitted_date");
+                        promiseViewModel.time = documentSnapshot.getString("splitted_time");
+
+                        Log.d("Firestore", "약속 데이터를 성공적으로 불러왔습니다: " + promiseId);
+                    } else {
+                        Log.w("Firestore", "해당 약속 문서를 찾을 수 없습니다: " + promiseId);
+                    }
+                    // 데이터 복원
+                    updateUIFromViewModel();
+                })
+                        .addOnFailureListener(e -> {
+                            Log.e("Firestore", "약속 데이터를 불러오는 중 오류가 발생했습니다.", e);
+                            Toast.makeText(requireContext(), "약속 데이터를 불러오는 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
+                        });
+                    }
+
+    private void loadParticipantsFromFirestore() {
+        db.collection("promises").document(promiseId).collection("participants")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    ArrayList<String> nicknames = new ArrayList<>();
+                    ArrayList<String> photoUrls = new ArrayList<>();
+
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        String nickname = document.getString("nickname");
+                        String photoUrl = document.getString("photoUrl");
+
+                        if (nickname != null) {
+                            nicknames.add(nickname);
+                            photoUrls.add(photoUrl);
+                            Log.d("Firestore", "참여자 추가됨 - 닉네임: " + nickname + ", 사진 URL: " + photoUrl);
+                        } else {
+                            Log.w("Firestore", "닉네임 또는 사진 URL이 누락되었습니다. Document: " + document.getId());
+                        }
+                    }
+
+                    // 가져온 데이터를 UI에 업데이트
+                    updateFriendListUI(nicknames, photoUrls);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "참여자 데이터를 불러오는 중 오류가 발생했습니다.", e);
+                    Toast.makeText(requireContext(), "참여자 데이터를 불러오는 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -301,6 +362,7 @@ public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
 
         // 선택한 친구 목록을 기반으로 프로필 동적 추가
         for (int i = 0; i < nicknames.size(); i++) {
+            //Log.e("Promise2", );
             View profileView = inflater.inflate(R.layout.view_promise_profile, friendListContainer, false);
 
             // 프로필 이미지와 이름 설정
@@ -308,7 +370,6 @@ public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
             TextView profileName = profileView.findViewById(R.id.name_in_promise);
 
             profileName.setText(nicknames.get(i));
-
             // Glide를 사용해 이미지 로드
             Glide.with(requireContext())
                     .load(photoUrls.get(i))
@@ -321,6 +382,19 @@ public class PromiseEditDialogFragment extends BottomSheetDialogFragment {
         }
 
     }
+
+    private void resetViewModel() {
+        promiseViewModel.promiseDescription = "";
+        promiseViewModel.date = "";
+        promiseViewModel.time = "";
+        promiseViewModel.promiseType = "";
+        promiseViewModel.promiseIconRes = 0;
+        promiseViewModel.latitude = 0.0;
+        promiseViewModel.longitude = 0.0;
+        promiseViewModel.selectedNicknames = new ArrayList<>();
+        promiseViewModel.selectedPhotoUrls = new ArrayList<>();
+    }
+
 
     private void updateUIFromViewModel() {
 

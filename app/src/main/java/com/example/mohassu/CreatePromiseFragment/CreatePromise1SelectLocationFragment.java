@@ -68,21 +68,6 @@ public class CreatePromise1SelectLocationFragment extends Fragment implements On
 
         centerMarkerIcon = view.findViewById(R.id.center_marker_icon);
 
-        View homeView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_main_home, null);
-        // Custom button to center on current location
-        ImageButton myLocationButton = homeView.findViewById(R.id.btnNowLocation);
-        if (myLocationButton != null) {
-            myLocationButton.setOnClickListener(v -> {
-                LatLng currentPosition = marker.getPosition();
-                if (currentPosition != null) {
-                    // Move camera to the current position
-                    naverMap.moveCamera(CameraUpdate.scrollTo(currentPosition));
-                } else { // 예외처리 생략 가능
-                    Toast.makeText(requireContext(), "현재 위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
 
         // 새로 지도를 불러오는 코드 (기존과 동일)
         MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map);

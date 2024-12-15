@@ -82,7 +82,7 @@ public class CreatePromise3ChooseFriendsFragment extends Fragment {
                 // **데이터 전송 후 로그 출력**
                 Log.d("CreatePromise3", "setFragmentResult 호출 완료 - 데이터 전송 완료");
 
-                navController.navigate(R.id.actionSaveFriendsToPromise);
+                navController.navigateUp();
             } else {
                 Log.w("CreatePromise3", "선택된 친구가 없습니다.");
             }

@@ -29,6 +29,7 @@ import com.example.mohassu.R;
 
 import com.example.mohassu.Adapter.MenuWithIconAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -41,7 +42,10 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 
+import java.lang.ref.Reference;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +56,7 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
     private NaverMap naverMap;
     private Marker marker;
     private PromiseViewModel promiseViewModel;
+    int year, month, day, hour, minute;
 
     // 전역변수 선언
     private GeoPoint geoPoint;
@@ -64,6 +69,13 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        promiseViewModel = new ViewModelProvider(requireActivity()).get(PromiseViewModel.class);
+
+        // 새로운 약속 생성 시 ViewModel 초기화
+        if (getArguments() == null || !getArguments().containsKey("promiseId")) {
+            resetViewModel();
+        }
 
         // *** 리스너 등록 ***
         Log.d("CreatePromise2Detail", "리스너 등록 시작");
@@ -126,7 +138,6 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
 
         // 다음 프레그먼트를 클릭 시 다음 Fragment로 이동
         Button saveButton = view.findViewById(R.id.btnSave);
-        saveButton.setFocusable(false);
         saveButton.setOnClickListener(v -> {
             saveToFirestore();
             navController.navigate(R.id.actionSavePromise);
@@ -178,13 +189,13 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
         marker.setWidth(120); // 마커 크기 조정
         marker.setHeight(140);
 
-        loadUserInformationFromFirestore();
+        loadUserInformationFromBundle();
 
         // 데이터 복원
         updateUIFromViewModel();
     }
 
-    private void loadUserInformationFromFirestore() {
+    private void loadUserInformationFromBundle() {
 
         if (promiseViewModel.latitude != 0 && promiseViewModel.longitude != 0) {
             Log.d("CreatePromise2Detail", "ViewModel에 저장된 위도: " + promiseViewModel.latitude + ", 경도: " + promiseViewModel.longitude);
@@ -260,9 +271,9 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
         builder.setView(dialogView);
         builder.setPositiveButton("확인", (dialog, which) -> {
             // 날짜와 시간 가져오기
-            int year = datePicker.getYear();
-            int month = datePicker.getMonth();
-            int day = datePicker.getDayOfMonth();
+            year = datePicker.getYear();
+            month = datePicker.getMonth();
+            day = datePicker.getDayOfMonth();
 
             // 선택한 날짜와 시간을 표시하거나 저장
             String selectedDate = String.format("%04d-%02d-%02d", year, month + 1, day);
@@ -284,8 +295,8 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
         builder.setView(dialogView);
         builder.setPositiveButton("확인", (dialog, which) -> {
             // 날짜와 시간 가져오기
-            int hour = startTimePicker.getHour();
-            int minute = startTimePicker.getMinute();
+            hour = startTimePicker.getHour();
+            minute = startTimePicker.getMinute();
 
             // 선택한 날짜와 시간을 표시하거나 저장
             String selectedTime = String.format("%02d:%02d", hour, minute);
@@ -299,18 +310,30 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
     private void saveToFirestore() {
         // 2에서 입력한 데이터 가져오기
         String description = ((TextView) rootView.findViewById(R.id.promise_description)).getText().toString();
-        String promiseType = ((TextView) rootView.findViewById(R.id.tvText)).getText().toString();
+        String promiseTypes = ((TextView) rootView.findViewById(R.id.tvText)).getText().toString();
+
         String date = ((TextView) rootView.findViewById(R.id.tvSelectedDate)).getText().toString();
         String time = ((TextView) rootView.findViewById(R.id.tvSelectedTime)).getText().toString();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference myId = db.collection("users").document(userId);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+// 특정 날짜와 시간 설정 (예: 2024년 12월 25일 14시 30분 45초)
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day, hour, minute, 0); // 월은 0부터 시작 (12월 = Calendar.DECEMBER)
+        Date specificDate = calendar.getTime();
 
         // 파이어베이스에 저장할 데이터 생성
         Map<String, Object> promiseData = new HashMap<>();
         promiseData.put("location", geoPoint);
+        promiseData.put("host", myId);
         promiseData.put("description", description);
-        promiseData.put("promiseType", promiseType);
-        promiseData.put("date", date);
-        promiseData.put("time", time);
-        promiseData.put("createdAt", FieldValue.serverTimestamp());
+        promiseData.put("promiseType", promiseTypes);
+        promiseData.put("time", specificDate);
+        promiseData.put("splitted_date", date);
+        promiseData.put("splitted_time", time);
+        //promiseData.put("createdAt", FieldValue.serverTimestamp());
 
         db.collection("promises")
                 .add(promiseData)
@@ -318,6 +341,8 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
                     String promiseId = documentReference.getId();
                     Log.d("Firestore", "약속이 성공적으로 추가되었습니다: " + promiseId);
                     addParticipantsToFirestore(promiseId);
+
+
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Firestore", "약속 추가에 실패했습니다.", e);
@@ -327,34 +352,75 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
 
     private void addParticipantsToFirestore(String promiseId) {
         if (!promiseViewModel.selectedNicknames.isEmpty() && !promiseViewModel.selectedPhotoUrls.isEmpty()) {
-            if (promiseViewModel.selectedNicknames.size() != promiseViewModel.selectedPhotoUrls.size()) {
-                Log.e("Firestore", "닉네임과 사진 URL의 수가 일치하지 않습니다.");
-                return;
-            }
+
+            // 사용자 ID를 저장할 리스트 생성 (for 루프 밖으로 이동)
+            List<DocumentReference> participantReferences = new ArrayList<>();
+
+            // 모든 Firestore 비동기 작업을 추적하기 위한 Task 리스트
+            List<com.google.android.gms.tasks.Task<?>> tasks = new ArrayList<>();
 
             for (int i = 0; i < promiseViewModel.selectedNicknames.size(); i++) {
                 String friendNickname = promiseViewModel.selectedNicknames.get(i);
                 String friendPhotoUrl = promiseViewModel.selectedPhotoUrls.get(i);
 
-                // Firestore에 추가할 데이터 생성
-                Map<String, Object> participantData = new HashMap<>();
-                participantData.put("nickname", friendNickname);
-                participantData.put("photoUrl", friendPhotoUrl);
+                // Firestore에서 닉네임에 맞는 사용자 ID 조회
+                com.google.android.gms.tasks.Task<?> task = db.collection("users")
+                        .whereEqualTo("nickname", friendNickname) // 닉네임으로 해당 사용자 조회
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (!querySnapshot.isEmpty()) {
+                                // 첫 번째 일치하는 사용자 문서 가져오기
+                                String userId = querySnapshot.getDocuments().get(0).getId();
 
-                // Firestore에 participants 컬렉션에 추가
-                db.collection("promises")
-                        .document(promiseId)
-                        .collection("participants")
-                        .add(participantData)
-                        .addOnSuccessListener(participantRef ->
-                                Log.d("Firestore", "참여자 추가됨: " + friendNickname)
-                        )
+                                // Firestore에 추가할 데이터 생성
+                                Map<String, Object> participantData = new HashMap<>();
+                                participantData.put("nickname", friendNickname);
+                                participantData.put("photoUrl", friendPhotoUrl);
+
+                                // Firestore의 users/{userId}/participants에 데이터 추가
+                                db.collection("users")
+                                        .document(userId)
+                                        .collection("participants")
+                                        .add(participantData)
+                                        .addOnSuccessListener(participantRef ->
+                                                Log.d("Firestore", "참여자 추가됨: " + friendNickname)
+                                        )
+                                        .addOnFailureListener(e ->
+                                                Log.e("Firestore", "참여자 추가 실패: " + friendNickname, e)
+                                        );
+
+                                DocumentReference reference = db.collection("users").document(userId);
+                                participantReferences.add(reference);
+
+                            } else {
+                                Log.e("Firestore", "닉네임에 해당하는 사용자를 찾을 수 없습니다: " + friendNickname);
+                            }
+                        })
                         .addOnFailureListener(e ->
-                                Log.e("Firestore", "참여자 추가 실패: " + friendNickname, e)
+                                Log.e("Firestore", "사용자 조회 실패: " + friendNickname, e)
                         );
+
+                // Firestore의 비동기 작업을 추적하기 위해 Task를 추가
+                tasks.add(task);
             }
-        } else {
-            Log.w("Firestore", "선택된 친구가 없습니다.");
+
+            // 모든 Firestore 작업이 완료된 후에 participants 필드에 DocumentReference 추가
+            com.google.android.gms.tasks.Tasks.whenAll(tasks)
+                    .addOnSuccessListener(aVoid -> {
+                        // Firestore의 promises/{promiseId} 문서에 participants 필드를 추가
+                        db.collection("promises")
+                                .document(promiseId)
+                                .update("participants", participantReferences) // 약속 문서의 participants 필드에 DocumentReference 추가
+                                .addOnSuccessListener(aVoid2 ->
+                                        Log.d("Firestore", "participants 필드가 Firestore에 참조 배열로 추가되었습니다.")
+                                )
+                                .addOnFailureListener(e ->
+                                        Log.e("Firestore", "participants 필드 추가 실패", e)
+                                );
+                    })
+                    .addOnFailureListener(e ->
+                            Log.e("Firestore", "작업 전체 실패", e)
+                    );
         }
     }
 
@@ -388,6 +454,18 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
             friendListContainer.addView(profileView);
         }
 
+    }
+
+    private void resetViewModel() {
+        promiseViewModel.promiseDescription = "";
+        promiseViewModel.date = "";
+        promiseViewModel.time = "";
+        promiseViewModel.promiseType = "";
+        promiseViewModel.promiseIconRes = 0;
+        promiseViewModel.latitude = 0.0;
+        promiseViewModel.longitude = 0.0;
+        promiseViewModel.selectedNicknames = new ArrayList<>();
+        promiseViewModel.selectedPhotoUrls = new ArrayList<>();
     }
 
     private void updateUIFromViewModel() {
@@ -451,20 +529,10 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
         EditText descriptionEditText = rootView.findViewById(R.id.promise_description);
         TextView tvDate = rootView.findViewById(R.id.tvSelectedDate);
         TextView tvTime = rootView.findViewById(R.id.tvSelectedTime);
-        TextView tvText = rootView.findViewById(R.id.tvText);
-        ImageView ivIcon = rootView.findViewById(R.id.ivIcon);
 
         promiseViewModel.promiseDescription = descriptionEditText.getText().toString();
         promiseViewModel.date = tvDate.getText().toString();
         promiseViewModel.time = tvTime.getText().toString();
-        promiseViewModel.promiseType = tvText.getText().toString();
-
-        Object iconTag = ivIcon.getTag();
-        if (iconTag != null && iconTag instanceof Integer) {
-            promiseViewModel.promiseIconRes = (Integer) iconTag;
-        } else {
-            Log.w("CreatePromise2Detail", "Failed to get icon resource ID from ImageView tag.");
-        }
 
         if (geoPoint != null) {
             promiseViewModel.latitude = geoPoint.getLatitude();
