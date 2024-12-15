@@ -6,6 +6,7 @@
     <!-- 위치 추적 기능 관련 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -27,6 +28,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <activity
             android:name=".NavigationStartLoginAndSignupActivity"
             android:exported="true">
@@ -49,6 +57,8 @@
 <!--        <meta-data-->
 <!--            android:name="NAVER_MAPS_CLIENT_SECRET"-->
 <!--            android:value="nkBj5b39jqUnW0OVh6IKylxZvBqpd0XUz8GvlkeC" />-->
+
+
     </application>
 
 </manifest>
