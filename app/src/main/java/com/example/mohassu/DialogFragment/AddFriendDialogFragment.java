@@ -14,9 +14,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.mohassu.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,65 +52,112 @@ public class AddFriendDialogFragment extends DialogFragment {
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String currentUserId = auth.getCurrentUser().getUid(); // 현재 사용자 UID
 
-        String currentUserId = auth.getCurrentUser().getUid(); // 현재 로그인한 사용자 UID
-
-        // 이메일로 사용자 검색
-        //추가한 코드: 다른 데이터(좌표, 이름 등)
         db.collection("users")
-                .whereEqualTo("email", email)
+                .whereEqualTo("email", email) // 이메일로 사용자 검색
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        // 검색된 사용자 정보
-                        String friendUserId = task.getResult().getDocuments().get(0).getId();
-                        String name = task.getResult().getDocuments().get(0).getString("name");
-                        String nickname = task.getResult().getDocuments().get(0).getString("nickname");
-                        String photoUrl = task.getResult().getDocuments().get(0).getString("photoUrl");
-                        String place = task.getResult().getDocuments().get(0).getString("place");
-                        String statusMessage = task.getResult().getDocuments().get(0).getString("statusMessage");
+                .addOnSuccessListener(task -> {
+                    if (!task.isEmpty()) {
+                        DocumentSnapshot document = task.getDocuments().get(0);
+                        String friendUserId = document.getId(); // 친구의 UID 가져오기
 
-                        db.collection("users").document(friendUserId)
-                                .collection("location")
-                                .document("currentLocation")
+                        if (currentUserId.equals(friendUserId)) {
+                            Toast.makeText(requireContext(), "자기 자신을 친구로 추가할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        // 내 Firestore에 친구 추가 (currentUser -> friendUserId)
+                        db.collection("users").document(currentUserId)
+                                .collection("friends").document(friendUserId)
                                 .get()
-                                .addOnSuccessListener(locationDoc -> {
-                                    if (locationDoc.exists()) {
-                                        GeoPoint location = locationDoc.getGeoPoint("location");
-
-                                        if (location == null) {
-                                            location = new GeoPoint(0, 0); // 기본 위치 설정 (위도, 경도)
-                                        } // 위치 null 튕김 방지
-
-
-                                        // 친구 추가 로직
+                                .addOnSuccessListener(friendDoc -> {
+                                    if (friendDoc.exists()) {
+                                        Toast.makeText(requireContext(), "이미 친구로 추가된 사용자입니다.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        // 내 Firestore에 친구 추가
                                         Map<String, Object> friendData = new HashMap<>();
-                                        friendData.put("friendUserId", friendUserId);
-                                        friendData.put("email", email);
-                                        friendData.put("name", name);
-                                        friendData.put("nickname", nickname);
-                                        friendData.put("photoUrl", photoUrl);
-                                        friendData.put("place", place);
-                                        friendData.put("location", location);
-                                        if (statusMessage != null)
-                                            friendData.put("statusMessage", statusMessage);
-
+                                        friendData.put("userId", friendUserId);
 
                                         db.collection("users").document(currentUserId)
                                                 .collection("friends").document(friendUserId)
                                                 .set(friendData)
                                                 .addOnSuccessListener(aVoid -> {
-                                                    Toast.makeText(requireContext(), "친구 추가 완료!", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(requireContext(), "내 친구 목록에 추가 완료!", Toast.LENGTH_SHORT).show();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(requireContext(), "내 친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                });
+
+                                        // 친구의 Firestore에 나의 UID 추가 (friendUserId -> currentUserId)
+                                        Map<String, Object> myData = new HashMap<>();
+                                        myData.put("userId", currentUserId);
+
+                                        db.collection("users").document(friendUserId)
+                                                .collection("friends").document(currentUserId)
+                                                .set(myData)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    // 친구에게 알림 만들기
+//                                                    sendNotificationToFriend(friendUserId, "친구 추가 알림", currentUserId + "님이 친구로 추가되었습니다.");
+
+                                                    Toast.makeText(requireContext(), "친구의 친구 목록에 추가 완료!", Toast.LENGTH_SHORT).show();
                                                     dismiss(); // 다이얼로그 닫기
                                                 })
                                                 .addOnFailureListener(e -> {
-                                                    Toast.makeText(requireContext(), "친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(requireContext(), "친구의 친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 });
-                                    } else {
-                                        Toast.makeText(requireContext(), "사용자를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+//                                        addNotificationToFriend(friendUserId, currentUserId);  // 친구의 notification 컬렉션에 알림 추가
                                     }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(requireContext(), "친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        Toast.makeText(requireContext(), "해당 이메일을 가진 사용자가 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    // 친구에게 알림을 추가하는 메서드
+    private void addNotificationToFriend(String friendUserId, String currentUserId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // 현재 사용자의 닉네임을 Firestore에서 가져오기
+        db.collection("users").document(currentUserId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String currentUserNickname = documentSnapshot.getString("nickname"); // 닉네임 가져오기
+
+                        // 현재 시간을 밀리초로 가져오기
+                        long currentTime = System.currentTimeMillis();
+
+                        // 알림 데이터 만들기
+                        Map<String, Object> notificationData = new HashMap<>();
+                        notificationData.put("nickname", currentUserNickname);  // 로그인한 사용자의 닉네임 저장
+                        notificationData.put("actionType", "addFr");  // actionType에 "addFr" 추가
+                        notificationData.put("createdTime", (int)(currentTime / 1000)); // 초 단위로 저장
+                        notificationData.put("status",1);
+
+                        // 친구의 notification 컬렉션에 추가
+                        db.collection("users").document(friendUserId)
+                                .collection("notification").add(notificationData)
+                                .addOnSuccessListener(documentReference -> {
+                                    // 알림 추가 성공
+                                    Toast.makeText(requireContext(), "친구에게 알림이 전송되었습니다.", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    // 알림 추가 실패
+                                    Toast.makeText(requireContext(), "알림 전송 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     }
+                })
+                .addOnFailureListener(e -> {
+                    // Firestore에서 사용자 정보 가져오기 실패
+                    Toast.makeText(requireContext(), "사용자 정보를 가져오는 데 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 }

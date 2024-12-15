@@ -1,7 +1,5 @@
 package com.example.mohassu.LoginAndSignUpFragment;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class LoginFragment extends Fragment {
 
@@ -110,6 +109,19 @@ public class LoginFragment extends Fragment {
 
                                                 // SharedPreferences에 이메일과 비밀번호 및 프로필 정보 저장
                                                 saveCredentialsToPreferences(uid, email, password, name, nickName, birthDate, photoUrl);
+
+                                                // FCM 토큰 가져오기 및 저장
+                                                FirebaseMessaging.getInstance().getToken()
+                                                        .addOnCompleteListener(tokenTask -> {
+                                                            if (tokenTask.isSuccessful()) {
+                                                                String fcmToken = tokenTask.getResult();
+                                                                Log.d(TAG, "FCM Token: " + fcmToken);
+                                                                saveTokenToFirestore(fcmToken);  // Firestore에 FCM 토큰 저장
+                                                            } else {
+                                                                Log.w(TAG, "FCM token retrieval failed: " + tokenTask.getException());
+                                                            }
+                                                        });
+
                                             } else {
                                                 Log.d("Firestore", "No such document!");
                                             }
@@ -134,6 +146,7 @@ public class LoginFragment extends Fragment {
                     }
                 });
     }
+
     private void saveCredentialsToPreferences(String uid, String email, String password, String name, String nickName, String birthDate, String photoUrl) {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -146,5 +159,21 @@ public class LoginFragment extends Fragment {
         editor.putString("photoUrl", photoUrl);
         editor.apply(); // 비동기로 저장
         Log.d(TAG, "이메일과 비밀번호 및 회원프로필 정보가 저장되었습니다.");
+    }
+
+    private void saveTokenToFirestore(String fcmToken) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users").document(uid)
+                    .update("fcmToken", fcmToken)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "FCM Token 저장 성공");
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.w(TAG, "FCM Token 저장 실패: " + e.getMessage());
+                    });
+        }
     }
 }

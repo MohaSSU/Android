@@ -6,6 +6,7 @@
     <!-- 위치 추적 기능 관련 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -47,8 +48,17 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="fs9rplnpjv" />
 <!--        <meta-data-->
+<!--            android:name="firebase_messaging_auto_init_enabled"-->
+<!--            android:value="false" />-->
+<!--        <meta-data-->
+<!--            android:name="firebase_analytics_collection_enabled"-->
+<!--            android:value="false" />-->
+
+        <!--        <meta-data-->
 <!--            android:name="NAVER_MAPS_CLIENT_SECRET"-->
 <!--            android:value="nkBj5b39jqUnW0OVh6IKylxZvBqpd0XUz8GvlkeC" />-->
+
+
     </application>
 
 </manifest>

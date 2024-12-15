@@ -378,8 +378,8 @@ public class CreatePromise2DetailFragment extends Fragment implements OnMapReady
             // Glide를 사용해 이미지 로드
             Glide.with(requireContext())
                     .load(photoUrls.get(i))
-                    .placeholder(R.drawable.pic_basic_profile)
-                    .error(R.drawable.pic_basic_profile)
+                    .placeholder(R.drawable.img_basic_profile)
+                    .error(R.drawable.img_basic_profile)
                     .into(profileImage);
 
             // friendListContainer에 추가

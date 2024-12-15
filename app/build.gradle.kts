@@ -69,9 +69,13 @@ dependencies {
     implementation ("androidx.core:core-splashscreen:1.0.1")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth")
+        implementation(platform("com.google.firebase:firebase-bom:33.7.0")){
+        implementation("com.google.firebase:firebase-analytics")
+        implementation("com.google.firebase:firebase-auth")
+    // Firebase Messaging 라이브러리 추가
+        implementation("com.google.firebase:firebase-messaging")
+        implementation("com.google.firebase:firebase-analytics")
+}
 
     implementation ("com.google.firebase:firebase-firestore:24.7.0")
     implementation ("com.google.firebase:firebase-storage:20.2.0")// 최신 버전 확인
@@ -98,4 +102,6 @@ dependencies {
 
     //CirecleImageView
     implementation ("de.hdodenhof:circleimageview:2.2.0")
+
+
 }
