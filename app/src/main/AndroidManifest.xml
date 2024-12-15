@@ -28,13 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".MyFirebaseMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
         <activity
             android:name=".NavigationStartLoginAndSignupActivity"
             android:exported="true">
@@ -55,6 +48,13 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="fs9rplnpjv" />
 <!--        <meta-data-->
+<!--            android:name="firebase_messaging_auto_init_enabled"-->
+<!--            android:value="false" />-->
+<!--        <meta-data-->
+<!--            android:name="firebase_analytics_collection_enabled"-->
+<!--            android:value="false" />-->
+
+        <!--        <meta-data-->
 <!--            android:name="NAVER_MAPS_CLIENT_SECRET"-->
 <!--            android:value="nkBj5b39jqUnW0OVh6IKylxZvBqpd0XUz8GvlkeC" />-->
 

@@ -69,11 +69,12 @@ dependencies {
     implementation ("androidx.core:core-splashscreen:1.0.1")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0")){
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth")
+        implementation(platform("com.google.firebase:firebase-bom:33.7.0")){
+        implementation("com.google.firebase:firebase-analytics")
+        implementation("com.google.firebase:firebase-auth")
     // Firebase Messaging 라이브러리 추가
-    implementation("com.google.firebase:firebase-messaging") // 버전 명시 없이 추가
+        implementation("com.google.firebase:firebase-messaging")
+        implementation("com.google.firebase:firebase-analytics")
 }
 
     implementation ("com.google.firebase:firebase-firestore:24.7.0")

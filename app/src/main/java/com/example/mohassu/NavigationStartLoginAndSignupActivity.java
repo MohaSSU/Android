@@ -67,20 +67,6 @@ public class NavigationStartLoginAndSignupActivity extends AppCompatActivity {
             // 현재 시간 계산
             int timeAgo = 1;
 
-            // NotificationItem 생성
-            NotificationItem notificationItem = new NotificationItem(
-                    profileImageUrl,
-                    userName,
-                    message,
-                    timeAgo,
-                    actionType != null ? "수락" : null,
-                    actionType
-            );
-
-            // RecyclerView에 알림 추가
-            if (notificationAdapter != null) {
-                notificationAdapter.addNotification(notificationItem);
-            }
         }
     }
 }

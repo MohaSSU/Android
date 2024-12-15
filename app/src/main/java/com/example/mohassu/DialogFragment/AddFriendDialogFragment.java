@@ -16,8 +16,6 @@ import com.example.mohassu.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,7 +52,6 @@ public class AddFriendDialogFragment extends DialogFragment {
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         String currentUserId = auth.getCurrentUser().getUid(); // 현재 사용자 UID
 
         db.collection("users")
@@ -100,12 +97,16 @@ public class AddFriendDialogFragment extends DialogFragment {
                                                 .collection("friends").document(currentUserId)
                                                 .set(myData)
                                                 .addOnSuccessListener(aVoid -> {
+                                                    // 친구에게 알림 만들기
+//                                                    sendNotificationToFriend(friendUserId, "친구 추가 알림", currentUserId + "님이 친구로 추가되었습니다.");
+
                                                     Toast.makeText(requireContext(), "친구의 친구 목록에 추가 완료!", Toast.LENGTH_SHORT).show();
                                                     dismiss(); // 다이얼로그 닫기
                                                 })
                                                 .addOnFailureListener(e -> {
                                                     Toast.makeText(requireContext(), "친구의 친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 });
+//                                        addNotificationToFriend(friendUserId, currentUserId);  // 친구의 notification 컬렉션에 알림 추가
                                     }
                                 })
                                 .addOnFailureListener(e -> {
@@ -117,6 +118,46 @@ public class AddFriendDialogFragment extends DialogFragment {
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "친구 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    // 친구에게 알림을 추가하는 메서드
+    private void addNotificationToFriend(String friendUserId, String currentUserId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // 현재 사용자의 닉네임을 Firestore에서 가져오기
+        db.collection("users").document(currentUserId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String currentUserNickname = documentSnapshot.getString("nickname"); // 닉네임 가져오기
+
+                        // 현재 시간을 밀리초로 가져오기
+                        long currentTime = System.currentTimeMillis();
+
+                        // 알림 데이터 만들기
+                        Map<String, Object> notificationData = new HashMap<>();
+                        notificationData.put("nickname", currentUserNickname);  // 로그인한 사용자의 닉네임 저장
+                        notificationData.put("actionType", "addFr");  // actionType에 "addFr" 추가
+                        notificationData.put("createdTime", (int)(currentTime / 1000)); // 초 단위로 저장
+                        notificationData.put("status",1);
+
+                        // 친구의 notification 컬렉션에 추가
+                        db.collection("users").document(friendUserId)
+                                .collection("notification").add(notificationData)
+                                .addOnSuccessListener(documentReference -> {
+                                    // 알림 추가 성공
+                                    Toast.makeText(requireContext(), "친구에게 알림이 전송되었습니다.", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    // 알림 추가 실패
+                                    Toast.makeText(requireContext(), "알림 전송 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Firestore에서 사용자 정보 가져오기 실패
+                    Toast.makeText(requireContext(), "사용자 정보를 가져오는 데 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 }
