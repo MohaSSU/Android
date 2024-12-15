@@ -153,10 +153,11 @@ public class CreatePromise3ChooseFriendsFragment extends Fragment {
                         String nickname = documentSnapshot.getString("nickname");
                         String statusMessage = documentSnapshot.getString("statusMessage");
                         String photoUrl = documentSnapshot.getString("photoUrl");
+                        String timeTableJSON = documentSnapshot.getString("timetableData");
 
                         fetchCurrentClass(friendUid, currentClass -> {
                             // Friend 객체 생성 및 추가
-                            friendList.add(new Friend(friendUid, name, nickname, email, statusMessage, photoUrl, currentClass));
+                            friendList.add(new Friend(friendUid, name, nickname, email, statusMessage, timeTableJSON, photoUrl, currentClass));
                             selectFriendAdapter.notifyDataSetChanged();
                             Log.d("fetchFriendDetails", "Friend added: " + name);
                         });
