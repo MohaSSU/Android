@@ -19,7 +19,7 @@
         >
 
         <ImageButton
-            android:id="@+id/btn_close"
+            android:id="@+id/btn_bottomsheet_close"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginStart="16dp"

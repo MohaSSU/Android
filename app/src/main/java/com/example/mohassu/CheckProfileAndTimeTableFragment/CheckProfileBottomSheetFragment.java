@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,7 +52,8 @@ public class CheckProfileBottomSheetFragment extends BottomSheetDialogFragment {
         TextView nicknameTextView = view.findViewById(R.id.text_nickname);
         TextView nameTextView = view.findViewById(R.id.text_name);
         ImageView photoImageView = view.findViewById(R.id.img_profile);
-        Button viewTimeTableButton = view.findViewById(R.id.view_time_table_button); // 🔥 추가된 버튼
+        Button viewTimeTableButton = view.findViewById(R.id.view_time_table_button);
+        ImageButton BottomSheetCloseBtn = view.findViewById(R.id.btn_bottomsheet_close);
 
         // 🔥 데이터 바인딩
         nicknameTextView.setText(friend.getNickname() != null ? friend.getNickname() : "닉네임 없음");
@@ -78,5 +80,7 @@ public class CheckProfileBottomSheetFragment extends BottomSheetDialogFragment {
                 e.printStackTrace();
             }
         });
+        BottomSheetCloseBtn.setOnClickListener(view1 -> dismiss());
+
     }
 }

@@ -1,36 +1,44 @@
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="30dp"
     android:layout_marginBottom="16dp"
-    android:background="@drawable/background_view_friend"
-    >
+    app:cardElevation="5dp"
+    app:cardCornerRadius="20dp"
+    app:cardBackgroundColor="@color/white">
 
-    <!-- 프로필 이미지 -->
-    <ImageView
-        android:id="@+id/profile_image2"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/img_example_profile"
-        android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+<androidx.constraintlayout.widget.ConstraintLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:paddingHorizontal="20dp"
+android:paddingVertical="10dp"
+android:background="@drawable/background_view_friend">
 
+<!-- 프로필 이미지 -->
+<ImageView
+    android:id="@+id/profile_image2"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:src="@drawable/img_example_profile"
+    android:scaleType="centerCrop"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent" />
+
+<!-- 닉네임 텍스트 -->
     <TextView
         android:id="@+id/nickname_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text= "홍길동"
+        android:text="홍길동"
         android:textColor="@android:color/black"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image2"
+        app:layout_constraintTop_toBottomOf="@id/profile_image2"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="4dp"/>
+        android:layout_marginStart="4dp" />
+
 
     <!-- 메시지 텍스트 -->
     <TextView
@@ -42,10 +50,11 @@
         android:textColor="@android:color/black"
         android:textSize="14sp"
         android:textStyle="bold"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toEndOf="@id/profile_image2"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 타임스탬프 -->
+    <!-- 장소 정보 -->
     <TextView
         android:id="@+id/state_place"
         android:layout_width="wrap_content"
@@ -56,6 +65,7 @@
         app:layout_constraintStart_toStartOf="@id/state_text"
         app:layout_constraintTop_toBottomOf="@id/state_text" />
 
+    <!-- 수업 시간 -->
     <TextView
         android:id="@+id/state_time"
         android:layout_width="wrap_content"
@@ -67,3 +77,5 @@
         app:layout_constraintTop_toBottomOf="@id/state_place" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>

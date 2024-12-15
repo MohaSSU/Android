@@ -77,25 +77,12 @@ public class AddFriendDialogFragment extends DialogFragment {
                                 .get()
                                 .addOnSuccessListener(locationDoc -> {
                                     if (locationDoc.exists()) {
-                                        GeoPoint location = locationDoc.getGeoPoint("location");
-
-                                        if (location == null) {
-                                            location = new GeoPoint(0, 0); // 기본 위치 설정 (위도, 경도)
-                                        } // 위치 null 튕김 방지
-
 
                                         // 친구 추가 로직
                                         Map<String, Object> friendData = new HashMap<>();
                                         friendData.put("friendUserId", friendUserId);
                                         friendData.put("email", email);
                                         friendData.put("name", name);
-                                        friendData.put("nickname", nickname);
-                                        friendData.put("photoUrl", photoUrl);
-                                        friendData.put("place", place);
-                                        friendData.put("location", location);
-                                        if (statusMessage != null)
-                                            friendData.put("statusMessage", statusMessage);
-
 
                                         db.collection("users").document(currentUserId)
                                                 .collection("friends").document(friendUserId)
