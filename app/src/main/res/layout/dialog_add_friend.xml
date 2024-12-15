@@ -28,6 +28,7 @@
         android:inputType="textEmailAddress"
         android:textColorHint="#999999"
         android:backgroundTint="#CCCCCC"
+        android:textColor="@color/black"
         android:layout_marginBottom="24dp"
         android:textSize="16sp" />
 
@@ -39,7 +40,7 @@
 
         <!-- 확인 버튼 -->
         <TextView
-            android:id="@+id/confirmButton"
+            android:id="@+id/btnAddFriend"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -54,7 +55,7 @@
 
         <!-- 취소 버튼 -->
         <TextView
-            android:id="@+id/cancelButton"
+            android:id="@+id/btnCancelFriend"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"

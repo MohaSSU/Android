@@ -1,7 +1,15 @@
 package com.example.mohassu.LoginAndSignUpFragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,9 +27,20 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
 import com.example.mohassu.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class Signup3ProfileFragment extends Fragment {
 
@@ -31,6 +50,10 @@ public class Signup3ProfileFragment extends Fragment {
     private ImageView profileImageView;
     private Button signupNextButton, skipButton;
     private Uri selectedImageUri; // 선택된 이미지의 URI 저장
+    private Bitmap circularBitmapToUpload; // 업로드할 원형 Bitmap을 저장할 변수 추가
+
+    private FirebaseStorage storage;
+    private FirebaseFirestore db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +63,10 @@ public class Signup3ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Firebase 초기화
+        storage = FirebaseStorage.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         // NavController 초기화
         NavController navController = Navigation.findNavController(view);
@@ -60,14 +87,12 @@ public class Signup3ProfileFragment extends Fragment {
 
         // 다음 버튼 클릭 리스너
         signupNextButton.setOnClickListener(v -> {
-            if (selectedImageUri != null) {
-                // 선택된 이미지 URI를 저장하거나 업로드 로직 추가
-                Toast.makeText(requireContext(), "프로필이 저장되었습니다!", Toast.LENGTH_SHORT).show();
+            if (circularBitmapToUpload != null) {
+                // 프로필 사진 업로드
+                uploadCircularImage(circularBitmapToUpload, navController);
             } else {
                 Toast.makeText(requireContext(), "프로필을 선택하지 않았습니다.", Toast.LENGTH_SHORT).show();
             }
-            // 다음 Fragment로 이동
-            navController.navigate(R.id.actionNextToSignup4);
         });
 
         // 건너뛰기 버튼 클릭 리스너
@@ -91,13 +116,99 @@ public class Signup3ProfileFragment extends Fragment {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
             selectedImageUri = data.getData();
             try {
-                // 이미지 URI를 Bitmap으로 변환하여 ImageView에 표시
+                // 이미지 URI를 Bitmap으로 변환
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), selectedImageUri);
-                profileImageView.setImageBitmap(bitmap);
+                // 원형 Bitmap으로 변환
+                Bitmap circularBitmap = getCircularBitmap(bitmap);
+                // ImageView에 설정
+                profileImageView.setImageBitmap(circularBitmap);
+                // Firebase에 업로드를 위한 변수에 저장
+                this.circularBitmapToUpload = circularBitmap;
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(requireContext(), "이미지를 로드할 수 없습니다.", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    // Firebase Storage에 프로필 사진 업로드
+    private void uploadCircularImage(Bitmap circularBitmap, NavController navController) {
+        if (circularBitmap == null) {
+            Toast.makeText(getContext(), "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            StorageReference storageRef = storage.getReference().child("profilePictures/" + UUID.randomUUID().toString());
+
+            // Bitmap을 바이트 배열로 변환
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            circularBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            // 업로드
+            UploadTask uploadTask = storageRef.putBytes(data);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    Toast.makeText(getContext(), "프로필 사진을 업로드 중 입니다.", Toast.LENGTH_SHORT).show();
+                    String photoUrl = uri.toString();
+                    // Firestore에 photoUrl 저장
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    Map<String, Object> updates = new HashMap<>();
+                    updates.put("photoUrl", photoUrl);
+
+                    db.collection("users").document(userId)
+                            .set(updates, SetOptions.merge())
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getContext(), "프로필 사진이 업데이트되었습니다.", Toast.LENGTH_SHORT).show();
+                                // 로컬 SharedPreferences에 저장
+                                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("photoUrl", photoUrl);
+                                editor.apply();
+                                navController.navigate(R.id.actionSaveProfile);
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(getContext(), "Firestore 저장 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "다운로드 URL 가져오기 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }).addOnFailureListener(e -> {
+
+                Toast.makeText(getContext(), "이미지 업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
+
+    private Bitmap getCircularBitmap(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int min = Math.min(width, height);
+
+        Bitmap output = Bitmap.createBitmap(min, min, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, min, min);
+
+        paint.setAntiAlias(true);
+        paint.setFilterBitmap(true);
+        paint.setDither(true);
+
+        // 투명 배경
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(Color.parseColor("#BAB399"));
+
+        // 원 그리기
+        canvas.drawCircle(min / 2, min / 2, min / 2, paint);
+
+        // SRC_IN 모드로 설정하여 원 내부만 남기기
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+
+        // 원형 비트맵 그리기
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
     }
 }

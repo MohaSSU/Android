@@ -106,6 +106,7 @@
         <DatePicker
             android:id="@+id/dpSpinner"
             android:datePickerMode="spinner"
+            android:theme="@style/WhiteBackgroundBlackTextDatePicker"
             android:calendarViewShown="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

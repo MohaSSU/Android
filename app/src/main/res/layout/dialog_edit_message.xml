@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_edit_message"
+    android:layout_width="300dp"
+    android:layout_height="70dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/pic_status_chat"
+    android:gravity="center_horizontal"
+    android:layout_gravity="center"
+    android:layout_marginBottom="80dp">
+
+    <EditText
+        android:id="@+id/markerMyMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:gravity="center"
+        android:hint="여기에 상태 메시지를 입력하세요"
+        android:inputType="text"
+        android:background="#00000000"
+        />
+
+</LinearLayout>

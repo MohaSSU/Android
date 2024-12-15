@@ -73,6 +73,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
 
+    implementation ("com.google.firebase:firebase-firestore:24.7.0")
+    implementation ("com.google.firebase:firebase-storage:20.2.0")// 최신 버전 확인
 
     // Naver Map SDK
     implementation("com.naver.maps:map-sdk:3.19.1")
@@ -91,4 +93,9 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-database")
 
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+
+    //CirecleImageView
+    implementation ("de.hdodenhof:circleimageview:2.2.0")
 }

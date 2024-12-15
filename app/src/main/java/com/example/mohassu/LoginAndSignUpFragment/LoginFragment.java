@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,12 +25,17 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
 import com.example.mohassu.NavigationMainActivity;
 import com.example.mohassu.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginFragment extends Fragment {
+
+    private static final String TAG = "mohassu:login";
 
     private EditText editTextEmail, editTextPassword;
     private Button buttonLogin;
@@ -84,11 +90,33 @@ public class LoginFragment extends Fragment {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null && user.isEmailVerified()){
-//
-                            Toast.makeText(getActivity(), "로그인 성공!", Toast.LENGTH_SHORT).show();
 
-                            // SharedPreferences에 이메일과 비밀번호 저장
-                            saveCredentialsToPreferences(email, password);
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            String uid = user.getUid();
+
+                            db.collection("users").document(uid)
+                                    .get()
+                                    .addOnCompleteListener(tasks -> {
+                                        if (tasks.isSuccessful()) {
+                                            DocumentSnapshot document = tasks.getResult();
+                                            if (document.exists()) {
+                                                // Firestore에서 사용자 데이터 가져오기
+                                                String nickName = document.getString("nickname");
+                                                String name = document.getString("name");
+                                                String birthDate = document.getString("birthDate");
+                                                String photoUrl = document.getString("photoUrl");
+
+                                                Log.d("mohassu:Firestore", "Name: " + name + ", Email: " + email + ", nickName" + nickName +", birthDate" + birthDate);
+
+                                                // SharedPreferences에 이메일과 비밀번호 및 프로필 정보 저장
+                                                saveCredentialsToPreferences(uid, email, password, name, nickName, birthDate, photoUrl);
+                                            } else {
+                                                Log.d("Firestore", "No such document!");
+                                            }
+                                        } else {
+                                            Log.w("Firestore", "Error getting document.", task.getException());
+                                        }
+                                    });
 
                             // 메인 액티비티로 이동
                             Intent intent = new Intent(getActivity(), NavigationMainActivity.class);
@@ -97,6 +125,7 @@ public class LoginFragment extends Fragment {
                             Log.d("NavigationDebug", "NavigationMainActivity started");
                             requireActivity().finish();
                             Log.d("NavigationDebug", "Current activity finished");
+                            Toast.makeText(getActivity(), "로그인 성공!", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getActivity(), "이메일 인증을 완료해주세요.", Toast.LENGTH_SHORT).show();
                         }
@@ -105,12 +134,17 @@ public class LoginFragment extends Fragment {
                     }
                 });
     }
-    private void saveCredentialsToPreferences(String email, String password) {
+    private void saveCredentialsToPreferences(String uid, String email, String password, String name, String nickName, String birthDate, String photoUrl) {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("uid",uid);
         editor.putString("email", email);
         editor.putString("password", password);
+        editor.putString("name", name);
+        editor.putString("nickName", nickName);
+        editor.putString("birthDate", birthDate);
+        editor.putString("photoUrl", photoUrl);
         editor.apply(); // 비동기로 저장
-        Log.d("SharedPreferences", "이메일과 비밀번호가 저장되었습니다.");
+        Log.d(TAG, "이메일과 비밀번호 및 회원프로필 정보가 저장되었습니다.");
     }
 }
