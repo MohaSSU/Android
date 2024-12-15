@@ -132,8 +132,10 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                 if (currentPosition != null) {
                     // Move camera to the current position
                     naverMap.moveCamera(CameraUpdate.scrollTo(currentPosition));
+                    Log.d("","");// 추가
                 } else { // 예외처리 생략 가능
                     Toast.makeText(requireContext(), "현재 위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+
                 }
             });
         }
@@ -646,6 +648,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                             String photoUrl = document.getString("photoUrl");
                             GeoPoint location = document.getGeoPoint("location");
                             String statusMessage = document.getString("statusMessage");
+
                             // 마커 클릭 시 친구 ID 전달
                             String friendId = document.getId();
 
@@ -718,9 +721,9 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                                         // 클릭 이벤트 설정
                                                         // 프로필 보기 버튼 클릭 이벤트
                                                         profileButton.findViewById(R.id.showProfileButton).setOnClickListener(v -> {
-                                                            // BottomSheetDialogFragment 호출
-                                                            EmptyBottomSheetProfile bottomSheet = EmptyBottomSheetProfile.newInstance(friendId);
-                                                            bottomSheet.show(getParentFragmentManager(), "ProfileBottomSheet");
+                                                            // CheckProfileBottomSheetFragment 호출
+                                                            CheckProfileBottomSheetFragment bottomSheet = CheckProfileBottomSheetFragment.newInstanceWithFriendId(friendId);
+                                                            bottomSheet.show(getParentFragmentManager(), "CheckProfileBottomSheetFragment");
                                                         });
 
                                                         return true; // 클릭 이벤트 소비
@@ -792,9 +795,9 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                                                         // 클릭 이벤트 설정
                                                         // 프로필 보기 버튼 클릭 이벤트
                                                         profileButton.findViewById(R.id.showProfileButton).setOnClickListener(v -> {
-                                                            // BottomSheetDialogFragment 호출
-                                                            EmptyBottomSheetProfile bottomSheet = EmptyBottomSheetProfile.newInstance(friendId);
-                                                            bottomSheet.show(getParentFragmentManager(), "ProfileBottomSheet");
+                                                            // CheckProfileBottomSheetFragment 호출
+                                                            CheckProfileBottomSheetFragment bottomSheet = CheckProfileBottomSheetFragment.newInstanceWithFriendId(friendId);
+                                                            bottomSheet.show(getParentFragmentManager(), "CheckProfileBottomSheetFragment");
                                                         });
 
                                                         return true; // 클릭 이벤트 소비

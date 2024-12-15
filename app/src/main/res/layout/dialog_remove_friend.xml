@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="25dp"
+        android:background="@drawable/background_dialog"
+        android:layout_gravity="center">
+
+        <!-- 다이얼로그 메시지 -->
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="정말 친구를 삭제하시겠습니까?"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:layout_marginBottom="10dp" />
+
+        <!-- 버튼 레이아웃 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <!-- 확인 버튼 -->
+            <TextView
+                android:id="@+id/btnAddFriend"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="확인"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textColor="@color/colorPrimary"
+                android:background="?selectableItemBackground" />
+
+            <!-- 취소 버튼 -->
+            <TextView
+                android:id="@+id/btnCancelFriend"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="취소"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textColor="@color/colorPrimary"
+                android:background="?selectableItemBackground" />
+
+        </LinearLayout>
+
+    </LinearLayout>

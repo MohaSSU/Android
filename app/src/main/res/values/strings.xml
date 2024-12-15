@@ -45,6 +45,6 @@
         <item>창의관</item>
         <item>대운동장</item>
     </string-array>
-    <string name="check_time_table_title">%1$s 님의 시간표</string>
+    <string name="check_time_table_title">%1$s님의 시간표</string>
     <string name="action_settings">Settings</string>
 </resources>
